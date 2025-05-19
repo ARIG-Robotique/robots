@@ -14,13 +14,13 @@ import org.springframework.shell.jline.PromptProvider;
 @ComponentScan("org.arig.robot.odin.utils")
 public class OdinUtilsShellContext {
 
-    @Bean
-    public PromptProvider myPromptProvider() {
-        return () -> new AttributedString("odin-utils:> ", AttributedStyle.DEFAULT.background(AttributedStyle.YELLOW));
-    }
+  @Bean
+  public PromptProvider myPromptProvider() {
+    return () -> new AttributedString("odin-utils:> ", AttributedStyle.DEFAULT.background(AttributedStyle.YELLOW));
+  }
 
-    @Bean
-    public OdinShellInputReader shellInputReader(@Lazy LineReader lineReader) {
-        return new OdinShellInputReader(lineReader);
-    }
+  @Bean
+  public OdinShellInputReader shellInputReader(@Lazy LineReader lineReader) {
+    return new OdinShellInputReader(lineReader);
+  }
 }

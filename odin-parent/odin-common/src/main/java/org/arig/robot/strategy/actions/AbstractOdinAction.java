@@ -7,13 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 public abstract class AbstractOdinAction extends AbstractEurobotAction {
 
-    @Autowired
-    protected OdinRobotStatus rsOdin;
+  @Autowired
+  protected OdinRobotStatus rsOdin;
 
-    @Autowired
-    protected OdinRobotServosService servosOdin;
+  @Autowired
+  protected OdinRobotServosService servosOdin;
 
-    @Autowired
-    protected OdinIOService ioService;
+  @Autowired
+  protected OdinIOService ioService;
 
 }

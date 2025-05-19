@@ -17,53 +17,53 @@ import java.io.IOException;
 @Slf4j
 public class MonitoringJsonWrapper extends AbstractMonitoringWrapper {
 
-    @Autowired
-    private Environment env;
+  @Autowired
+  private Environment env;
 
-    private File saveDirectory;
+  private File saveDirectory;
 
-    public MonitoringJsonWrapper() {
-        saveDirectory = new File("./logs");
-        if (!saveDirectory.exists()) {
-            log.info("Création du répertoire {} : {}", saveDirectory.getAbsolutePath(), saveDirectory.mkdirs());
-        }
+  public MonitoringJsonWrapper() {
+    saveDirectory = new File("./logs");
+    if (!saveDirectory.exists()) {
+      log.info("Création du répertoire {} : {}", saveDirectory.getAbsolutePath(), saveDirectory.mkdirs());
+    }
+  }
+
+  @Override
+  protected void saveMouvementPoints() {
+    if (!hasMouvementPoints()) {
+      log.info("Aucun point de monitoring de mouvement a enregistrer");
+      return;
     }
 
-    @Override
-    protected void saveMouvementPoints() {
-        if (!hasMouvementPoints()) {
-            log.info("Aucun point de monitoring de mouvement a enregistrer");
-            return;
-        }
+    try {
+      final String fileName = env.getRequiredProperty(ConstantesConfig.keyExecutionId) + "-mouvement.json";
+      final File f = new File(saveDirectory, fileName);
+      final ObjectMapper om = new ObjectMapper();
+      log.info("Enregistrement de {} points de mouvement dans le fichier {}", monitorMouvementPoints().size(), f.getAbsolutePath());
+      om.writeValue(new BufferedOutputStream(new FileOutputStream(f)), monitorMouvementPoints());
+    } catch (IOException e) {
+      log.error("Impossible d'enregistrer le JSON des points de monitoring", e);
+      throw new RuntimeException("Erreur d'enregistrement du monitoring", e);
+    }
+  }
 
-        try {
-            final String fileName = env.getRequiredProperty(ConstantesConfig.keyExecutionId) + "-mouvement.json";
-            final File f = new File(saveDirectory, fileName);
-            final ObjectMapper om = new ObjectMapper();
-            log.info("Enregistrement de {} points de mouvement dans le fichier {}", monitorMouvementPoints().size(), f.getAbsolutePath());
-            om.writeValue(new BufferedOutputStream(new FileOutputStream(f)), monitorMouvementPoints());
-        } catch (IOException e) {
-            log.error("Impossible d'enregistrer le JSON des points de monitoring", e);
-            throw new RuntimeException("Erreur d'enregistrement du monitoring", e);
-        }
+  @Override
+  protected void saveTimeSeriePoints() {
+    if (!hasTimeSeriePoints()) {
+      log.info("Aucun point de monitoring time series a enregistrer");
+      return;
     }
 
-    @Override
-    protected void saveTimeSeriePoints() {
-        if (!hasTimeSeriePoints()) {
-            log.info("Aucun point de monitoring time series a enregistrer");
-            return;
-        }
-
-        try {
-            final String fileName = env.getRequiredProperty(ConstantesConfig.keyExecutionId) + "-timeseries.json";
-            final File f = new File(saveDirectory, fileName);
-            final ObjectMapper om = new ObjectMapper();
-            log.info("Enregistrement de {} points time serie dans le fichier {}", monitorTimeSeriePoints().size(), f.getAbsolutePath());
-            om.writeValue(new BufferedOutputStream(new FileOutputStream(f)), monitorTimeSeriePoints());
-        } catch (IOException e) {
-            log.error("Impossible d'enregistrer le JSON des points de monitoring", e);
-            throw new RuntimeException("Erreur d'enregistrement du monitoring", e);
-        }
+    try {
+      final String fileName = env.getRequiredProperty(ConstantesConfig.keyExecutionId) + "-timeseries.json";
+      final File f = new File(saveDirectory, fileName);
+      final ObjectMapper om = new ObjectMapper();
+      log.info("Enregistrement de {} points time serie dans le fichier {}", monitorTimeSeriePoints().size(), f.getAbsolutePath());
+      om.writeValue(new BufferedOutputStream(new FileOutputStream(f)), monitorTimeSeriePoints());
+    } catch (IOException e) {
+      log.error("Impossible d'enregistrer le JSON des points de monitoring", e);
+      throw new RuntimeException("Erreur d'enregistrement du monitoring", e);
     }
+  }
 }

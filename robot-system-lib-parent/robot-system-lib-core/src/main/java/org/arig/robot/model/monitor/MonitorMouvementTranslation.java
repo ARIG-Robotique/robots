@@ -12,9 +12,9 @@ import org.arig.robot.model.enums.TypeMouvement;
 @EqualsAndHashCode(callSuper = true)
 public class MonitorMouvementTranslation extends AbstractMonitorMouvement {
 
-    private final TypeMouvement type = TypeMouvement.TRANSLATION;
+  private final TypeMouvement type = TypeMouvement.TRANSLATION;
 
-    private Double distance;
-    private Point fromPoint;
-    private Point toPoint;
+  private Double distance;
+  private Point fromPoint;
+  private Point toPoint;
 }

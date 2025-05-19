@@ -14,6 +14,7 @@ import org.arig.robot.strategy.actions.AbstractNerellAction;
 public abstract class AbstractDeposeGradin extends AbstractNerellAction {
 
   protected abstract ConstructionArea constructionArea();
+
   protected abstract Point rangPosition(ConstructionArea.Rang rang);
 
   @Override
@@ -60,8 +61,7 @@ public abstract class AbstractDeposeGradin extends AbstractNerellAction {
 
     // Ne pas autoriser les déposes sans stock complet sur les deux faces quand deux faces actives
     if (rs.useTwoFaces() && rs.getRemainingTime() >= EurobotConfig.validDeposeDeuxFacesNonPleineRemainingTime
-        && (rs.faceAvant().isEmpty() || rs.faceArriere().isEmpty()))
-    {
+      && (rs.faceAvant().isEmpty() || rs.faceArriere().isEmpty())) {
       return false;
     }
 

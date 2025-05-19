@@ -1,9 +1,9 @@
 package org.arig.robot.model;
 
 public enum Team {
-    JAUNE, BLEU;
+  JAUNE, BLEU;
 
-    public String pathfinderMap(String robot) {
-        return String.format("classpath:maps/%s-%s.png", name(), robot);
-    }
+  public String pathfinderMap(String robot) {
+    return String.format("classpath:maps/%s-%s.png", name(), robot);
+  }
 }

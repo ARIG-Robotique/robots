@@ -9,17 +9,17 @@ import org.springframework.stereotype.Service;
 @Service
 public class NerellEcranService extends EcranService {
 
-    @Override
-    public void updateStateInfo(EcranState stateInfos) {
-        super.updateStateInfo(stateInfos);
-    }
+  @Override
+  public void updateStateInfo(EcranState stateInfos) {
+    super.updateStateInfo(stateInfos);
+  }
 
-    @Override
-    protected EcranParams getParams() {
-        EcranParams params = super.getParams();
-        params.setName("Nerell");
-        params.setPrimary(true);
-        params.setPami(false);
-        return params;
-    }
+  @Override
+  protected EcranParams getParams() {
+    EcranParams params = super.getParams();
+    params.setName("Nerell");
+    params.setPrimary(true);
+    params.setPami(false);
+    return params;
+  }
 }

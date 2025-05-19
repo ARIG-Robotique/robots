@@ -10,22 +10,22 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class PamiCapteursController extends AbstractCapteursController {
 
-    @Autowired
-    private PamiRobotStatus robotStatus;
+  @Autowired
+  private PamiRobotStatus robotStatus;
 
-    @Autowired
-    private PamiIOService ioService;
+  @Autowired
+  private PamiIOService ioService;
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        super.afterPropertiesSet();
+  @Override
+  public void afterPropertiesSet() throws Exception {
+    super.afterPropertiesSet();
 
-        numeriqueInfos.put("Calage arriere gauche", ioService::calageArriereGauche);
-        numeriqueInfos.put("Calage arriere droit", ioService::calageArriereDroit);
+    numeriqueInfos.put("Calage arriere gauche", ioService::calageArriereGauche);
+    numeriqueInfos.put("Calage arriere droit", ioService::calageArriereDroit);
 
-        numeriqueInfos.put("Présence sol gauche", () -> ioService.presenceSolGauche(false));
-        numeriqueInfos.put("Présence sol droit", () -> ioService.presenceSolDroit(false));
+    numeriqueInfos.put("Présence sol gauche", () -> ioService.presenceSolGauche(false));
+    numeriqueInfos.put("Présence sol droit", () -> ioService.presenceSolDroit(false));
 
-        textInfos.put("Equipe", () -> (robotStatus.team() != null) ? robotStatus.team().name() : "???");
-    }
+    textInfos.put("Equipe", () -> (robotStatus.team() != null) ? robotStatus.team().name() : "???");
+  }
 }

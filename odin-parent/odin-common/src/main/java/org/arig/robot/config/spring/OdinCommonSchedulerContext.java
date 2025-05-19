@@ -16,13 +16,13 @@ import java.util.concurrent.Executors;
 @ComponentScan({"org.arig.robot.scheduler"})
 public class OdinCommonSchedulerContext implements SchedulingConfigurer {
 
-    @Bean(destroyMethod="shutdown")
-    public ExecutorService taskExecutor() {
-        return Executors.newScheduledThreadPool(OdinConstantesConfig.nbThreadScheduledExecutor);
-    }
+  @Bean(destroyMethod = "shutdown")
+  public ExecutorService taskExecutor() {
+    return Executors.newScheduledThreadPool(OdinConstantesConfig.nbThreadScheduledExecutor);
+  }
 
-    @Override
-    public void configureTasks(ScheduledTaskRegistrar taskRegistrar) {
-        taskRegistrar.setScheduler(taskExecutor());
-    }
+  @Override
+  public void configureTasks(ScheduledTaskRegistrar taskRegistrar) {
+    taskRegistrar.setScheduler(taskExecutor());
+  }
 }

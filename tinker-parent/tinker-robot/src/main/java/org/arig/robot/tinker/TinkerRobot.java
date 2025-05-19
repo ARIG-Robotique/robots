@@ -10,7 +10,7 @@ import java.io.IOException;
 @SpringBootApplication
 public class TinkerRobot {
 
-    public static void main(final String[] args) throws IOException {
-        SpringApplication.run(TinkerRobot.class, args);
-    }
+  public static void main(final String[] args) throws IOException {
+    SpringApplication.run(TinkerRobot.class, args);
+  }
 }

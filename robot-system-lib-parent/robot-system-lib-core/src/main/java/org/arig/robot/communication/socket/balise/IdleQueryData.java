@@ -9,6 +9,6 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class IdleQueryData implements Serializable {
 
-    private boolean value;
+  private boolean value;
 
 }

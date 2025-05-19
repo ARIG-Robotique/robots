@@ -10,23 +10,23 @@ import java.util.List;
  */
 public interface MonitoringWrapper {
 
-    void cleanAllPoints();
+  void cleanAllPoints();
 
-    void cleanTimeSeriePoints();
+  void cleanTimeSeriePoints();
 
-    void cleanMouvementPoints();
+  void cleanMouvementPoints();
 
-    List<MonitorTimeSerie> monitorTimeSeriePoints();
+  List<MonitorTimeSerie> monitorTimeSeriePoints();
 
-    List<AbstractMonitorMouvement> monitorMouvementPoints();
+  List<AbstractMonitorMouvement> monitorMouvementPoints();
 
-    void addTimeSeriePoint(MonitorTimeSerie point);
+  void addTimeSeriePoint(MonitorTimeSerie point);
 
-    void forceAddTimeSeriePoint(MonitorTimeSerie pont);
+  void forceAddTimeSeriePoint(MonitorTimeSerie pont);
 
-    void addMouvementPoint(AbstractMonitorMouvement point);
+  void addMouvementPoint(AbstractMonitorMouvement point);
 
-    void forceAddMouvementPoint(AbstractMonitorMouvement point);
+  void forceAddMouvementPoint(AbstractMonitorMouvement point);
 
-    void save();
+  void save();
 }

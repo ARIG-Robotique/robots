@@ -18,79 +18,79 @@ import java.util.concurrent.ThreadPoolExecutor;
 @ExtendWith(SpringExtension.class)
 public class SocketServerTest {
 
-    enum TestEnum {
-        ACTION
+  enum TestEnum {
+    ACTION
+  }
+
+  static class TestQuery extends AbstractQuery<TestEnum> {
+    public TestQuery() {
+      super(TestEnum.ACTION);
+    }
+  }
+
+  static class TestResponse extends AbstractResponse<TestEnum> {
+    public TestResponse() {
+      this.setAction(TestEnum.ACTION);
+    }
+  }
+
+  static class TestServer extends AbstractSocketServer<TestEnum> {
+    List<TestEnum> receivedQueries = new ArrayList<>();
+
+    public TestServer(final Integer port, final ThreadPoolExecutor executor) {
+      super(port, executor);
     }
 
-    static class TestQuery extends AbstractQuery<TestEnum> {
-        public TestQuery() {
-            super(TestEnum.ACTION);
-        }
+    @Override
+    protected Class<TestEnum> getActionEnum() {
+      return TestEnum.class;
     }
 
-    static class TestResponse extends AbstractResponse<TestEnum> {
-        public TestResponse() {
-            this.setAction(TestEnum.ACTION);
-        }
+    @Override
+    protected Class<? extends AbstractQuery<TestEnum>> getQueryClass(TestEnum action) {
+      return TestQuery.class;
     }
 
-    static class TestServer extends AbstractSocketServer<TestEnum> {
-        List<TestEnum> receivedQueries = new ArrayList<>();
+    @Override
+    protected AbstractResponse<TestEnum> handleQuery(AbstractQuery<TestEnum> query) {
+      receivedQueries.add(query.getAction());
+      return new TestResponse();
+    }
+  }
 
-        public TestServer(final Integer port, final ThreadPoolExecutor executor)  {
-            super(port, executor);
-        }
+  static class TestClient extends AbstractSocketClient<TestEnum> {
+    List<TestEnum> receivedReponses = new ArrayList<>();
 
-        @Override
-        protected Class<TestEnum> getActionEnum() {
-            return TestEnum.class;
-        }
-
-        @Override
-        protected Class<? extends AbstractQuery<TestEnum>> getQueryClass(TestEnum action) {
-            return TestQuery.class;
-        }
-
-        @Override
-        protected AbstractResponse<TestEnum> handleQuery(AbstractQuery<TestEnum> query) {
-            receivedQueries.add(query.getAction());
-            return new TestResponse();
-        }
+    public TestClient(final Integer port) {
+      super("127.0.0.1", port, 1000);
     }
 
-    static class TestClient extends AbstractSocketClient<TestEnum> {
-        List<TestEnum> receivedReponses = new ArrayList<>();
-
-        public TestClient(final Integer port) {
-            super("127.0.0.1", port, 1000);
-        }
-
-        @SneakyThrows
-        public void testQuery() {
-            TestResponse response = sendToSocketAndGet(new TestQuery(), TestResponse.class);
-            receivedReponses.add(response.getAction());
-        }
-    }
-
-    @Test
     @SneakyThrows
-    public void testSimple() {
-        final int port = 9000;
-        final ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(1);
-
-        TestServer server = new TestServer(port, executor);
-        server.openSocket();
-
-        TestClient client = new TestClient(port);
-        client.openSocket();
-
-        client.testQuery();
-
-        Assertions.assertThat(server.receivedQueries).containsExactly(TestEnum.ACTION);
-        Assertions.assertThat(client.receivedReponses).containsExactly(TestEnum.ACTION);
-
-        client.end();
-        server.end();
+    public void testQuery() {
+      TestResponse response = sendToSocketAndGet(new TestQuery(), TestResponse.class);
+      receivedReponses.add(response.getAction());
     }
+  }
+
+  @Test
+  @SneakyThrows
+  public void testSimple() {
+    final int port = 9000;
+    final ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(1);
+
+    TestServer server = new TestServer(port, executor);
+    server.openSocket();
+
+    TestClient client = new TestClient(port);
+    client.openSocket();
+
+    client.testQuery();
+
+    Assertions.assertThat(server.receivedQueries).containsExactly(TestEnum.ACTION);
+    Assertions.assertThat(client.receivedReponses).containsExactly(TestEnum.ACTION);
+
+    client.end();
+    server.end();
+  }
 
 }

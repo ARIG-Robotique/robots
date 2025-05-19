@@ -9,8 +9,8 @@ import org.springframework.context.annotation.Configuration;
 @Slf4j
 @Configuration
 public class EurobotContext {
-    @Bean
-    public TableUtils tableUtils() {
-        return new TableUtils(EurobotConfig.tableWidth, EurobotConfig.tableHeight, EurobotConfig.tableBorder);
-    }
+  @Bean
+  public TableUtils tableUtils() {
+    return new TableUtils(EurobotConfig.tableWidth, EurobotConfig.tableHeight, EurobotConfig.tableBorder);
+  }
 }

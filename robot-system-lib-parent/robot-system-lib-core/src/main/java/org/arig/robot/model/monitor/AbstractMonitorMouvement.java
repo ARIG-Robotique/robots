@@ -11,5 +11,5 @@ import org.arig.robot.model.enums.TypeMouvement;
 @EqualsAndHashCode(callSuper = true)
 public abstract class AbstractMonitorMouvement extends AbstractMonitor {
 
-    public abstract TypeMouvement getType();
+  public abstract TypeMouvement getType();
 }

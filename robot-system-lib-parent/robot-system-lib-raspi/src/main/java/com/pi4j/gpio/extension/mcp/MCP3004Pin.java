@@ -36,7 +36,6 @@ import java.util.EnumSet;
  */
 
 /**
- *
  * <p>
  * This GPIO provider implements the MCP3004 SPI GPIO expansion board as native Pi4J GPIO pins. It is a 10-bit ADC
  * providing 4 input channels. More information about the board can be found here: *
@@ -52,14 +51,14 @@ import java.util.EnumSet;
  */
 public class MCP3004Pin {
 
-	public static final Pin CH0 = createAnalogInputPin(0, "ANALOG INPUT 0");
-	public static final Pin CH1 = createAnalogInputPin(1, "ANALOG INPUT 1");
-	public static final Pin CH2 = createAnalogInputPin(2, "ANALOG INPUT 2");
-	public static final Pin CH3 = createAnalogInputPin(3, "ANALOG INPUT 3");
+  public static final Pin CH0 = createAnalogInputPin(0, "ANALOG INPUT 0");
+  public static final Pin CH1 = createAnalogInputPin(1, "ANALOG INPUT 1");
+  public static final Pin CH2 = createAnalogInputPin(2, "ANALOG INPUT 2");
+  public static final Pin CH3 = createAnalogInputPin(3, "ANALOG INPUT 3");
 
-	public static Pin[] ALL = { MCP3004Pin.CH0, MCP3004Pin.CH1, MCP3004Pin.CH2, MCP3004Pin.CH3 };
+  public static Pin[] ALL = {MCP3004Pin.CH0, MCP3004Pin.CH1, MCP3004Pin.CH2, MCP3004Pin.CH3};
 
-	private static Pin createAnalogInputPin(final int channel, final String name) {
-		return new PinImpl(MCP3004GpioProvider.NAME, channel, name, EnumSet.of(PinMode.ANALOG_INPUT));
-	}
+  private static Pin createAnalogInputPin(final int channel, final String name) {
+    return new PinImpl(MCP3004GpioProvider.NAME, channel, name, EnumSet.of(PinMode.ANALOG_INPUT));
+  }
 }

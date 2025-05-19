@@ -14,78 +14,78 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Slf4j
 public abstract class Abstract2WheelsEncoders {
 
-    @Autowired
-    private MonitoringWrapper monitoringWrapper;
+  @Autowired
+  private MonitoringWrapper monitoringWrapper;
 
-    @Getter
-    private double distance;
+  @Getter
+  private double distance;
 
-    @Getter
-    private double orientation;
+  @Getter
+  private double orientation;
 
-    @Getter
-    private double gauche;
+  @Getter
+  private double gauche;
 
-    @Getter
-    private double droit;
+  @Getter
+  private double droit;
 
-    @Getter
-    private double coefGauche;
+  @Getter
+  private double coefGauche;
 
-    @Getter
-    private double coefDroit;
+  @Getter
+  private double coefDroit;
 
-    private boolean alternate;
-    private final String name;
+  private boolean alternate;
+  private final String name;
 
-    protected Abstract2WheelsEncoders(final String name) {
-        this.name = name;
-        distance = orientation = 0;
-        coefDroit = coefGauche = 1.0;
-        alternate = false;
+  protected Abstract2WheelsEncoders(final String name) {
+    this.name = name;
+    distance = orientation = 0;
+    coefDroit = coefGauche = 1.0;
+    alternate = false;
+  }
+
+  public void lectureValeurs() {
+
+    if (alternate) {
+      gauche = lectureGauche() * coefGauche;
+      droit = lectureDroit() * coefDroit;
+    } else {
+      droit = lectureDroit() * coefDroit;
+      gauche = lectureGauche() * coefGauche;
     }
+    alternate = !alternate;
 
-    public void lectureValeurs() {
+    calculPolarValues();
+    sendMonitoring();
+  }
 
-        if (alternate) {
-            gauche = lectureGauche() * coefGauche;
-            droit = lectureDroit() * coefDroit;
-        } else {
-            droit = lectureDroit() * coefDroit;
-            gauche = lectureGauche() * coefGauche;
-        }
-        alternate = !alternate;
+  public void setCoefs(final double coefGauche, final double coefDroit) {
+    this.coefGauche = coefGauche;
+    this.coefDroit = coefDroit;
+  }
 
-        calculPolarValues();
-        sendMonitoring();
-    }
+  public abstract void reset();
 
-    public void setCoefs(final double coefGauche, final double coefDroit) {
-        this.coefGauche = coefGauche;
-        this.coefDroit = coefDroit;
-    }
+  protected abstract double lectureGauche();
 
-    public abstract void reset();
+  protected abstract double lectureDroit();
 
-    protected abstract double lectureGauche();
+  private void calculPolarValues() {
+    distance = (droit + gauche) / 2;
+    orientation = droit - gauche;
+  }
 
-    protected abstract double lectureDroit();
+  private void sendMonitoring() {
+    // Construction du monitoring
+    MonitorTimeSerie serie = new MonitorTimeSerie()
+      .measurementName("encodeurs")
+      .addTag(MonitorTimeSerie.TAG_NAME, name)
+      .addField("gauche", getGauche())
+      .addField("droit", getDroit())
+      .addField("distance", getDistance())
+      .addField("orientation", getOrientation());
 
-    private void calculPolarValues() {
-        distance = (droit + gauche) / 2;
-        orientation = droit - gauche;
-    }
-
-    private void sendMonitoring() {
-        // Construction du monitoring
-        MonitorTimeSerie serie = new MonitorTimeSerie()
-                .measurementName("encodeurs")
-                .addTag(MonitorTimeSerie.TAG_NAME, name)
-                .addField("gauche", getGauche())
-                .addField("droit", getDroit())
-                .addField("distance", getDistance())
-                .addField("orientation", getOrientation());
-
-        monitoringWrapper.addTimeSeriePoint(serie);
-    }
+    monitoringWrapper.addTimeSeriePoint(serie);
+  }
 }

@@ -21,35 +21,35 @@ import java.util.concurrent.TimeUnit;
 @ContextConfiguration(classes = {RampTestContext.class})
 public abstract class AbstractRampTest {
 
-    @Autowired
-    private MonitoringWrapper monitoringWrapper;
+  @Autowired
+  private MonitoringWrapper monitoringWrapper;
 
-    protected abstract AbstractRampFilter getFiltre();
+  protected abstract AbstractRampFilter getFiltre();
 
-    @BeforeEach
-    public void before() {
-        System.setProperty(ConstantesConfig.keyExecutionId, UUID.randomUUID().toString());
-        monitoringWrapper.cleanAllPoints();
+  @BeforeEach
+  public void before() {
+    System.setProperty(ConstantesConfig.keyExecutionId, UUID.randomUUID().toString());
+    monitoringWrapper.cleanAllPoints();
 
-        getFiltre().reset();
-    }
+    getFiltre().reset();
+  }
 
-    @AfterEach
-    public void after() {
-        monitoringWrapper.save();
-    }
+  @AfterEach
+  public void after() {
+    monitoringWrapper.save();
+  }
 
-    @Test
-    @DirtiesContext
-    public void testChangeSampleTime() {
-        getFiltre().setSampleTimeMs(1000);
-        Assertions.assertEquals(1, getFiltre().getSampleTimeS(), 0);
+  @Test
+  @DirtiesContext
+  public void testChangeSampleTime() {
+    getFiltre().setSampleTimeMs(1000);
+    Assertions.assertEquals(1, getFiltre().getSampleTimeS(), 0);
 
-        getFiltre().setSampleTimeMs(1500);
-        Assertions.assertEquals(1.5, getFiltre().getSampleTimeS(), 0);
+    getFiltre().setSampleTimeMs(1500);
+    Assertions.assertEquals(1.5, getFiltre().getSampleTimeS(), 0);
 
-        getFiltre().setSampleTime(10, TimeUnit.SECONDS);
-        Assertions.assertEquals(10, getFiltre().getSampleTimeS(), 0);
-    }
+    getFiltre().setSampleTime(10, TimeUnit.SECONDS);
+    Assertions.assertEquals(10, getFiltre().getSampleTimeS(), 0);
+  }
 
 }

@@ -10,52 +10,52 @@ import java.util.List;
  */
 public interface Action {
 
-    /**
-     * Nom de l'action
-     *
-     * @return Le nom de l'action
-     */
-    String name();
+  /**
+   * Nom de l'action
+   *
+   * @return Le nom de l'action
+   */
+  String name();
 
-    /**
-     * Valeur indiquant l'ordre de priorité d'exécution.
-     * Plus la valeur est grande plus cela est prioritaire.
-     *
-     * @return La valeur de l'ordre
-     */
-    int order();
+  /**
+   * Valeur indiquant l'ordre de priorité d'exécution.
+   * Plus la valeur est grande plus cela est prioritaire.
+   *
+   * @return La valeur de l'ordre
+   */
+  int order();
 
-    /**
-     * Est-ce que toute les conditions sont réunies pour l'exécution ?
-     *
-     * @return true si cette action peut être éxécuter
-     */
-    boolean isValid();
+  /**
+   * Est-ce que toute les conditions sont réunies pour l'exécution ?
+   *
+   * @return true si cette action peut être éxécuter
+   */
+  boolean isValid();
 
-    /**
-     * Retourne le nom des actions de l'autre robot empechant d'executer cette action
-     */
-    List<String> blockingActions();
+  /**
+   * Retourne le nom des actions de l'autre robot empechant d'executer cette action
+   */
+  List<String> blockingActions();
 
-    Rectangle blockingZone();
+  Rectangle blockingZone();
 
-    /**
-     * Renvoi l'information concernant la réalisation complète de l'action.
-     *
-     * @return true si cette action est terminé. Elle sera supprimé de la liste des actions possibles
-     */
-    boolean isCompleted();
+  /**
+   * Renvoi l'information concernant la réalisation complète de l'action.
+   *
+   * @return true si cette action est terminé. Elle sera supprimé de la liste des actions possibles
+   */
+  boolean isCompleted();
 
-    void refreshCompleted();
+  void refreshCompleted();
 
-    /**
-     * Processus d'exécution de l'action
-     */
-    void execute();
+  /**
+   * Processus d'exécution de l'action
+   */
+  void execute();
 
-    /**
-     * Recupere l'UUID de l'action
-     */
-    String uuid();
+  /**
+   * Recupere l'UUID de l'action
+   */
+  String uuid();
 
 }

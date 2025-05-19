@@ -45,37 +45,37 @@ import com.pi4j.io.gpio.GpioProviderBase;
  */
 public abstract class MonitorGpioProviderBase extends GpioProviderBase implements MonitorGpioProvider {
 
-    protected MonitoringStateDevice monitor;
+  protected MonitoringStateDevice monitor;
 
-    /**
-     * This method will be overrided by subclass to provide specific clean on shutdown.
-     *
-     * @throws Exception An exception may be raised (cf subclass)
-     */
-    protected void specificShutdown() throws Exception {
-        // NOOP. Will be defined in subclass if needed
+  /**
+   * This method will be overrided by subclass to provide specific clean on shutdown.
+   *
+   * @throws Exception An exception may be raised (cf subclass)
+   */
+  protected void specificShutdown() throws Exception {
+    // NOOP. Will be defined in subclass if needed
+  }
+
+  @Override
+  public void shutdown() {
+    // prevent reentrant invocation
+    if (isShutdown())
+      return;
+
+    // perform shutdown login in base
+    super.shutdown();
+
+    // if a monitor is running, then shut it down now
+    if (monitor != null) {
+      // shutdown monitoring thread
+      monitor.shutdown();
+      monitor = null;
     }
 
-    @Override
-    public void shutdown() {
-        // prevent reentrant invocation
-        if(isShutdown())
-            return;
-
-        // perform shutdown login in base
-        super.shutdown();
-
-        // if a monitor is running, then shut it down now
-        if (monitor != null) {
-            // shutdown monitoring thread
-            monitor.shutdown();
-            monitor = null;
-        }
-
-        try {
-            specificShutdown();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+    try {
+      specificShutdown();
+    } catch (Exception e) {
+      throw new RuntimeException(e);
     }
+  }
 }

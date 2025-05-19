@@ -11,98 +11,98 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class PamiIOServiceSimulator extends AbstractIOServiceBouchon implements PamiIOService {
 
-    private final PamiRobotStatus rs;
+  private final PamiRobotStatus rs;
 
-    @Override
-    public void sound() {
-        log.info("Bip Bip Bip ...");
-    }
+  @Override
+  public void sound() {
+    log.info("Bip Bip Bip ...");
+  }
 
 // --------------------------------------------------------- //
-    // -------------------------- INPUT ------------------------ //
-    // --------------------------------------------------------- //
+  // -------------------------- INPUT ------------------------ //
+  // --------------------------------------------------------- //
 
-    // Calages
-    @Override
-    public boolean calagePriseProduitPinceAvant() {
-        return calagePriseProduitPinceAvant(1);
-    }
+  // Calages
+  @Override
+  public boolean calagePriseProduitPinceAvant() {
+    return calagePriseProduitPinceAvant(1);
+  }
 
-    @Override
-    public boolean calagePriseProduitPinceAvant(int mandatorySensors) {
-        return false;
-    }
+  @Override
+  public boolean calagePriseProduitPinceAvant(int mandatorySensors) {
+    return false;
+  }
 
-    @Override
-    public boolean calagePriseProduitPinceArriere() {
-        return calagePriseProduitPinceArriere(1);
-    }
+  @Override
+  public boolean calagePriseProduitPinceArriere() {
+    return calagePriseProduitPinceArriere(1);
+  }
 
-    @Override
-    public boolean calagePriseProduitPinceArriere(int mandatorySensors) {
-        return false;
-    }
+  @Override
+  public boolean calagePriseProduitPinceArriere(int mandatorySensors) {
+    return false;
+  }
 
-    @Override
-    public boolean calagePriseProduitSolAvant() {
-        return calagePriseProduitSolAvant(1);
-    }
+  @Override
+  public boolean calagePriseProduitSolAvant() {
+    return calagePriseProduitSolAvant(1);
+  }
 
-    @Override
-    public boolean calagePriseProduitSolAvant(int mandatorySensors) {
-        return false;
-    }
+  @Override
+  public boolean calagePriseProduitSolAvant(int mandatorySensors) {
+    return false;
+  }
 
-    @Override
-    public boolean calagePriseProduitSolArriere() {
-        return calagePriseProduitSolArriere(1);
-    }
+  @Override
+  public boolean calagePriseProduitSolArriere() {
+    return calagePriseProduitSolArriere(1);
+  }
 
-    @Override
-    public boolean calagePriseProduitSolArriere(int mandatorySensors) {
-        return false;
-    }
+  @Override
+  public boolean calagePriseProduitSolArriere(int mandatorySensors) {
+    return false;
+  }
 
-    @Override
-    public boolean calageAvantGauche() {
-        return rs.calage().contains(TypeCalage.AVANT);
-    }
+  @Override
+  public boolean calageAvantGauche() {
+    return rs.calage().contains(TypeCalage.AVANT);
+  }
 
-    @Override
-    public boolean calageAvantDroit() {
-        return rs.calage().contains(TypeCalage.AVANT);
-    }
+  @Override
+  public boolean calageAvantDroit() {
+    return rs.calage().contains(TypeCalage.AVANT);
+  }
 
-    @Override
-    public boolean calageArriereGauche() {
-        return rs.calage().contains(TypeCalage.ARRIERE);
-    }
+  @Override
+  public boolean calageArriereGauche() {
+    return rs.calage().contains(TypeCalage.ARRIERE);
+  }
 
-    @Override
-    public boolean calageArriereDroit() {
-        return rs.calage().contains(TypeCalage.ARRIERE);
-    }
+  @Override
+  public boolean calageArriereDroit() {
+    return rs.calage().contains(TypeCalage.ARRIERE);
+  }
 
-    // Numerique
+  // Numerique
 
-    @Override
-    public boolean presenceSolGauche(boolean expectedSimulator) {
-        return expectedSimulator;
-    }
+  @Override
+  public boolean presenceSolGauche(boolean expectedSimulator) {
+    return expectedSimulator;
+  }
 
-    @Override
-    public boolean presenceSolDroit(boolean expectedSimulator) {
-        return expectedSimulator;
-    }
+  @Override
+  public boolean presenceSolDroit(boolean expectedSimulator) {
+    return expectedSimulator;
+  }
 
-    // Analogique
+  // Analogique
 
-    // --------------------------------------------------------- //
-    // -------------------------- OUTPUT ----------------------- //
-    // --------------------------------------------------------- //
+  // --------------------------------------------------------- //
+  // -------------------------- OUTPUT ----------------------- //
+  // --------------------------------------------------------- //
 
-    // ----------------------------------------------------------- //
-    // -------------------------- BUSINESS ----------------------- //
-    // ----------------------------------------------------------- //
+  // ----------------------------------------------------------- //
+  // -------------------------- BUSINESS ----------------------- //
+  // ----------------------------------------------------------- //
 
 }

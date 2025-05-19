@@ -14,33 +14,33 @@ import java.util.List;
  */
 public class NoPathFinderImpl extends AbstractPathFinder {
 
-    @Override
-    public void setObstacles(final List<Shape> obstacles) {
-    }
+  @Override
+  public void setObstacles(final List<Shape> obstacles) {
+  }
 
-    @Override
-    public Chemin findPath(Point from, Point to) throws NoPathFoundException {
-        Chemin c = new Chemin();
-        c.addPoint(to);
-        return c;
-    }
+  @Override
+  public Chemin findPath(Point from, Point to) throws NoPathFoundException {
+    Chemin c = new Chemin();
+    c.addPoint(to);
+    return c;
+  }
 
-    @Override
-    public boolean isBlocked(Point point) {
-        return false;
-    }
+  @Override
+  public boolean isBlocked(Point point) {
+    return false;
+  }
 
-    @Override
-    public Point getNearestPoint(Point from, Point to) {
-        return to;
-    }
+  @Override
+  public Point getNearestPoint(Point from, Point to) {
+    return to;
+  }
 
-    @Override
-    public boolean isBlockedByObstacle(Point pointCm) {
-        return false;
-    }
+  @Override
+  public boolean isBlockedByObstacle(Point pointCm) {
+    return false;
+  }
 
-    @Override
-    public void construitGraphDepuisImageNoirEtBlanc(final InputStream is) {
-    }
+  @Override
+  public void construitGraphDepuisImageNoirEtBlanc(final InputStream is) {
+  }
 }

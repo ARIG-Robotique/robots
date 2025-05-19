@@ -19,13 +19,13 @@ import java.util.concurrent.Executors;
 @ComponentScan({"org.arig.robot.scheduler"})
 public class NerellCommonSchedulerContext implements SchedulingConfigurer {
 
-    @Bean(destroyMethod="shutdown")
-    public ExecutorService taskExecutor() {
-        return Executors.newScheduledThreadPool(NerellConstantesConfig.nbThreadScheduledExecutor);
-    }
+  @Bean(destroyMethod = "shutdown")
+  public ExecutorService taskExecutor() {
+    return Executors.newScheduledThreadPool(NerellConstantesConfig.nbThreadScheduledExecutor);
+  }
 
-    @Override
-    public void configureTasks(ScheduledTaskRegistrar taskRegistrar) {
-        taskRegistrar.setScheduler(taskExecutor());
-    }
+  @Override
+  public void configureTasks(ScheduledTaskRegistrar taskRegistrar) {
+    taskRegistrar.setScheduler(taskExecutor());
+  }
 }

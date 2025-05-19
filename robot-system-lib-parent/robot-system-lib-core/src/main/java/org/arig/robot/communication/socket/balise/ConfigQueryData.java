@@ -10,6 +10,6 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class ConfigQueryData implements Serializable {
 
-    private BaliseMode mode;
+  private BaliseMode mode;
 
 }

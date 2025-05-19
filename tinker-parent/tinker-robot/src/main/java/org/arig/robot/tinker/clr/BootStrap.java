@@ -10,18 +10,18 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class BootStrap implements CommandLineRunner {
 
-    private final AbstractPropulsionsMotors motors;
-    private final ServosServicesImpl servosServicesImpl;
+  private final AbstractPropulsionsMotors motors;
+  private final ServosServicesImpl servosServicesImpl;
 
-    @Override
-    public void run(final String... args) throws Exception {
-        motors.init();
-        motors.printVersion();
-        motors.stopAll();
+  @Override
+  public void run(final String... args) throws Exception {
+    motors.init();
+    motors.printVersion();
+    motors.stopAll();
 
-        servosServicesImpl.fourcheHaut();
-        servosServicesImpl.blocageDroitOuvert();
-        servosServicesImpl.blocageGaucheOuvert();
-        servosServicesImpl.translateurCentre();
-    }
+    servosServicesImpl.fourcheHaut();
+    servosServicesImpl.blocageDroitOuvert();
+    servosServicesImpl.blocageGaucheOuvert();
+    servosServicesImpl.translateurCentre();
+  }
 }

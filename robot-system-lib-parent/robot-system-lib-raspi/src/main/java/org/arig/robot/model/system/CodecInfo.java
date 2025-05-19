@@ -10,18 +10,18 @@ import java.io.IOException;
  */
 public class CodecInfo {
 
-    @JsonGetter
-    public boolean isH264Enabled() throws IOException, InterruptedException {
-        return SystemInfo.getCodecH264Enabled();
-    }
+  @JsonGetter
+  public boolean isH264Enabled() throws IOException, InterruptedException {
+    return SystemInfo.getCodecH264Enabled();
+  }
 
-    @JsonGetter
-    public boolean isMPG2Enabled() throws IOException, InterruptedException {
-        return SystemInfo.getCodecMPG2Enabled();
-    }
+  @JsonGetter
+  public boolean isMPG2Enabled() throws IOException, InterruptedException {
+    return SystemInfo.getCodecMPG2Enabled();
+  }
 
-    @JsonGetter
-    public boolean isWVC1Enabled() throws IOException, InterruptedException {
-        return SystemInfo.getCodecWVC1Enabled();
-    }
+  @JsonGetter
+  public boolean isWVC1Enabled() throws IOException, InterruptedException {
+    return SystemInfo.getCodecWVC1Enabled();
+  }
 }

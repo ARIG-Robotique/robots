@@ -15,14 +15,14 @@ import org.springframework.shell.jline.PromptProvider;
 @ComponentScan("org.arig.robot.pami.utils")
 public class PamiUtilsShellContext {
 
-    @Bean
-    public PromptProvider myPromptProvider() {
-        String pamiId = System.getProperty(ConstantesConfig.keyPamiId);
-        return () -> new AttributedString(pamiId + "-utils:> ", AttributedStyle.DEFAULT.background(AttributedStyle.YELLOW));
-    }
+  @Bean
+  public PromptProvider myPromptProvider() {
+    String pamiId = System.getProperty(ConstantesConfig.keyPamiId);
+    return () -> new AttributedString(pamiId + "-utils:> ", AttributedStyle.DEFAULT.background(AttributedStyle.YELLOW));
+  }
 
-    @Bean
-    public PamiShellInputReader shellInputReader(@Lazy LineReader lineReader) {
-        return new PamiShellInputReader(lineReader);
-    }
+  @Bean
+  public PamiShellInputReader shellInputReader(@Lazy LineReader lineReader) {
+    return new PamiShellInputReader(lineReader);
+  }
 }

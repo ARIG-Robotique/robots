@@ -8,4 +8,5 @@ import org.arig.robot.model.lidar.ScanInfos;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class GrabDataResponse extends AbstractResponseWithData<LidarAction, ScanInfos> { }
+public class GrabDataResponse extends AbstractResponseWithData<LidarAction, ScanInfos> {
+}

@@ -11,18 +11,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class NerellSimulatorCapteursController {
 
-    @Autowired
-    private NerellIOServiceSimulator ioServiceBouchon;
+  @Autowired
+  private NerellIOServiceSimulator ioServiceBouchon;
 
-    @PostMapping(AbstractCapteursController.ROOT_PATH + "/tirette")
-    public void setTirette(@RequestBody Boolean value) {
-        log.info("Définition de la valeur de la tirette : {}", value);
-        ioServiceBouchon.tirette(value);
-    }
+  @PostMapping(AbstractCapteursController.ROOT_PATH + "/tirette")
+  public void setTirette(@RequestBody Boolean value) {
+    log.info("Définition de la valeur de la tirette : {}", value);
+    ioServiceBouchon.tirette(value);
+  }
 
-    @PostMapping(AbstractCapteursController.ROOT_PATH + "/au")
-    public void setAu(@RequestBody Boolean value) {
-        log.info("Définition de la valeur de l'arret d'urgence : {}", value);
-        ioServiceBouchon.au(value);
-    }
+  @PostMapping(AbstractCapteursController.ROOT_PATH + "/au")
+  public void setAu(@RequestBody Boolean value) {
+    log.info("Définition de la valeur de l'arret d'urgence : {}", value);
+    ioServiceBouchon.au(value);
+  }
 }

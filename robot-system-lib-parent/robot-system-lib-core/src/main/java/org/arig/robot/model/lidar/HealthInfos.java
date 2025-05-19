@@ -12,11 +12,11 @@ import java.io.Serializable;
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class HealthInfos implements Serializable {
-    private HealthState state;
-    private Short value;
-    private Short errorCode;
+  private HealthState state;
+  private Short value;
+  private Short errorCode;
 
-    public boolean isOk() {
-        return state != null && state == HealthState.OK;
-    }
+  public boolean isOk() {
+    return state != null && state == HealthState.OK;
+  }
 }

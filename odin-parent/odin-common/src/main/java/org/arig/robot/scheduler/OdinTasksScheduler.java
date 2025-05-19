@@ -17,75 +17,75 @@ import org.springframework.stereotype.Component;
 @Component
 public class OdinTasksScheduler {
 
-    @Autowired
-    private OdinRobotStatus rs;
+  @Autowired
+  private OdinRobotStatus rs;
 
-    @Autowired
-    private AvoidingService avoidingService;
+  @Autowired
+  private AvoidingService avoidingService;
 
-    @Autowired
-    private SystemBlockerManager systemBlockerManager;
+  @Autowired
+  private SystemBlockerManager systemBlockerManager;
 
-    @Autowired
-    private OdinEcranService ecranService;
+  @Autowired
+  private OdinEcranService ecranService;
 
-    @Autowired
-    private BaliseService baliseService;
+  @Autowired
+  private BaliseService baliseService;
 
-    @Autowired
-    private IOService ioService;
+  @Autowired
+  private IOService ioService;
 
-    @Autowired
-    private AbstractEnergyService energyService;
+  @Autowired
+  private AbstractEnergyService energyService;
 
-    @Autowired
-    protected MonitoringWrapper monitoringWrapper;
+  @Autowired
+  protected MonitoringWrapper monitoringWrapper;
 
-    @Scheduled(fixedRate = 1000)
-    public void ecranTask() {
-        ecranService.process();
+  @Scheduled(fixedRate = 1000)
+  public void ecranTask() {
+    ecranService.process();
+  }
+
+  @Scheduled(fixedDelay = 20)
+  public void obstacleAvoidanceTask() {
+    if (rs.avoidanceEnabled()) {
+      avoidingService.process();
+    }
+  }
+
+  @Scheduled(fixedDelay = 500)
+  public void systemBlockerManagerTask() {
+    if (rs.matchEnabled()) {
+      systemBlockerManager.process();
+    }
+  }
+
+  @Scheduled(fixedDelay = 5000)
+  public void systemCheckTensionTaks() {
+    if (rs.matchEnabled()) {
+      if (!energyService.checkServos()) {
+        ioService.disableAlimServos();
+      }
+      if (!energyService.checkMoteurs()) {
+        ioService.disableAlimMoteurs();
+      }
+    }
+  }
+
+  @Scheduled(fixedDelay = 2000)
+  public void updateBaliseStatus() {
+    if (!rs.baliseEnabled()) {
+      return;
     }
 
-    @Scheduled(fixedDelay = 20)
-    public void obstacleAvoidanceTask() {
-        if (rs.avoidanceEnabled()) {
-            avoidingService.process();
-        }
+    if (!baliseService.isConnected()) {
+      baliseService.tryConnect();
+
+    } else {
+      if (!rs.twoRobots()) {
+        baliseService.startDetection();
+      }
+      baliseService.updateStatus();
     }
-
-    @Scheduled(fixedDelay = 500)
-    public void systemBlockerManagerTask() {
-        if (rs.matchEnabled()) {
-            systemBlockerManager.process();
-        }
-    }
-
-    @Scheduled(fixedDelay = 5000)
-    public void systemCheckTensionTaks() {
-        if (rs.matchEnabled()) {
-            if (!energyService.checkServos()) {
-                ioService.disableAlimServos();
-            }
-            if (!energyService.checkMoteurs()) {
-                ioService.disableAlimMoteurs();
-            }
-        }
-    }
-
-    @Scheduled(fixedDelay = 2000)
-    public void updateBaliseStatus() {
-        if (!rs.baliseEnabled()) {
-            return;
-        }
-
-        if (!baliseService.isConnected()) {
-            baliseService.tryConnect();
-
-        } else {
-            if (!rs.twoRobots()) {
-                baliseService.startDetection();
-            }
-            baliseService.updateStatus();
-        }
-    }
+  }
 }

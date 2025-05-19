@@ -4,156 +4,156 @@ import org.arig.robot.system.pathfinding.PathFinderAlgorithm;
 
 public interface OdinConstantesConfig {
 
-    // Seuil de detection pour l'alimentation
-    double seuilAlimentationServosVolts = 3;
-    double seuilAlimentationMoteursVolts = 7;
+  // Seuil de detection pour l'alimentation
+  double seuilAlimentationServosVolts = 3;
+  double seuilAlimentationMoteursVolts = 7;
 
-    // Nb Thread Pool Scheduler
-    int nbThreadScheduledExecutor = 20;
+  // Nb Thread Pool Scheduler
+  int nbThreadScheduledExecutor = 20;
 
-    // Nb Thread Pool Async
-    int nbThreadAsyncExecutor = 10;
+  // Nb Thread Pool Async
+  int nbThreadAsyncExecutor = 10;
 
-    // Configuration asservissement //
-    double asservTimeMs = 20;
-    double asservTimeS = OdinConstantesConfig.asservTimeMs / 1000;
+  // Configuration asservissement //
+  double asservTimeMs = 20;
+  double asservTimeS = OdinConstantesConfig.asservTimeMs / 1000;
 
-    int i2cReadTimeMs = 20;
-    double calageGlobalTimeMs = 100;
-    double calageCourtTimeMs = 10;
+  int i2cReadTimeMs = 20;
+  double calageGlobalTimeMs = 100;
+  double calageCourtTimeMs = 10;
 
-    // -------------------------------- //
-    // Configuration moteurs propulsion //
-    // -------------------------------- //
-    int numeroMoteurGauche = 2;
-    int numeroMoteurDroit = 1;
+  // -------------------------------- //
+  // Configuration moteurs propulsion //
+  // -------------------------------- //
+  int numeroMoteurGauche = 2;
+  int numeroMoteurDroit = 1;
 
-    // ----------------------------- //
-    // Configuration des convertions //
-    // ----------------------------- //
+  // ----------------------------- //
+  // Configuration des convertions //
+  // ----------------------------- //
 
-    //double entraxe = 280;
-    double entraxe = 279.4632765693719;
+  //double entraxe = 280;
+  double entraxe = 279.4632765693719;
 
-    // Diam 47mm => périmètre 147.655 mm
-    // 4096 p => 147.65485471872 mm : 4096 / 147.65485471872000000 = 27.74036795337890000
-    //double countPerMm = 27.74036795337890000; // Théorique
-    //double countPerMm = 27.556656907330034; // Manuel 2700 -> mesure 2718 depuis le théorique
-    //double countPerMm = 27.456813947520867; // Manuel 2750 -> 2760 depuis 2718
-    double countPerMm = 27.44683328087328; // Manuel 2750 -> 2751 depuis 2760
+  // Diam 47mm => périmètre 147.655 mm
+  // 4096 p => 147.65485471872 mm : 4096 / 147.65485471872000000 = 27.74036795337890000
+  //double countPerMm = 27.74036795337890000; // Théorique
+  //double countPerMm = 27.556656907330034; // Manuel 2700 -> mesure 2718 depuis le théorique
+  //double countPerMm = 27.456813947520867; // Manuel 2750 -> 2760 depuis 2718
+  double countPerMm = 27.44683328087328; // Manuel 2750 -> 2751 depuis 2760
 
-    // Entraxe 280mm => périmètre 879.64594300514200000 mm (1 roue)
-    // 879.64594300514200000 mm => 180° : 879.64594300514200000 * 27.74036795337890000 / 180 =
-    //double countPerDeg = 135.56501182033100000; // Théorique
-    //double countPerDeg = 133.86663837508056; // 5 tours
-    //double countPerDeg = 133.86778649410599; // 10 tours
+  // Entraxe 280mm => périmètre 879.64594300514200000 mm (1 roue)
+  // 879.64594300514200000 mm => 180° : 879.64594300514200000 * 27.74036795337890000 / 180 =
+  //double countPerDeg = 135.56501182033100000; // Théorique
+  //double countPerDeg = 133.86663837508056; // 5 tours
+  //double countPerDeg = 133.86778649410599; // 10 tours
 
-    double coefCodeurDroit = 1.0;
-    // 10 cycles : 0.9991086296802006
-    // 20 cycles : 0.9990845254418886
-    // 30 cycles : 0.9990466918451644
-    // 30 cycles : 0.9990741125307827
-    double coefCodeurGauche = (0.9990466918451644 + 0.9990741125307827) / 2; // 0.9992895892534229 <- 5 cycles 3: 0.9992203095908642 old:(0.9989161414636104 + 0.998509395055139) / 2;
+  double coefCodeurDroit = 1.0;
+  // 10 cycles : 0.9991086296802006
+  // 20 cycles : 0.9990845254418886
+  // 30 cycles : 0.9990466918451644
+  // 30 cycles : 0.9990741125307827
+  double coefCodeurGauche = (0.9990466918451644 + 0.9990741125307827) / 2; // 0.9992895892534229 <- 5 cycles 3: 0.9992203095908642 old:(0.9989161414636104 + 0.998509395055139) / 2;
 
 
-    // ------------------------ //
-    // Configuration des rampes //
-    // ------------------------ //
-    double gainVitesseRampeDistance = 1.5;
-    double gainVitesseRampeOrientation = gainVitesseRampeDistance * 2;
-    double gainVitesseRampeDistanceSimulateur = 3;
-    double gainVitesseRampeOrientationSimulateur = gainVitesseRampeDistanceSimulateur * 2;
+  // ------------------------ //
+  // Configuration des rampes //
+  // ------------------------ //
+  double gainVitesseRampeDistance = 1.5;
+  double gainVitesseRampeOrientation = gainVitesseRampeDistance * 2;
+  double gainVitesseRampeDistanceSimulateur = 3;
+  double gainVitesseRampeOrientationSimulateur = gainVitesseRampeDistanceSimulateur * 2;
 
-    double rampAccDistance = 1000.0; // en mm/s2
-    double rampDecDistance = 1000.0; // en mm/s2
+  double rampAccDistance = 1000.0; // en mm/s2
+  double rampDecDistance = 1000.0; // en mm/s2
 
-    double rampAccOrientation = 1000.0; // en mm/s2
-    double rampDecOrientation = 1000.0; // en mm/s2
+  double rampAccOrientation = 1000.0; // en mm/s2
+  double rampDecOrientation = 1000.0; // en mm/s2
 
-    // -------------------------- //
-    // Configuration des vitesses //
-    // -------------------------- //
+  // -------------------------- //
+  // Configuration des vitesses //
+  // -------------------------- //
 
-    long vitesseOrientationMax = 1000;
-    long vitesseOrientationMin = 150;
+  long vitesseOrientationMax = 1000;
+  long vitesseOrientationMin = 150;
 
-    long vitesseMax = 1000;
-    long vitesseMin = 100;
+  long vitesseMax = 1000;
+  long vitesseMin = 100;
 
-    // -------------- //
-    // Parametres PID //
-    // -------------- //
-    double kcrDistance = 21.5;
-    double tcrDistance = 0.04;
-    double kpDistance = 30;
-    double kiDistance = 0.005;
-    double kdDistance = 50;
-    double kpDistanceSimu = 12.9;
-    double kiDistanceSimu = 0.0;
-    double kdDistanceSimu = 0.008;
+  // -------------- //
+  // Parametres PID //
+  // -------------- //
+  double kcrDistance = 21.5;
+  double tcrDistance = 0.04;
+  double kpDistance = 30;
+  double kiDistance = 0.005;
+  double kdDistance = 50;
+  double kpDistanceSimu = 12.9;
+  double kiDistanceSimu = 0.0;
+  double kdDistanceSimu = 0.008;
 
-    double kcrOrientation = 10.0;
-    double tcrOrientation = 0.05;
-    double kpOrientation = 30;
-    double kiOrientation = 0.005;
-    double kdOrientation = 50;
-    double kpOrientationSimu = 6.0;
-    double kiOrientationSimu = 0.0;
-    double kdOrientationSimu = 0.01;
+  double kcrOrientation = 10.0;
+  double tcrOrientation = 0.05;
+  double kpOrientation = 30;
+  double kiOrientation = 0.005;
+  double kdOrientation = 50;
+  double kpOrientationSimu = 6.0;
+  double kiOrientationSimu = 0.0;
+  double kdOrientationSimu = 0.01;
 
-    // --------------------------- //
-    // Paramètre mouvement manager //
-    // --------------------------- //
-    double arretDistanceMm = 1;
-    double arretOrientDeg = 0.5;
-    double approcheAvecFreinDistanceMm = 10;
-    double approcheAvecFreinOrientationDeg = 5;
-    double approcheSansFreinDistanceMm = 50;
-    double approcheSansFreinOrientationDeg = 5;
-    double startAngleDemiTourDeg = 75;
-    double startAngleLimitVitesseDistance = 15;
+  // --------------------------- //
+  // Paramètre mouvement manager //
+  // --------------------------- //
+  double arretDistanceMm = 1;
+  double arretOrientDeg = 0.5;
+  double approcheAvecFreinDistanceMm = 10;
+  double approcheAvecFreinOrientationDeg = 5;
+  double approcheSansFreinDistanceMm = 50;
+  double approcheSansFreinOrientationDeg = 5;
+  double startAngleDemiTourDeg = 75;
+  double startAngleLimitVitesseDistance = 15;
 
-    // TODO : A déterminer de manière empirique
-    double seuilErreurOrientationDeg = arretOrientDeg;
-    double seuilErreurDistanceMm = arretDistanceMm;
+  // TODO : A déterminer de manière empirique
+  double seuilErreurOrientationDeg = arretOrientDeg;
+  double seuilErreurDistanceMm = arretDistanceMm;
 
-    double maxErrorSumDistance = 20000;
-    double maxErrorSumOrientation = 40000;
+  double maxErrorSumDistance = 20000;
+  double maxErrorSumOrientation = 40000;
 
-    // -------------------------- //
-    // Paramètre Physiques        //
-    // -------------------------- //
+  // -------------------------- //
+  // Paramètre Physiques        //
+  // -------------------------- //
 
-    double dstCallage = 110.0; // dos du robot <=> milieu du robot
+  double dstCallage = 110.0; // dos du robot <=> milieu du robot
 
-    // -------------------------- //
-    // Paramètre Avoiding service //
-    // -------------------------- //
+  // -------------------------- //
+  // Paramètre Avoiding service //
+  // -------------------------- //
 
-    int avoidanceWaitTimeMs = 500;
-    int avoidanceWaitTimeLongMs = 5000;
-    int avoidancePathRefreshTimeMs = 2000;
+  int avoidanceWaitTimeMs = 500;
+  int avoidanceWaitTimeLongMs = 5000;
+  int avoidancePathRefreshTimeMs = 2000;
 
-    // ---------------------- //
-    // Paramètre path finding //
-    // ---------------------- //
-    PathFinderAlgorithm pathFindingAlgo = PathFinderAlgorithm.ANYA16;
-    int pathFindingAngle = 45;
-    int pathFindingAngleSafe = 50;
-    int pathFindingSeuilProximite = 440;
-    int pathFindingSeuilProximiteSafe = 500;
-    int pathFindingSeuilProximiteArig = 390;
-    int pathFindingTailleObstacle = OdinConstantesConfig.pathFindingSeuilProximite * 2 + 50;
-    int pathFindingTailleObstacleArig = OdinConstantesConfig.pathFindingSeuilProximiteArig * 2 + 50;
+  // ---------------------- //
+  // Paramètre path finding //
+  // ---------------------- //
+  PathFinderAlgorithm pathFindingAlgo = PathFinderAlgorithm.ANYA16;
+  int pathFindingAngle = 45;
+  int pathFindingAngleSafe = 50;
+  int pathFindingSeuilProximite = 440;
+  int pathFindingSeuilProximiteSafe = 500;
+  int pathFindingSeuilProximiteArig = 390;
+  int pathFindingTailleObstacle = OdinConstantesConfig.pathFindingSeuilProximite * 2 + 50;
+  int pathFindingTailleObstacleArig = OdinConstantesConfig.pathFindingSeuilProximiteArig * 2 + 50;
 
-    int lidarClusterSizeMm = 50;
-    int lidarOffsetPointMm = 30; // "recule" les points détectés pour prendre en compte qu'on ne detecte que les faces avant
+  int lidarClusterSizeMm = 50;
+  int lidarOffsetPointMm = 30; // "recule" les points détectés pour prendre en compte qu'on ne detecte que les faces avant
 
-    // ----------------- //
-    // Paramètres métier //
-    // ----------------- //
+  // ----------------- //
+  // Paramètres métier //
+  // ----------------- //
 
-    int WAIT_LED = 200;
-    int TIMEOUT_POMPE = 1000;
-    int TIMEOUT_COLOR = 800;
+  int WAIT_LED = 200;
+  int TIMEOUT_POMPE = 1000;
+  int TIMEOUT_COLOR = 800;
 }

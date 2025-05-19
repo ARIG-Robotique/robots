@@ -14,47 +14,47 @@ import org.springframework.stereotype.Component;
 @Component
 public class EchappementAruco extends AbstractEurobotAction {
 
-    @Getter
-    private final boolean completed = false;
+  @Getter
+  private final boolean completed = false;
 
-    @Override
-    public String name() {
-        return EurobotConfig.ACTION_ECHAPPEMENT_ARUCO_PREFIX + robotName.id();
+  @Override
+  public String name() {
+    return EurobotConfig.ACTION_ECHAPPEMENT_ARUCO_PREFIX + robotName.id();
+  }
+
+  @Override
+  public int executionTimeMs() {
+    return 0;
+  }
+
+  @Override
+  public Point entryPoint() {
+    if (robotName.id() == RobotName.RobotIdentification.NERELL) {
+      return new Point(getX(1500), 550);
+    } else {
+      return new Point(getX(1500), 950);
     }
+  }
 
-    @Override
-    public int executionTimeMs() {
-        return 0;
+  @Override
+  public int order() {
+    return -100 + tableUtils.alterOrder(entryPoint());
+  }
+
+  @Override
+  public boolean isValid() {
+    return isTimeValid() && rs.getRemainingTime() > EurobotConfig.validEchappementRemainingTime;
+  }
+
+  @Override
+  public void execute() {
+    try {
+      mv.setVitesse(config.vitesse(80), config.vitesseOrientation());
+      mv.pathTo(entryPoint());
+
+    } catch (AvoidingException | NoPathFoundException e) {
+      updateValidTime();
+      log.error("Erreur d'éxecution de l'action : {}", e.getMessage());
     }
-
-    @Override
-    public Point entryPoint() {
-        if (robotName.id() == RobotName.RobotIdentification.NERELL) {
-            return new Point(getX(1500), 550);
-        } else {
-            return new Point(getX(1500), 950);
-        }
-    }
-
-    @Override
-    public int order() {
-        return -100 + tableUtils.alterOrder(entryPoint());
-    }
-
-    @Override
-    public boolean isValid() {
-        return isTimeValid() && rs.getRemainingTime() > EurobotConfig.validEchappementRemainingTime;
-    }
-
-    @Override
-    public void execute() {
-        try {
-            mv.setVitesse(config.vitesse(80), config.vitesseOrientation());
-            mv.pathTo(entryPoint());
-
-        } catch (AvoidingException | NoPathFoundException e) {
-            updateValidTime();
-            log.error("Erreur d'éxecution de l'action : {}", e.getMessage());
-        }
-    }
+  }
 }

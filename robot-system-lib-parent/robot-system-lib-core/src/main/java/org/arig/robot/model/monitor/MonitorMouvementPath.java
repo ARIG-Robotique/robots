@@ -14,7 +14,7 @@ import java.util.Collection;
 @EqualsAndHashCode(callSuper = true)
 public class MonitorMouvementPath extends AbstractMonitorMouvement {
 
-    private final TypeMouvement type = TypeMouvement.PATH;
+  private final TypeMouvement type = TypeMouvement.PATH;
 
-    private Collection<Point> path;
+  private Collection<Point> path;
 }

@@ -9,7 +9,7 @@ import org.arig.robot.communication.socket.ecran.enums.EcranAction;
 @EqualsAndHashCode(callSuper = true)
 public class GetConfigQuery extends AbstractQuery<EcranAction> {
 
-    public GetConfigQuery() {
-        super(EcranAction.GET_CONFIG);
-    }
+  public GetConfigQuery() {
+    super(EcranAction.GET_CONFIG);
+  }
 }

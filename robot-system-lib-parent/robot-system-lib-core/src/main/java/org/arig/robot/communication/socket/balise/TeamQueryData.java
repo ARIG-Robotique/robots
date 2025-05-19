@@ -9,6 +9,6 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class TeamQueryData implements Serializable {
 
-    private String team;
+  private String team;
 
 }

@@ -8,4 +8,5 @@ import org.arig.robot.model.ecran.AbstractEcranConfig;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class GetConfigResponse extends AbstractResponseWithData<EcranAction, AbstractEcranConfig> { }
+public class GetConfigResponse extends AbstractResponseWithData<EcranAction, AbstractEcranConfig> {
+}

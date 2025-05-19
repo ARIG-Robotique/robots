@@ -6,17 +6,17 @@ import org.junit.jupiter.api.Test;
 
 public class ServoTest {
 
-    @Test
-    public void testAngular() {
-        Servo servo = new Servo()
-                .angular()
-                .angle(-44, 2430)
-                .angle(0, 1960)
-                .angle(90, 1090)
-                .angle(135, 580)
-                .build();
+  @Test
+  public void testAngular() {
+    Servo servo = new Servo()
+      .angular()
+      .angle(-44, 2430)
+      .angle(0, 1960)
+      .angle(90, 1090)
+      .angle(135, 580)
+      .build();
 
-        Assertions.assertEquals(1090, servo.angleToPosition(90));
-    }
+    Assertions.assertEquals(1090, servo.angleToPosition(90));
+  }
 
 }

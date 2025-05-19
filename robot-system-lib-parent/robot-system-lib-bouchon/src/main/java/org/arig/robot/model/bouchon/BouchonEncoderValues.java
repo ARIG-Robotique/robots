@@ -10,14 +10,14 @@ import lombok.experimental.Accessors;
 @Accessors(fluent = true, chain = true)
 public class BouchonEncoderValues {
 
-    private int vitesseMoteur;
-    private double gauche, droit;
+  private int vitesseMoteur;
+  private double gauche, droit;
 
-    public boolean vitessePositive() {
-        return vitesseMoteur >= 0;
-    }
+  public boolean vitessePositive() {
+    return vitesseMoteur >= 0;
+  }
 
-    public boolean vitesseNegative() {
-        return vitesseMoteur <= 0;
-    }
+  public boolean vitesseNegative() {
+    return vitesseMoteur <= 0;
+  }
 }

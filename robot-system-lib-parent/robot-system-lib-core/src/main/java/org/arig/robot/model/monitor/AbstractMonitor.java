@@ -11,6 +11,6 @@ import java.util.concurrent.TimeUnit;
 @Data
 public class AbstractMonitor implements Serializable {
 
-    private final Long time = System.currentTimeMillis();
-    private final TimeUnit precision = TimeUnit.MILLISECONDS;
+  private final Long time = System.currentTimeMillis();
+  private final TimeUnit precision = TimeUnit.MILLISECONDS;
 }

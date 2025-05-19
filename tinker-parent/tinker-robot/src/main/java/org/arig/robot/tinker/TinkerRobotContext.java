@@ -20,54 +20,54 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class TinkerRobotContext {
 
-    protected RobotName robotName() {
-        return RobotName.builder()
-                .id(RobotIdentification.TINKER)
-                .name("Tinker (JoyCon drived)")
-                .version("2020 (Sail the World)")
-                .build();
-    }
+  protected RobotName robotName() {
+    return RobotName.builder()
+      .id(RobotIdentification.TINKER)
+      .name("Tinker (JoyCon drived)")
+      .version("2020 (Sail the World)")
+      .build();
+  }
 
-    @Bean
-    public RobotName robotNameBean() {
-        return robotName();
-    }
+  @Bean
+  public RobotName robotNameBean() {
+    return robotName();
+  }
 
-    @Bean
-    public ServosServices servosServices(PCA9685GpioProvider pca9685GpioProvider) {
-        return new ServosServicesImpl(pca9685GpioProvider);
-    }
+  @Bean
+  public ServosServices servosServices(PCA9685GpioProvider pca9685GpioProvider) {
+    return new ServosServicesImpl(pca9685GpioProvider);
+  }
 
-    @Bean
-    public JoyConLeftEventListener leftEventListener(ServosServices servosServices, AbstractPropulsionsMotors motors) {
-        return new JoyConLeftEventListener(servosServices, motors);
-    }
+  @Bean
+  public JoyConLeftEventListener leftEventListener(ServosServices servosServices, AbstractPropulsionsMotors motors) {
+    return new JoyConLeftEventListener(servosServices, motors);
+  }
 
-    @Bean
-    public JoyConRightEventListener rightEventListener(ServosServices servosServices, AbstractPropulsionsMotors motors) {
-        return new JoyConRightEventListener(servosServices, motors);
-    }
+  @Bean
+  public JoyConRightEventListener rightEventListener(ServosServices servosServices, AbstractPropulsionsMotors motors) {
+    return new JoyConRightEventListener(servosServices, motors);
+  }
 
-    @Bean
-    public ControllerEventListener proEventListener(JoyConLeftEventListener left, JoyConRightEventListener right) {
-        return (event) -> {
-            left.handleInput(event);
-            right.handleInput(event);
-        };
-    }
+  @Bean
+  public ControllerEventListener proEventListener(JoyConLeftEventListener left, JoyConRightEventListener right) {
+    return (event) -> {
+      left.handleInput(event);
+      right.handleInput(event);
+    };
+  }
 
-    @Bean(destroyMethod = "close")
-    public JoyConLeft joyConLeft(JoyConLeftEventListener leftEventListener) {
-        return new JoyConLeft(leftEventListener);
-    }
+  @Bean(destroyMethod = "close")
+  public JoyConLeft joyConLeft(JoyConLeftEventListener leftEventListener) {
+    return new JoyConLeft(leftEventListener);
+  }
 
-    @Bean(destroyMethod = "close")
-    public JoyConRight joyConRight(JoyConRightEventListener rightEventListener) {
-        return new JoyConRight(rightEventListener);
-    }
+  @Bean(destroyMethod = "close")
+  public JoyConRight joyConRight(JoyConRightEventListener rightEventListener) {
+    return new JoyConRight(rightEventListener);
+  }
 
-    @Bean(destroyMethod = "close")
-    public ProController pro(ControllerEventListener proEventListener) {
-        return new ProController(proEventListener);
-    }
+  @Bean(destroyMethod = "close")
+  public ProController pro(ControllerEventListener proEventListener) {
+    return new ProController(proEventListener);
+  }
 }

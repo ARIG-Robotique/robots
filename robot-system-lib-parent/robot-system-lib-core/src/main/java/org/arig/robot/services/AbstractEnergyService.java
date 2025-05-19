@@ -9,59 +9,61 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Slf4j
 public abstract class AbstractEnergyService {
 
-    @Autowired
-    private MonitoringWrapper monitoringWrapper;
+  @Autowired
+  private MonitoringWrapper monitoringWrapper;
 
-    @Autowired
-    private RobotConfig robotConfig;
+  @Autowired
+  private RobotConfig robotConfig;
 
-    public abstract double tensionServos();
-    public abstract double courantServos();
+  public abstract double tensionServos();
 
-    public abstract double tensionMoteurs();
-    public abstract double courantMoteurs();
+  public abstract double courantServos();
 
-    public boolean checkServos() {
-        return checkServos(true);
+  public abstract double tensionMoteurs();
+
+  public abstract double courantMoteurs();
+
+  public boolean checkServos() {
+    return checkServos(true);
+  }
+
+  public boolean checkServos(boolean withLog) {
+    final double tension = tensionServos();
+    final double courant = courantServos();
+
+    if (withLog) {
+      log.info("Energy servos : {} V ; {} A ; seuil tension {} V", tension, courant, robotConfig.seuilTensionServos());
     }
 
-    public boolean checkServos(boolean withLog) {
-        final double tension = tensionServos();
-        final double courant = courantServos();
+    // Construction du monitoring
+    final MonitorTimeSerie serie = new MonitorTimeSerie()
+      .measurementName("power")
+      .addField("servosTension", tension)
+      .addField("servosCourant", courant);
+    monitoringWrapper.addTimeSeriePoint(serie);
 
-        if (withLog) {
-            log.info("Energy servos : {} V ; {} A ; seuil tension {} V", tension, courant, robotConfig.seuilTensionServos());
-        }
+    return tension > robotConfig.seuilTensionServos();
+  }
 
-        // Construction du monitoring
-        final MonitorTimeSerie serie = new MonitorTimeSerie()
-                .measurementName("power")
-                .addField("servosTension", tension)
-                .addField("servosCourant", courant);
-        monitoringWrapper.addTimeSeriePoint(serie);
+  public boolean checkMoteurs() {
+    return checkMoteurs(true);
+  }
 
-        return tension > robotConfig.seuilTensionServos();
+  public boolean checkMoteurs(boolean withLog) {
+    final double tension = tensionMoteurs();
+    final double courant = courantMoteurs();
+
+    if (withLog) {
+      log.info("Energy moteurs : {} V ; {} A ; seuil tension {} V", tension, courant, robotConfig.seuilTensionMoteurs());
     }
 
-    public boolean checkMoteurs() {
-        return checkMoteurs(true);
-    }
+    // Construction du monitoring
+    final MonitorTimeSerie serie = new MonitorTimeSerie()
+      .measurementName("power")
+      .addField("moteursTension", tension)
+      .addField("moteursCourant", courant);
+    monitoringWrapper.addTimeSeriePoint(serie);
 
-    public boolean checkMoteurs(boolean withLog) {
-        final double tension = tensionMoteurs();
-        final double courant = courantMoteurs();
-
-        if (withLog) {
-            log.info("Energy moteurs : {} V ; {} A ; seuil tension {} V", tension, courant, robotConfig.seuilTensionMoteurs());
-        }
-
-        // Construction du monitoring
-        final MonitorTimeSerie serie = new MonitorTimeSerie()
-                .measurementName("power")
-                .addField("moteursTension", tension)
-                .addField("moteursCourant", courant);
-        monitoringWrapper.addTimeSeriePoint(serie);
-
-        return tension > robotConfig.seuilTensionMoteurs();
-    }
+    return tension > robotConfig.seuilTensionMoteurs();
+  }
 }

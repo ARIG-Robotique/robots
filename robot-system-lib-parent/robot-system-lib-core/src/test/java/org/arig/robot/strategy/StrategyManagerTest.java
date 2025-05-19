@@ -15,15 +15,15 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ContextConfiguration(classes = {StrategyManagerTestContext.class})
 public class StrategyManagerTest {
 
-    @Autowired
-    private StrategyManager sm;
+  @Autowired
+  private StrategyManager sm;
 
-    @Test
-    public void testStrategyManagerList() {
-        while(sm.actionsCount() != 0) {
-            sm.execute();
-        }
-
-        sm.execute();
+  @Test
+  public void testStrategyManagerList() {
+    while (sm.actionsCount() != 0) {
+      sm.execute();
     }
+
+    sm.execute();
+  }
 }

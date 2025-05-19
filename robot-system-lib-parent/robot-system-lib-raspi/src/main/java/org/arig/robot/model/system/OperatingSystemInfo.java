@@ -11,28 +11,28 @@ import java.text.ParseException;
  */
 public class OperatingSystemInfo {
 
-    @JsonGetter
-    public String getName() {
-        return SystemInfo.getOsName();
-    }
+  @JsonGetter
+  public String getName() {
+    return SystemInfo.getOsName();
+  }
 
-    @JsonGetter
-    public String getVersion() {
-        return SystemInfo.getOsVersion();
-    }
+  @JsonGetter
+  public String getVersion() {
+    return SystemInfo.getOsVersion();
+  }
 
-    @JsonGetter
-    public String getArchitecture() {
-        return SystemInfo.getOsArch();
-    }
+  @JsonGetter
+  public String getArchitecture() {
+    return SystemInfo.getOsArch();
+  }
 
-    @JsonGetter
-    public String getFirmwareBuild() throws IOException, InterruptedException {
-        return SystemInfo.getOsFirmwareBuild();
-    }
+  @JsonGetter
+  public String getFirmwareBuild() throws IOException, InterruptedException {
+    return SystemInfo.getOsFirmwareBuild();
+  }
 
-    @JsonGetter
-    public String getFirmwareDate() throws IOException, InterruptedException, ParseException {
-        return SystemInfo.getOsFirmwareDate();
-    }
+  @JsonGetter
+  public String getFirmwareDate() throws IOException, InterruptedException, ParseException {
+    return SystemInfo.getOsFirmwareDate();
+  }
 }

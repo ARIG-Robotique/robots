@@ -1,9 +1,9 @@
 description = "ARIG Association - Robots"
 
 tasks.wrapper {
-	description = "Generates gradlew[.bat] scripts"
-	gradleVersion = "8.1.1"
-	distributionType = Wrapper.DistributionType.ALL
+    description = "Generates gradlew[.bat] scripts"
+    gradleVersion = "8.1.1"
+    distributionType = Wrapper.DistributionType.ALL
 }
 
 // ********************* OLD ************************* //

@@ -20,53 +20,53 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ExtendWith(SpringExtension.class)
 abstract class LD19LidarTelemeterOverSocketTest {
 
-    static LD19LidarTelemeterOverSocket ldLidar;
+  static LD19LidarTelemeterOverSocket ldLidar;
 
-    @AfterAll
-    static void stopTest() {
-        if (ldLidar != null) {
-            ldLidar.end();
-        }
+  @AfterAll
+  static void stopTest() {
+    if (ldLidar != null) {
+      ldLidar.end();
+    }
+  }
+
+  @Test
+  void testDeviceInfos() {
+    DeviceInfos infos = ldLidar.deviceInfo();
+    Assertions.assertNotNull(infos);
+
+    Assertions.assertEquals("ldlidar", infos.getDriver());
+    Assertions.assertEquals("v2.3.1", infos.getFirmwareVersion());
+    Assertions.assertNull(infos.getHardwareVersion());
+    Assertions.assertNull(infos.getSerialNumber());
+  }
+
+  @Test
+  void testHealthInfo() {
+    HealthInfos infos = ldLidar.healthInfo();
+    Assertions.assertNotNull(infos);
+    Assertions.assertEquals(HealthState.OK, infos.getState());
+  }
+
+  @Test
+  void testGrabData() {
+    HealthInfos health = ldLidar.healthInfo();
+    if (health.getState() != HealthState.OK) {
+      Assertions.fail("Erreur de santé du RPLidar " + health.getState());
     }
 
-    @Test
-    void testDeviceInfos() {
-        DeviceInfos infos = ldLidar.deviceInfo();
-        Assertions.assertNotNull(infos);
+    ldLidar.startScan();
 
-        Assertions.assertEquals("ldlidar", infos.getDriver());
-        Assertions.assertEquals("v2.3.1", infos.getFirmwareVersion());
-        Assertions.assertNull(infos.getHardwareVersion());
-        Assertions.assertNull(infos.getSerialNumber());
-    }
+    int nb = 1;
+    do {
+      log.info("Récupération scan {} / 1000", nb);
 
-    @Test
-    void testHealthInfo() {
-        HealthInfos infos = ldLidar.healthInfo();
-        Assertions.assertNotNull(infos);
-        Assertions.assertEquals(HealthState.OK, infos.getState());
-    }
+      ScanInfos scans = ldLidar.grabData();
+      Assertions.assertNotNull(scans);
+      Assertions.assertNotNull(scans.getIgnored());
+      Assertions.assertTrue(CollectionUtils.isNotEmpty(scans.getScan()));
+      nb++;
+    } while (nb <= 1000);
 
-    @Test
-    void testGrabData() {
-        HealthInfos health = ldLidar.healthInfo();
-        if (health.getState() != HealthState.OK) {
-            Assertions.fail("Erreur de santé du RPLidar " + health.getState());
-        }
-
-        ldLidar.startScan();
-
-        int nb = 1;
-        do {
-            log.info("Récupération scan {} / 1000", nb);
-
-            ScanInfos scans = ldLidar.grabData();
-            Assertions.assertNotNull(scans);
-            Assertions.assertNotNull(scans.getIgnored());
-            Assertions.assertTrue(CollectionUtils.isNotEmpty(scans.getScan()));
-            nb++;
-        } while (nb <= 1000);
-
-        ldLidar.stopScan();
-    }
+    ldLidar.stopScan();
+  }
 }

@@ -7,7 +7,7 @@ spring:
 robot:
   # Système d'évittement
   avoidance:
-     implementation: SEMI_COMPLETE
+    implementation: SEMI_COMPLETE
 
   # Config
   pathfinding:

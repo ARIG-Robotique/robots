@@ -7,4 +7,5 @@ import org.arig.robot.communication.socket.lidar.enums.LidarAction;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class SetSpeedResponse extends AbstractResponse<LidarAction> { }
+public class SetSpeedResponse extends AbstractResponse<LidarAction> {
+}

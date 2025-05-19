@@ -7,6 +7,6 @@ import lombok.experimental.Accessors;
 @Accessors(fluent = true, chain = true)
 public class BouchonEncoderValue {
 
-    private int vitesseMoteur;
-    private double value;
+  private int vitesseMoteur;
+  private double value;
 }

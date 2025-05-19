@@ -48,7 +48,7 @@ public abstract class AbstractPriseGradinBrut extends AbstractNerellAction {
     }
 
     return isTimeValid() && rs.getRemainingTime() > EurobotConfig.validPriseRemainingTime
-        && gradin().present() && !gradin().bloque();
+      && gradin().present() && !gradin().bloque();
   }
 
   @Override

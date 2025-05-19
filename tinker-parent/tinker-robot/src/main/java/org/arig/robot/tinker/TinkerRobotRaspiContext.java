@@ -27,50 +27,50 @@ import java.math.BigDecimal;
 @Profile("raspi")
 public class TinkerRobotRaspiContext {
 
-    @Bean(destroyMethod = "close")
-    public I2CBus i2cBus() throws IOException, UnsupportedBusNumberException {
-        return I2CFactory.getInstance(I2CBus.BUS_1);
-    }
+  @Bean(destroyMethod = "close")
+  public I2CBus i2cBus() throws IOException, UnsupportedBusNumberException {
+    return I2CFactory.getInstance(I2CBus.BUS_1);
+  }
 
-    @Bean
-    public I2CManager i2cManager(I2CBus i2cBus) throws IOException {
-        final RaspiI2CManager manager = new RaspiI2CManager();
+  @Bean
+  public I2CManager i2cManager(I2CBus i2cBus) throws IOException {
+    final RaspiI2CManager manager = new RaspiI2CManager();
 
-        final I2CManagerDevice<I2CDevice> pca9685 = I2CManagerDevice.<I2CDevice>builder()
-                .deviceName(TinkerConstantesI2C.PCA9685_DEVICE_NAME)
-                .device(i2cBus.getDevice(TinkerConstantesI2C.PCA9685_ADDRESS))
-                .build();
-        final I2CManagerDevice<I2CDevice> md22 = I2CManagerDevice.<I2CDevice>builder()
-                .deviceName(TinkerConstantesI2C.MD22_DEVICE_NAME)
-                .device(i2cBus.getDevice(TinkerConstantesI2C.MD22_ADDRESS))
-                .build();
+    final I2CManagerDevice<I2CDevice> pca9685 = I2CManagerDevice.<I2CDevice>builder()
+      .deviceName(TinkerConstantesI2C.PCA9685_DEVICE_NAME)
+      .device(i2cBus.getDevice(TinkerConstantesI2C.PCA9685_ADDRESS))
+      .build();
+    final I2CManagerDevice<I2CDevice> md22 = I2CManagerDevice.<I2CDevice>builder()
+      .deviceName(TinkerConstantesI2C.MD22_DEVICE_NAME)
+      .device(i2cBus.getDevice(TinkerConstantesI2C.MD22_ADDRESS))
+      .build();
 
-        manager.registerDevice(pca9685);
-        manager.registerDevice(md22);
+    manager.registerDevice(pca9685);
+    manager.registerDevice(md22);
 
-        return manager;
-    }
+    return manager;
+  }
 
-    @Bean
-    @SneakyThrows
-    public PCA9685GpioProvider pca9685GpioControler(I2CBus bus) {
-        final PCA9685GpioProvider gpioProvider = new PCA9685GpioProvider(bus, TinkerConstantesI2C.PCA9685_ADDRESS,
-                new BigDecimal(60));
+  @Bean
+  @SneakyThrows
+  public PCA9685GpioProvider pca9685GpioControler(I2CBus bus) {
+    final PCA9685GpioProvider gpioProvider = new PCA9685GpioProvider(bus, TinkerConstantesI2C.PCA9685_ADDRESS,
+      new BigDecimal(60));
 
-        final GpioController gpio = GpioFactory.getInstance();
+    final GpioController gpio = GpioFactory.getInstance();
 
-        gpio.provisionPwmOutputPin(gpioProvider, TinkerConstantesServos.FOURCHE);
-        gpio.provisionPwmOutputPin(gpioProvider, TinkerConstantesServos.BLOCAGE_DROITE);
-        gpio.provisionPwmOutputPin(gpioProvider, TinkerConstantesServos.BLOCAGE_GAUCHE);
-        gpio.provisionPwmOutputPin(gpioProvider, TinkerConstantesServos.TRANSLATEUR);
+    gpio.provisionPwmOutputPin(gpioProvider, TinkerConstantesServos.FOURCHE);
+    gpio.provisionPwmOutputPin(gpioProvider, TinkerConstantesServos.BLOCAGE_DROITE);
+    gpio.provisionPwmOutputPin(gpioProvider, TinkerConstantesServos.BLOCAGE_GAUCHE);
+    gpio.provisionPwmOutputPin(gpioProvider, TinkerConstantesServos.TRANSLATEUR);
 
-        return gpioProvider;
-    }
+    return gpioProvider;
+  }
 
-    @Bean
-    public PropulsionsMD22Motors md22Motors() {
-        PropulsionsMD22Motors motors = new PropulsionsMD22Motors(TinkerConstantesI2C.MD22_DEVICE_NAME, (byte) 1, (short) 0);
-        motors.assignMotors(1, 2);
-        return motors;
-    }
+  @Bean
+  public PropulsionsMD22Motors md22Motors() {
+    PropulsionsMD22Motors motors = new PropulsionsMD22Motors(TinkerConstantesI2C.MD22_DEVICE_NAME, (byte) 1, (short) 0);
+    motors.assignMotors(1, 2);
+    return motors;
+  }
 }

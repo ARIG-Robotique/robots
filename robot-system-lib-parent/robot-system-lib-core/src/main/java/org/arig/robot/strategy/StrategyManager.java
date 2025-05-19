@@ -19,82 +19,82 @@ import java.util.stream.Collectors;
 @Slf4j
 public class StrategyManager {
 
-    @Autowired
-    private List<Action> actions;
+  @Autowired
+  private List<Action> actions;
 
-    @Autowired
-    private AbstractRobotStatus rs;
+  @Autowired
+  private AbstractRobotStatus rs;
 
-    @Autowired
-    private TableUtils tableUtils;
+  @Autowired
+  private TableUtils tableUtils;
 
-    @Autowired
-    private List<RobotGroup> robotGroups;
+  @Autowired
+  private List<RobotGroup> robotGroups;
 
-    @Autowired
-    private LidarService lidarService;
+  @Autowired
+  private LidarService lidarService;
 
-    public synchronized List<Action> actions() {
-        return actions;
+  public synchronized List<Action> actions() {
+    return actions;
+  }
+
+  public void execute() {
+    if (rs.currentAction() != null) {
+      log.info("Recherche d'une action à exécuter parmis les {} disponible(s)", actionsCount());
     }
 
-    public void execute() {
-        if (rs.currentAction() != null) {
-            log.info("Recherche d'une action à exécuter parmis les {} disponible(s)", actionsCount());
-        }
+    final String otherCurrentAction = rs.otherCurrentAction();
 
-        final String otherCurrentAction = rs.otherCurrentAction();
+    Optional<Action> nextAction = actions().stream()
+      .filter(Action::isValid)
+      .filter(a -> !StringUtils.equals(otherCurrentAction, a.name()))
+      .filter(a -> otherCurrentAction == null || !a.blockingActions().contains(otherCurrentAction))
+      .filter(a -> !lidarService.hasObstacleInZone(a.blockingZone()))
+      .sorted(Comparator.comparingInt(Action::order).reversed())
+      .findFirst();
 
-        Optional<Action> nextAction = actions().stream()
-                .filter(Action::isValid)
-                .filter(a -> !StringUtils.equals(otherCurrentAction, a.name()))
-                .filter(a -> otherCurrentAction == null || !a.blockingActions().contains(otherCurrentAction))
-                .filter(a -> !lidarService.hasObstacleInZone(a.blockingZone()))
-                .sorted(Comparator.comparingInt(Action::order).reversed())
-                .findFirst();
-
-        if (!nextAction.isPresent()) {
-            if (rs.currentAction() != null) {
-                log.warn("0/{} actions disponibles pour le moment", actionsCount());
-                if (!rs.pamiRobot()) {
-                    rs.currentAction(null);
-                    robotGroups.forEach(r -> r.setCurrentAction(null));
-                }
-            }
-            return;
-        }
-
-        final Action action = nextAction.get();
+    if (!nextAction.isPresent()) {
+      if (rs.currentAction() != null) {
+        log.warn("0/{} actions disponibles pour le moment", actionsCount());
         if (!rs.pamiRobot()) {
-            rs.currentAction(action.name());
-            robotGroups.forEach(r -> r.setCurrentAction(action.name()));
+          rs.currentAction(null);
+          robotGroups.forEach(r -> r.setCurrentAction(null));
         }
-        log.info("Execution de l'action {}", action.name());
-        tableUtils.clearDynamicDeadZones();
-
-        try {
-            action.execute();
-        } catch (Exception e) {
-            log.warn(e.getMessage(), e);
-            actions().remove(action);
-        }
-
-        if (action.isCompleted()) {
-            log.info("L'action {} est terminée.", action.name());
-        }
-
-        // Purge des actions terminé par l'autre robot entre temps
-        log.info("Purge des actions terminées entre temps");
-        final List<Action> completedActions = actions().stream()
-                .peek(Action::refreshCompleted)
-                .filter(Action::isCompleted)
-                .collect(Collectors.toList());
-        completedActions.forEach(a -> actions().remove(a));
-
-        log.info("Il reste {} actions disponibles", actionsCount());
+      }
+      return;
     }
 
-    public int actionsCount() {
-        return actions().size();
+    final Action action = nextAction.get();
+    if (!rs.pamiRobot()) {
+      rs.currentAction(action.name());
+      robotGroups.forEach(r -> r.setCurrentAction(action.name()));
     }
+    log.info("Execution de l'action {}", action.name());
+    tableUtils.clearDynamicDeadZones();
+
+    try {
+      action.execute();
+    } catch (Exception e) {
+      log.warn(e.getMessage(), e);
+      actions().remove(action);
+    }
+
+    if (action.isCompleted()) {
+      log.info("L'action {} est terminée.", action.name());
+    }
+
+    // Purge des actions terminé par l'autre robot entre temps
+    log.info("Purge des actions terminées entre temps");
+    final List<Action> completedActions = actions().stream()
+      .peek(Action::refreshCompleted)
+      .filter(Action::isCompleted)
+      .collect(Collectors.toList());
+    completedActions.forEach(a -> actions().remove(a));
+
+    log.info("Il reste {} actions disponibles", actionsCount());
+  }
+
+  public int actionsCount() {
+    return actions().size();
+  }
 }

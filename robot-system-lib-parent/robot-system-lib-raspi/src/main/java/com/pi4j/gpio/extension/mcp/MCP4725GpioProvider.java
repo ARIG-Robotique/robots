@@ -52,172 +52,163 @@ import java.io.IOException;
  * </p>
  *
  * @author Christian Wehrli, Robert Savage
- *
  */
 public class MCP4725GpioProvider extends DacGpioProviderBase implements DacGpioProvider {
 
-    public static final String NAME = "com.pi4j.gpio.extension.mcp.MCP4725GpioProvider";
-    public static final String DESCRIPTION = "MCP4725 GPIO Provider";
-    private boolean i2cBusOwner = false;
-    private final I2CBus bus;
-    private final I2CDevice device;
+  public static final String NAME = "com.pi4j.gpio.extension.mcp.MCP4725GpioProvider";
+  public static final String DESCRIPTION = "MCP4725 GPIO Provider";
+  private boolean i2cBusOwner = false;
+  private final I2CBus bus;
+  private final I2CDevice device;
 
-    // =======================================================================
-    // MCP4725 12-BIT MIN AND MAX VALUES
-    // =======================================================================
-    public static final int MAX_VALUE = 4095; // 12-bit ADC can produce values from 0 to 4095
-    public static final int MIN_VALUE = 0;    // 12-bit ADC can produce values from 0 to 4095
+  // =======================================================================
+  // MCP4725 12-BIT MIN AND MAX VALUES
+  // =======================================================================
+  public static final int MAX_VALUE = 4095; // 12-bit ADC can produce values from 0 to 4095
+  public static final int MIN_VALUE = 0;    // 12-bit ADC can produce values from 0 to 4095
 
-    // =======================================================================
-    // MCP4725 I2C ADDRESS
-    // =======================================================================
-    public static final int MCP4725_ADDRESS_1 = 0x62; // ADDRESS 1 : 0x62 (01100010) ADR -> GND (default)
-    public static final int MCP4725_ADDRESS_2 = 0x63; // ADDRESS 2 : 0x63 (01100011) ADR -> VDD
+  // =======================================================================
+  // MCP4725 I2C ADDRESS
+  // =======================================================================
+  public static final int MCP4725_ADDRESS_1 = 0x62; // ADDRESS 1 : 0x62 (01100010) ADR -> GND (default)
+  public static final int MCP4725_ADDRESS_2 = 0x63; // ADDRESS 2 : 0x63 (01100011) ADR -> VDD
 
-    // =======================================================================
-    // WRITE REGISTER
-    // =======================================================================
-    private static final int MCP4725_REG_WRITEDAC = 0x40; // Writes data to the DAC
-    @SuppressWarnings("unused")
-	private static final int MCP4725_REG_WRITEDAC_EEPROM = 0x60; // not used yet... writes data to the DAC and the EEPROM (persisting the assigned value after reset)
+  // =======================================================================
+  // WRITE REGISTER
+  // =======================================================================
+  private static final int MCP4725_REG_WRITEDAC = 0x40; // Writes data to the DAC
+  @SuppressWarnings("unused")
+  private static final int MCP4725_REG_WRITEDAC_EEPROM = 0x60; // not used yet... writes data to the DAC and the EEPROM (persisting the assigned value after reset)
 
-    // =======================================================================
-    // CONSTRUCTORS
-    // =======================================================================
+  // =======================================================================
+  // CONSTRUCTORS
+  // =======================================================================
 
-    /**
-     * This is the default constructor.  If you use this constructor the
-     * MCP4725 will be considered the I2C bus owner and will close the
-     * bus communication any time the class is destroyed and on program
-     * shutdown.
-     *
-     * @param busNumber
-     *     the I2C bus number used to communicate with the MCP4725
-     * @param address
-     *     the address of the MCP4725 on the I2C bus.
-     *
-     * @throws IOException
-     */
-    public MCP4725GpioProvider(int busNumber, int address) throws UnsupportedBusNumberException, IOException {
-        // create I2C communications bus instance
-        this(I2CFactory.getInstance(busNumber), address);
-        i2cBusOwner = true;
+  /**
+   * This is the default constructor.  If you use this constructor the
+   * MCP4725 will be considered the I2C bus owner and will close the
+   * bus communication any time the class is destroyed and on program
+   * shutdown.
+   *
+   * @param busNumber the I2C bus number used to communicate with the MCP4725
+   * @param address   the address of the MCP4725 on the I2C bus.
+   * @throws IOException
+   */
+  public MCP4725GpioProvider(int busNumber, int address) throws UnsupportedBusNumberException, IOException {
+    // create I2C communications bus instance
+    this(I2CFactory.getInstance(busNumber), address);
+    i2cBusOwner = true;
+  }
+
+  /**
+   * This is an alternate constructor that can be used to create the
+   * MCP4725 instance but not be considered the I2C bus owner and the
+   * class will not close the bus communication when the class is destroyed
+   * or on program shutdown.
+   *
+   * @param bus     an existing I2C bus instance defined in the user's code to communicate with the MCP4725
+   * @param address the address of the MCP4725 on the I2C bus.
+   * @throws IOException
+   */
+  public MCP4725GpioProvider(I2CBus bus, int address) throws IOException {
+    // seed parent class with all the valid pins for the MCP4725 DAC (only 1 pin).
+    super(MCP4725Pin.ALL);
+
+    // set reference to I2C communications bus instance and get I2C device
+    this.bus = bus;
+    device = bus.getDevice(address);
+  }
+
+  /**
+   * Set the analog output value to an output pin on the DAC immediately.
+   *
+   * @param pin   analog output pin
+   * @param value raw value to send to the DAC. (Between: 0..4095)
+   */
+  @Override
+  public void setValue(Pin pin, double value) {
+
+    // validate range
+    if (value <= getMinSupportedValue()) {
+      value = getMinSupportedValue();
+    } else if (value >= getMaxSupportedValue()) {
+      value = getMaxSupportedValue();
     }
 
-    /**
-     * This is an alternate constructor that can be used to create the
-     * MCP4725 instance but not be considered the I2C bus owner and the
-     * class will not close the bus communication when the class is destroyed
-     * or on program shutdown.
-     *
-     * @param bus
-     *     an existing I2C bus instance defined in the user's code to communicate with the MCP4725
-     * @param address
-     *     the address of the MCP4725 on the I2C bus.
-     *
-     * @throws IOException
-     */
-    public MCP4725GpioProvider(I2CBus bus, int address) throws IOException {
-        // seed parent class with all the valid pins for the MCP4725 DAC (only 1 pin).
-        super(MCP4725Pin.ALL);
+    // the DAC only supports integer values between 0..4095
+    int write_value = (int) value;
+    try {
+      // create data packet and seed targeted value
+      byte packet[] = new byte[3];
+      packet[0] = (byte) MCP4725_REG_WRITEDAC;
+      packet[1] = (byte) (write_value >> 4); // Upper data bits (D11.D10.D9.D8.D7.D6.D5.D4)
+      packet[2] = (byte) (write_value << 4); // Lower data bits (D3.D2.D1.D0.x.x.x.x)
 
-        // set reference to I2C communications bus instance and get I2C device
-        this.bus = bus;
-        device = bus.getDevice(address);
+      // write packet of data to the I2C bus
+      device.write(packet, 0, 3);
+
+      // update the pin cache and dispatch any events
+      super.setValue(pin, value);
+    } catch (IOException e) {
+      throw new RuntimeException("Unable to write DAC output value.", e);
     }
+  }
 
-    /**
-     * Set the analog output value to an output pin on the DAC immediately.
-     *
-     * @param pin analog output pin
-     * @param value raw value to send to the DAC. (Between: 0..4095)
-     */
-    @Override
-    public void setValue(Pin pin, double value) {
+  /**
+   * Gets the name of the DAC provider instance.
+   *
+   * @return name of the DAC provider instance.
+   */
+  @Override
+  public String getName() {
+    return NAME;
+  }
 
-        // validate range
-        if(value <= getMinSupportedValue()){
-            value =  getMinSupportedValue();
-        }
-        else if(value >= getMaxSupportedValue()){
-            value = getMaxSupportedValue();
-        }
-
-        // the DAC only supports integer values between 0..4095
-        int write_value = (int)value;
-        try {
-            // create data packet and seed targeted value
-            byte packet[] = new byte[3];
-            packet[0] = (byte) MCP4725_REG_WRITEDAC;
-            packet[1] = (byte) (write_value >> 4); // Upper data bits (D11.D10.D9.D8.D7.D6.D5.D4)
-            packet[2] = (byte) (write_value << 4); // Lower data bits (D3.D2.D1.D0.x.x.x.x)
-
-            // write packet of data to the I2C bus
-            device.write(packet, 0, 3);
-
-            // update the pin cache and dispatch any events
-            super.setValue(pin, value);
-        }
-        catch (IOException e) {
-            throw new RuntimeException("Unable to write DAC output value.", e);
-        }
+  /**
+   * This method is used by the framework to shutdown the
+   * DAC instance and apply any configured shutdown values to the DAC pins.
+   * <p>
+   * This method will also close the I2C bus for the connected MCP4725.
+   */
+  @Override
+  public void shutdown() {
+    // prevent reentrant
+    if (isShutdown()) {
+      return;
     }
+    super.shutdown(); // <-- the shutdown values will be applied to the DAC in the parent class
+    try {
+      // if we are the owner of the I2C bus, then close it
+      if (i2cBusOwner) {
+        // close the I2C bus communication
+        bus.close();
+      }
 
-    /**
-     * Gets the name of the DAC provider instance.
-     *
-     * @return name of the DAC provider instance.
-     */
-    @Override
-    public String getName() {
-        return NAME;
+    } catch (IOException e) {
+      throw new RuntimeException(e);
     }
+  }
 
-    /**
-     * This method is used by the framework to shutdown the
-     * DAC instance and apply any configured shutdown values to the DAC pins.
-     *
-     * This method will also close the I2C bus for the connected MCP4725.
-     */
-    @Override
-    public void shutdown() {
-        // prevent reentrant
-        if (isShutdown()) {
-            return;
-        }
-        super.shutdown(); // <-- the shutdown values will be applied to the DAC in the parent class
-        try {
-            // if we are the owner of the I2C bus, then close it
-            if(i2cBusOwner) {
-                // close the I2C bus communication
-                bus.close();
-            }
+  /**
+   * Get the minimum supported analog value for the ADC implementation.
+   *
+   * @return Returns the minimum supported analog value.
+   */
+  @Override
+  public double getMinSupportedValue() {
+    return MIN_VALUE;
+  }
 
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    /**
-     * Get the minimum supported analog value for the ADC implementation.
-     *
-     * @return Returns the minimum supported analog value.
-     */
-    @Override
-    public double getMinSupportedValue(){
-        return MIN_VALUE;
-    }
-
-    /**
-     * Get the maximum supported analog value for the ADC implementation.
-     *
-     * (For example, a 10 bit ADC's maximum value is 1023 and
-     *  a 12-bit ADC's maximum value is 4095.
-     *
-     * @return Returns the maximum supported analog value.
-     */
-    @Override
-    public double getMaxSupportedValue(){
-        return MAX_VALUE;
-    }
+  /**
+   * Get the maximum supported analog value for the ADC implementation.
+   * <p>
+   * (For example, a 10 bit ADC's maximum value is 1023 and
+   * a 12-bit ADC's maximum value is 4095.
+   *
+   * @return Returns the maximum supported analog value.
+   */
+  @Override
+  public double getMaxSupportedValue() {
+    return MAX_VALUE;
+  }
 }

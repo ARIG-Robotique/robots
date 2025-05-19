@@ -12,18 +12,18 @@ import org.springframework.shell.standard.commands.Quit;
 @AllArgsConstructor
 public class PamiQuitCommand implements Quit.Command {
 
-    private final AbstractPropulsionsMotors motors;
-    private final PamiIOService ioService;
+  private final AbstractPropulsionsMotors motors;
+  private final PamiIOService ioService;
 
-    @ShellMethod(value = "Exit the shell.", key = {"quit", "exit"})
-    public void quit() {
-        // Stop les moteurs
-        motors.stopAll();
+  @ShellMethod(value = "Exit the shell.", key = {"quit", "exit"})
+  public void quit() {
+    // Stop les moteurs
+    motors.stopAll();
 
-        // Stop les alimentations de puissance
-        ioService.disableAlimMoteurs();
-        ioService.disableAlimServos();
+    // Stop les alimentations de puissance
+    ioService.disableAlimMoteurs();
+    ioService.disableAlimServos();
 
-        throw new ExitRequest();
-    }
+    throw new ExitRequest();
+  }
 }

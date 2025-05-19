@@ -10,7 +10,7 @@ import org.arig.robot.model.ecran.AbstractEcranState;
 @EqualsAndHashCode(callSuper = true)
 public class UpdateStateQuery extends AbstractQueryWithData<EcranAction, AbstractEcranState> {
 
-    public UpdateStateQuery() {
-        super(EcranAction.UPDATE_STATE);
-    }
+  public UpdateStateQuery() {
+    super(EcranAction.UPDATE_STATE);
+  }
 }

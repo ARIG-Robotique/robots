@@ -32,11 +32,11 @@ public class BatterySensorValue {
 
   public String infos() {
     return String.format("Battery: %.2fV (%.0f%%) - Cell1: %.2fV (%.0f%%) - Cell2: %.2fV (%.0f%%) - Cell3: %.2fV (%.0f%%) - Cell4: %.2fV (%.0f%%)",
-        voltage, percentage,
-        cell1Voltage, cell1Percentage,
-        cell2Voltage, cell2Percentage,
-        cell3Voltage, cell3Percentage,
-        cell4Voltage, cell4Percentage
+      voltage, percentage,
+      cell1Voltage, cell1Percentage,
+      cell2Voltage, cell2Percentage,
+      cell3Voltage, cell3Percentage,
+      cell4Voltage, cell4Percentage
     );
   }
 }

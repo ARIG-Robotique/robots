@@ -37,7 +37,6 @@ import com.pi4j.io.spi.SpiMode;
 import java.io.IOException;
 
 /**
- *
  * <p>
  * This GPIO provider implements the MCP3008 SPI GPIO expansion board as native Pi4J GPIO pins. It is a 10-bit ADC
  * providing 8 input channels. More information about the board can be found here: -
@@ -47,7 +46,7 @@ import java.io.IOException;
  * <p>
  * The MCP3008 is connected via SPI connection to the Raspberry Pi and provides 8 GPIO pins that can be used for analog
  * input pins. The values returned are in the range 0-1023 (10 bit value).
- *
+ * <p>
  * Note: This implementation currently only supports single-ended inputs.
  * </p>
  *
@@ -55,101 +54,84 @@ import java.io.IOException;
  */
 public class MCP3008GpioProvider extends MCP3x0xGpioProvider implements AdcGpioProvider {
 
-	public static final String NAME = "com.pi4j.gpio.extension.mcp.MCP3008GpioProvider";
-	public static final String DESCRIPTION = "MCP3008 GPIO Provider";
-	public static final int INPUT_COUNT = 8;
-	public static final int RESOLUTION = 10;
+  public static final String NAME = "com.pi4j.gpio.extension.mcp.MCP3008GpioProvider";
+  public static final String DESCRIPTION = "MCP3008 GPIO Provider";
+  public static final int INPUT_COUNT = 8;
+  public static final int RESOLUTION = 10;
 
-	/**
-	 * Create new instance of this MCP3008 provider with background monitoring and pin notification events enabled.
-	 *
-	 * @param channel
-	 *            spi channel the MCP3008 is connected to
-	 * @throws IOException
-	 *             if an error occurs during initialization of the SpiDevice
-	 */
-	public MCP3008GpioProvider(final SpiChannel channel) throws IOException {
-		this(channel, SpiDevice.DEFAULT_SPI_SPEED, SpiDevice.DEFAULT_SPI_MODE, true);
-	}
+  /**
+   * Create new instance of this MCP3008 provider with background monitoring and pin notification events enabled.
+   *
+   * @param channel spi channel the MCP3008 is connected to
+   * @throws IOException if an error occurs during initialization of the SpiDevice
+   */
+  public MCP3008GpioProvider(final SpiChannel channel) throws IOException {
+    this(channel, SpiDevice.DEFAULT_SPI_SPEED, SpiDevice.DEFAULT_SPI_MODE, true);
+  }
 
-	/**
-	 * Create new instance of this MCP3008 provider with background monitoring and pin notification events enabled.
-	 *
-	 * @param channel
-	 *            spi channel the MCP3008 is connected to
-	 * @param speed
-	 *            spi speed to communicate with MCP3008
-	 * @throws IOException
-	 *             if an error occurs during initialization of the SpiDevice
-	 */
-	public MCP3008GpioProvider(final SpiChannel channel, final int speed) throws IOException {
-		this(channel, speed, SpiDevice.DEFAULT_SPI_MODE, true);
-	}
+  /**
+   * Create new instance of this MCP3008 provider with background monitoring and pin notification events enabled.
+   *
+   * @param channel spi channel the MCP3008 is connected to
+   * @param speed   spi speed to communicate with MCP3008
+   * @throws IOException if an error occurs during initialization of the SpiDevice
+   */
+  public MCP3008GpioProvider(final SpiChannel channel, final int speed) throws IOException {
+    this(channel, speed, SpiDevice.DEFAULT_SPI_MODE, true);
+  }
 
-	/**
-	 * Create new instance of this MCP3008 provider with background monitoring and pin notification events enabled.
-	 *
-	 * @param channel
-	 *            spi channel the MCP3008 is connected to
-	 * @param mode
-	 *            spi mode to communicate with MCP3008
-	 * @throws IOException
-	 *             if an error occurs during initialization of the SpiDevice
-	 */
-	public MCP3008GpioProvider(final SpiChannel channel, final SpiMode mode) throws IOException {
-		this(channel, SpiDevice.DEFAULT_SPI_SPEED, mode, true);
-	}
+  /**
+   * Create new instance of this MCP3008 provider with background monitoring and pin notification events enabled.
+   *
+   * @param channel spi channel the MCP3008 is connected to
+   * @param mode    spi mode to communicate with MCP3008
+   * @throws IOException if an error occurs during initialization of the SpiDevice
+   */
+  public MCP3008GpioProvider(final SpiChannel channel, final SpiMode mode) throws IOException {
+    this(channel, SpiDevice.DEFAULT_SPI_SPEED, mode, true);
+  }
 
-	/**
-	 * Create new instance of this MCP3008 provider with background monitoring and pin notification events enabled.
-	 *
-	 * @param channel
-	 *            spi channel the MCP3008 is connected to
-	 * @param speed
-	 *            spi speed to communicate with MCP3008
-	 * @param mode
-	 *            spi mode to communicate with MCP3008
-	 * @throws IOException
-	 *             if an error occurs during initialization of the SpiDevice
-	 */
-	public MCP3008GpioProvider(final SpiChannel channel, final int speed, final SpiMode mode) throws IOException {
-		this(channel, speed, mode, true);
-	}
+  /**
+   * Create new instance of this MCP3008 provider with background monitoring and pin notification events enabled.
+   *
+   * @param channel spi channel the MCP3008 is connected to
+   * @param speed   spi speed to communicate with MCP3008
+   * @param mode    spi mode to communicate with MCP3008
+   * @throws IOException if an error occurs during initialization of the SpiDevice
+   */
+  public MCP3008GpioProvider(final SpiChannel channel, final int speed, final SpiMode mode) throws IOException {
+    this(channel, speed, mode, true);
+  }
 
-	/**
-	 * Create new instance of this MCP3008 provider. Optionally enable or disable background monitoring and pin
-	 * notification events.
-	 *
-	 * @param channel
-	 *            spi channel the MCP3008 is connected to
-	 * @param speed
-	 *            spi speed to communicate with MCP3008
-	 * @param mode
-	 *            spi mode to communicate with MCP3008
-	 * @param enableBackgroundMonitoring
-	 *            if enabled, then a background thread will be created to constantly acquire the ADC input values and
-	 *            publish pin change listeners if the value change is beyond the configured threshold.
-	 * @throws IOException
-	 *             if an error occurs during initialization of the SpiDevice
-	 */
-	public MCP3008GpioProvider(final SpiChannel channel, final int speed, final SpiMode mode,
-			final boolean enableBackgroundMonitoring) throws IOException {
-		super(MCP3008Pin.ALL, channel, speed, RESOLUTION, mode);
+  /**
+   * Create new instance of this MCP3008 provider. Optionally enable or disable background monitoring and pin
+   * notification events.
+   *
+   * @param channel                    spi channel the MCP3008 is connected to
+   * @param speed                      spi speed to communicate with MCP3008
+   * @param mode                       spi mode to communicate with MCP3008
+   * @param enableBackgroundMonitoring if enabled, then a background thread will be created to constantly acquire the ADC input values and
+   *                                   publish pin change listeners if the value change is beyond the configured threshold.
+   * @throws IOException if an error occurs during initialization of the SpiDevice
+   */
+  public MCP3008GpioProvider(final SpiChannel channel, final int speed, final SpiMode mode,
+                             final boolean enableBackgroundMonitoring) throws IOException {
+    super(MCP3008Pin.ALL, channel, speed, RESOLUTION, mode);
 
-		// default background monitoring interval
-		setMonitorInterval(DEFAULT_MONITOR_INTERVAL);
+    // default background monitoring interval
+    setMonitorInterval(DEFAULT_MONITOR_INTERVAL);
 
-		// enable|disable background monitoring
-		if (enableBackgroundMonitoring) {
-			setMonitorEnabled(enableBackgroundMonitoring);
-		}
-	}
+    // enable|disable background monitoring
+    if (enableBackgroundMonitoring) {
+      setMonitorEnabled(enableBackgroundMonitoring);
+    }
+  }
 
-	// ------------------------------------------------------------------------------------------
-	// PUBLIC METHODS
-	// ------------------------------------------------------------------------------------------
-	@Override
-	public String getName() {
-		return NAME;
-	}
+  // ------------------------------------------------------------------------------------------
+  // PUBLIC METHODS
+  // ------------------------------------------------------------------------------------------
+  @Override
+  public String getName() {
+    return NAME;
+  }
 }

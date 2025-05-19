@@ -21,23 +21,23 @@ import java.util.Map;
 @Profile(ConstantesConfig.profileMonitoring)
 public class CodeursController {
 
-    @Autowired
-    private Abstract2WheelsEncoders encoders;
+  @Autowired
+  private Abstract2WheelsEncoders encoders;
 
-    @GetMapping
-    public Map<String, Double> showValues() {
-        encoders.lectureValeurs();
-        Map<String, Double> v = new HashMap<>();
-        v.put("distance", encoders.getDistance());
-        v.put("orientation", encoders.getOrientation());
-        v.put("gauche", encoders.getGauche());
-        v.put("droit", encoders.getDroit());
+  @GetMapping
+  public Map<String, Double> showValues() {
+    encoders.lectureValeurs();
+    Map<String, Double> v = new HashMap<>();
+    v.put("distance", encoders.getDistance());
+    v.put("orientation", encoders.getOrientation());
+    v.put("gauche", encoders.getGauche());
+    v.put("droit", encoders.getDroit());
 
-        return v;
-    }
+    return v;
+  }
 
-    @GetMapping(value = "/reset")
-    public void resetValues() {
-        encoders.reset();
-    }
+  @GetMapping(value = "/reset")
+  public void resetValues() {
+    encoders.reset();
+  }
 }

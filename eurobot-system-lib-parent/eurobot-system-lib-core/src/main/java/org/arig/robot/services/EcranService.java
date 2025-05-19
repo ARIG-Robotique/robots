@@ -15,33 +15,33 @@ import java.util.stream.Stream;
 @Slf4j
 public class EcranService extends AbstractEcranService<EcranConfig, EcranState> {
 
-    public EcranService() {
-        super(new EcranState());
-    }
+  public EcranService() {
+    super(new EcranState());
+  }
 
-    @Override
-    public void updateStateInfo(EcranState stateInfos) {
-        super.updateStateInfo(stateInfos);
-    }
+  @Override
+  public void updateStateInfo(EcranState stateInfos) {
+    super.updateStateInfo(stateInfos);
+  }
 
-    @Override
-    public EcranConfig config() {
-        EcranConfig config = super.config();
-        if (config == null) {
-            config = new EcranConfig();
-        }
-        return config;
+  @Override
+  public EcranConfig config() {
+    EcranConfig config = super.config();
+    if (config == null) {
+      config = new EcranConfig();
     }
+    return config;
+  }
 
-    @Override
-    protected EcranParams getParams() {
-        EcranParams ecranParams = new EcranParams();
-        ecranParams.setTeams(Map.of(
-                Team.JAUNE.name(), "yellow",
-                Team.BLEU.name(), "blue"
-        ));
-        ecranParams.setStrategies(Stream.of(Strategy.values()).map(Strategy::description).collect(Collectors.toList()));
-        ecranParams.setOptions(Stream.of(StrategyOption.values()).map(s -> s.description()+(s.defaultValue() ? "|1": "")).collect(Collectors.toList()));
-        return ecranParams;
-    }
+  @Override
+  protected EcranParams getParams() {
+    EcranParams ecranParams = new EcranParams();
+    ecranParams.setTeams(Map.of(
+      Team.JAUNE.name(), "yellow",
+      Team.BLEU.name(), "blue"
+    ));
+    ecranParams.setStrategies(Stream.of(Strategy.values()).map(Strategy::description).collect(Collectors.toList()));
+    ecranParams.setOptions(Stream.of(StrategyOption.values()).map(s -> s.description() + (s.defaultValue() ? "|1" : "")).collect(Collectors.toList()));
+    return ecranParams;
+  }
 }

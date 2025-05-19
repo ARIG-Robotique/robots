@@ -14,15 +14,15 @@ import org.springframework.shell.standard.ShellMethod;
 @AllArgsConstructor
 public class NerellI2CCommands {
 
-    private final I2CManager i2CManager;
+  private final I2CManager i2CManager;
 
-    @ShellMethod("Scan I2C")
-    public void scanI2C() {
-        log.info("Scan des devices I2C enregistré");
-        try {
-            i2CManager.executeScan();
-        } catch (I2CException e) {
-            log.error("Erreur lors du scan I2C", e);
-        }
+  @ShellMethod("Scan I2C")
+  public void scanI2C() {
+    log.info("Scan des devices I2C enregistré");
+    try {
+      i2CManager.executeScan();
+    } catch (I2CException e) {
+      log.error("Erreur lors du scan I2C", e);
     }
+  }
 }

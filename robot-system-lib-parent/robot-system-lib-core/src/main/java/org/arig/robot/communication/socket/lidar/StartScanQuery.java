@@ -10,22 +10,22 @@ import org.arig.robot.model.lidar.SpeedInfos;
 @EqualsAndHashCode(callSuper = true)
 public class StartScanQuery extends AbstractQueryWithData<LidarAction, SpeedInfos> {
 
-    public StartScanQuery() {
-        this(LidarAction.START_SCAN);
+  public StartScanQuery() {
+    this(LidarAction.START_SCAN);
+  }
+
+  protected StartScanQuery(LidarAction action) {
+    super(action);
+  }
+
+  public void setSpeed(Short speed) {
+    if (speed == null) {
+      return;
     }
 
-    protected StartScanQuery(LidarAction action) {
-        super(action);
+    if (!hasData()) {
+      setData(new SpeedInfos());
     }
-
-    public void setSpeed(Short speed) {
-        if (speed == null) {
-            return;
-        }
-
-        if (!hasData()) {
-            setData(new SpeedInfos());
-        }
-        getData().setSpeed(speed);
-    }
+    getData().setSpeed(speed);
+  }
 }

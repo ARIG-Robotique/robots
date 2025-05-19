@@ -17,16 +17,16 @@ import java.io.Serializable;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class StatusResponseData implements Serializable {
 
-    private StatusResponse parent;
-    private StatusResponse externalRunner;
-    private StatusResponse internalRunner;
-    private String statusMessage;
-    private BaliseMode mode;
-    private String team;
-    private Boolean idle;
+  private StatusResponse parent;
+  private StatusResponse externalRunner;
+  private StatusResponse internalRunner;
+  private String statusMessage;
+  private BaliseMode mode;
+  private String team;
+  private Boolean idle;
 
-    public boolean isAllOK() {
-        return parent == StatusResponse.OK && externalRunner == StatusResponse.OK && internalRunner == StatusResponse.OK;
-    }
+  public boolean isAllOK() {
+    return parent == StatusResponse.OK && externalRunner == StatusResponse.OK && internalRunner == StatusResponse.OK;
+  }
 
 }

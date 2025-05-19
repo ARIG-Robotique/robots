@@ -36,7 +36,6 @@ import java.util.EnumSet;
  */
 
 /**
- *
  * <p>
  * This GPIO provider implements the MCP3208 SPI GPIO expansion board as native Pi4J GPIO pins. It is a 12-bit ADC
  * providing 8 input channels.
@@ -51,19 +50,19 @@ import java.util.EnumSet;
  */
 public class MCP3208Pin {
 
-	public static final Pin CH0 = createAnalogInputPin(0, "ANALOG INPUT 0");
-	public static final Pin CH1 = createAnalogInputPin(1, "ANALOG INPUT 1");
-	public static final Pin CH2 = createAnalogInputPin(2, "ANALOG INPUT 2");
-	public static final Pin CH3 = createAnalogInputPin(3, "ANALOG INPUT 3");
-	public static final Pin CH4 = createAnalogInputPin(4, "ANALOG INPUT 4");
-	public static final Pin CH5 = createAnalogInputPin(5, "ANALOG INPUT 5");
-	public static final Pin CH6 = createAnalogInputPin(6, "ANALOG INPUT 6");
-	public static final Pin CH7 = createAnalogInputPin(7, "ANALOG INPUT 7");
+  public static final Pin CH0 = createAnalogInputPin(0, "ANALOG INPUT 0");
+  public static final Pin CH1 = createAnalogInputPin(1, "ANALOG INPUT 1");
+  public static final Pin CH2 = createAnalogInputPin(2, "ANALOG INPUT 2");
+  public static final Pin CH3 = createAnalogInputPin(3, "ANALOG INPUT 3");
+  public static final Pin CH4 = createAnalogInputPin(4, "ANALOG INPUT 4");
+  public static final Pin CH5 = createAnalogInputPin(5, "ANALOG INPUT 5");
+  public static final Pin CH6 = createAnalogInputPin(6, "ANALOG INPUT 6");
+  public static final Pin CH7 = createAnalogInputPin(7, "ANALOG INPUT 7");
 
-	public static Pin[] ALL = { MCP3208Pin.CH0, MCP3208Pin.CH1, MCP3208Pin.CH2, MCP3208Pin.CH3, MCP3208Pin.CH4,
-			MCP3208Pin.CH5, MCP3208Pin.CH6, MCP3208Pin.CH7 };
+  public static Pin[] ALL = {MCP3208Pin.CH0, MCP3208Pin.CH1, MCP3208Pin.CH2, MCP3208Pin.CH3, MCP3208Pin.CH4,
+    MCP3208Pin.CH5, MCP3208Pin.CH6, MCP3208Pin.CH7};
 
-	private static Pin createAnalogInputPin(final int channel, final String name) {
-		return new PinImpl(MCP3208GpioProvider.NAME, channel, name, EnumSet.of(PinMode.ANALOG_INPUT));
-	}
+  private static Pin createAnalogInputPin(final int channel, final String name) {
+    return new PinImpl(MCP3208GpioProvider.NAME, channel, name, EnumSet.of(PinMode.ANALOG_INPUT));
+  }
 }

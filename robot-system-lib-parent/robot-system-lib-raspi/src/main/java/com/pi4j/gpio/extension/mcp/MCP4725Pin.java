@@ -48,15 +48,14 @@ import java.util.EnumSet;
  *
  * @author Christian Wehrli
  * @version 1.0, Feb 11, 2014
- *
  */
 public class MCP4725Pin {
 
-    public static final Pin OUTPUT = createAnalogOutputPin(0, "ANALOG OUTPUT");
+  public static final Pin OUTPUT = createAnalogOutputPin(0, "ANALOG OUTPUT");
 
-    public static Pin[] ALL = { MCP4725Pin.OUTPUT };
+  public static Pin[] ALL = {MCP4725Pin.OUTPUT};
 
-    private static Pin createAnalogOutputPin(int address, String name) {
-        return new PinImpl(MCP4725GpioProvider.NAME, address, name, EnumSet.of(PinMode.ANALOG_OUTPUT));
-    }
+  private static Pin createAnalogOutputPin(int address, String name) {
+    return new PinImpl(MCP4725GpioProvider.NAME, address, name, EnumSet.of(PinMode.ANALOG_OUTPUT));
+  }
 }

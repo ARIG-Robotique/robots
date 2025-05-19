@@ -9,35 +9,35 @@ import org.arig.robot.system.encoders.AbstractEncoder;
 @AllArgsConstructor
 public class AsservissementPosition implements IAsservissement {
 
-    private final CommandeAsservissementPosition cmd;
+  private final CommandeAsservissementPosition cmd;
 
-    private AbstractEncoder encoder;
+  private AbstractEncoder encoder;
 
-    private final PidFilter pid;
+  private final PidFilter pid;
 
-    private final TrapezoidalRampFilter ramp;
+  private final TrapezoidalRampFilter ramp;
 
-    @Override
-    public void reset(final boolean resetFilters) {
-        pid.reset();
+  @Override
+  public void reset(final boolean resetFilters) {
+    pid.reset();
 
-        if (resetFilters) {
-            ramp.reset();
-        }
+    if (resetFilters) {
+      ramp.reset();
     }
+  }
 
-    @Override
-    public void process(final long timeStepMs, boolean obstacleDetected) {
-        // Rampe accel / decel
-        ramp.setConsigneVitesse(cmd.getVitesse().getValue());
-        ramp.setFrein(cmd.isFrein());
-        final double position = ramp.filter(cmd.getConsigne().getValue());
+  @Override
+  public void process(final long timeStepMs, boolean obstacleDetected) {
+    // Rampe accel / decel
+    ramp.setConsigneVitesse(cmd.getVitesse().getValue());
+    ramp.setFrein(cmd.isFrein());
+    final double position = ramp.filter(cmd.getConsigne().getValue());
 
-        // Correction PID
-        pid.consigne(position);
-        final double distance = pid.filter(encoder.getValue());
+    // Correction PID
+    pid.consigne(position);
+    final double distance = pid.filter(encoder.getValue());
 
-        // Comande moteur
-        cmd.getMoteur().setValue((int) distance);
-    }
+    // Comande moteur
+    cmd.getMoteur().setValue((int) distance);
+  }
 }

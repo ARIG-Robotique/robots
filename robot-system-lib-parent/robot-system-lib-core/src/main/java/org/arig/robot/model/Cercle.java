@@ -14,8 +14,8 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = true)
 public class Cercle extends Shape {
 
-    private final ShapeType type = ShapeType.CIRCLE;
+  private final ShapeType type = ShapeType.CIRCLE;
 
-    private Point centre;
-    private Integer rayon;
+  private Point centre;
+  private Integer rayon;
 }

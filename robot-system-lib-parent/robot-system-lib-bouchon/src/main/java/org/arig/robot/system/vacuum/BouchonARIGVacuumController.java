@@ -5,25 +5,25 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class BouchonARIGVacuumController extends AbstractARIGVacuumController {
 
-    @Override
-    public void readAllValues() {
-    }
+  @Override
+  public void readAllValues() {
+  }
 
-    @Override
-    public void readData(byte pompeNb) {
-    }
+  @Override
+  public void readData(byte pompeNb) {
+  }
 
-    @Override
-    public void printVersion() {
-    }
+  @Override
+  public void printVersion() {
+  }
 
-    @Override
-    protected void sendToController() {
-    }
+  @Override
+  protected void sendToController() {
+  }
 
-    @Override
-    protected byte[] readFromController(byte register, int size) {
-        return new byte[0];
-    }
+  @Override
+  protected byte[] readFromController(byte register, int size) {
+    return new byte[0];
+  }
 
 }

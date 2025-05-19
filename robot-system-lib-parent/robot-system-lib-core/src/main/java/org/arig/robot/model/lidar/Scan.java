@@ -12,15 +12,15 @@ import java.io.Serializable;
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Scan implements Serializable {
-    private float angleDeg;
-    private float distanceMm;
-    private boolean syncBit;
-    private short quality;
+  private float angleDeg;
+  private float distanceMm;
+  private boolean syncBit;
+  private short quality;
 
-    public Scan offsetDistanceMm(int offsetDistanceMm) {
-        if (offsetDistanceMm == 0) {
-            return this;
-        }
-        return new Scan(angleDeg, distanceMm + offsetDistanceMm, syncBit, quality);
+  public Scan offsetDistanceMm(int offsetDistanceMm) {
+    if (offsetDistanceMm == 0) {
+      return this;
     }
+    return new Scan(angleDeg, distanceMm + offsetDistanceMm, syncBit, quality);
+  }
 }

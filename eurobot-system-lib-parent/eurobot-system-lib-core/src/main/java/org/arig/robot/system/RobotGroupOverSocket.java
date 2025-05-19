@@ -10,17 +10,17 @@ import java.util.function.Function;
 @Slf4j
 public class RobotGroupOverSocket extends AbstractRobotGroupOverSocket {
 
-    private final Function<AbstractRobotStatus, Boolean> groupOkFunction;
-    private final AbstractRobotStatus rs;
+  private final Function<AbstractRobotStatus, Boolean> groupOkFunction;
+  private final AbstractRobotStatus rs;
 
-    public RobotGroupOverSocket(AbstractRobotStatus rs, Function<AbstractRobotStatus, Boolean> groupOkFunction, int serverPort, String otherHost, int otherPort, Executor executor) {
-        super(serverPort, otherHost, otherPort, executor);
-        this.groupOkFunction = groupOkFunction;
-        this.rs = rs;
-    }
+  public RobotGroupOverSocket(AbstractRobotStatus rs, Function<AbstractRobotStatus, Boolean> groupOkFunction, int serverPort, String otherHost, int otherPort, Executor executor) {
+    super(serverPort, otherHost, otherPort, executor);
+    this.groupOkFunction = groupOkFunction;
+    this.rs = rs;
+  }
 
-    @Override
-    protected boolean groupOk() {
-        return groupOkFunction.apply(rs);
-    }
+  @Override
+  protected boolean groupOk() {
+    return groupOkFunction.apply(rs);
+  }
 }

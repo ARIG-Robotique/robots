@@ -18,62 +18,62 @@ import java.util.List;
 @Slf4j
 public class CompleteAvoidingService extends AbstractAvoidingService {
 
-    private boolean hasObstacle = false;
+  private boolean hasObstacle = false;
 
-    private AbstractMonitorMouvement currentMvt;
+  private AbstractMonitorMouvement currentMvt;
 
-    private List<Line2D> lines = new ArrayList<>(); // Chemin parcouru
+  private List<Line2D> lines = new ArrayList<>(); // Chemin parcouru
 
-    @Override
-    protected void processAvoiding() {
-        checkMouvement();
-        lidarService.refreshObstacles(lines);
+  @Override
+  protected void processAvoiding() {
+    checkMouvement();
+    lidarService.refreshObstacles(lines);
 
-        // Une collision est détecté
-        if (lidarService.hasObstacle()) {
-            hasObstacle = true;
+    // Une collision est détecté
+    if (lidarService.hasObstacle()) {
+      hasObstacle = true;
 
-            // On rafraichit le path
-            if (rs.avoidanceEnabled()) {
-                trajectoryManager.refreshPathFinding();
-            }
+      // On rafraichit le path
+      if (rs.avoidanceEnabled()) {
+        trajectoryManager.refreshPathFinding();
+      }
 
-        } else if (hasObstacle) {
-            hasObstacle = false;
+    } else if (hasObstacle) {
+      hasObstacle = false;
 
-            // On rafraichit le path
-            if (rs.avoidanceEnabled()) {
-                trajectoryManager.refreshPathFinding();
-            }
-        }
+      // On rafraichit le path
+      if (rs.avoidanceEnabled()) {
+        trajectoryManager.refreshPathFinding();
+      }
     }
+  }
 
-    protected void checkMouvement() {
-        // Construction du chemin a parcourir sur le changement de mouvement
-        if (currentMvt != trajectoryManager.getCurrentMouvement()) {
-            log.info("Le mouvement courant a changé");
-            currentMvt = trajectoryManager.getCurrentMouvement();
+  protected void checkMouvement() {
+    // Construction du chemin a parcourir sur le changement de mouvement
+    if (currentMvt != trajectoryManager.getCurrentMouvement()) {
+      log.info("Le mouvement courant a changé");
+      currentMvt = trajectoryManager.getCurrentMouvement();
 
-            lines.clear();
-            if (currentMvt.getType() == TypeMouvement.PATH) {
-                MonitorMouvementPath mp = (MonitorMouvementPath) currentMvt;
+      lines.clear();
+      if (currentMvt.getType() == TypeMouvement.PATH) {
+        MonitorMouvementPath mp = (MonitorMouvementPath) currentMvt;
 
-                Point2D ptFrom = new Point2D.Double(
-                        trajectoryManager.currentXMm() / 10,
-                        trajectoryManager.currentYMm() / 10
-                );
-                Point2D ptTo;
-                for (Point pt : mp.getPath()) {
-                    ptTo = new Point2D.Double(
-                            pt.getX() / 10,
-                            pt.getY() / 10
-                    );
+        Point2D ptFrom = new Point2D.Double(
+          trajectoryManager.currentXMm() / 10,
+          trajectoryManager.currentYMm() / 10
+        );
+        Point2D ptTo;
+        for (Point pt : mp.getPath()) {
+          ptTo = new Point2D.Double(
+            pt.getX() / 10,
+            pt.getY() / 10
+          );
 
-                    lines.add(new Line2D.Double(ptFrom, ptTo));
-                    ptFrom = new Point2D.Double(ptTo.getX(), ptTo.getY());
-                }
-            }
+          lines.add(new Line2D.Double(ptFrom, ptTo));
+          ptFrom = new Point2D.Double(ptTo.getX(), ptTo.getY());
         }
+      }
     }
+  }
 
 }

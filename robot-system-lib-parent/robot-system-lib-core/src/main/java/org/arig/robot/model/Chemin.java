@@ -14,29 +14,29 @@ import java.util.LinkedHashSet;
 @Data
 public class Chemin {
 
-    private final Collection<Point> points = new LinkedHashSet<>();
+  private final Collection<Point> points = new LinkedHashSet<>();
 
-    public void addPoint(final Point pt) {
-        points.add(pt);
+  public void addPoint(final Point pt) {
+    points.add(pt);
+  }
+
+  public int nbPoints() {
+    return points.size();
+  }
+
+  public boolean hasNext() {
+    return !points.isEmpty();
+  }
+
+  public Point next() {
+    Iterator<Point> it = points.iterator();
+    if (it.hasNext()) {
+      Point p = it.next();
+      it.remove();
+      return p;
     }
 
-    public int nbPoints() {
-        return points.size();
-    }
-
-    public boolean hasNext() {
-        return !points.isEmpty();
-    }
-
-    public Point next() {
-        Iterator<Point> it = points.iterator();
-        if (it.hasNext()) {
-            Point p = it.next();
-            it.remove();
-            return p;
-        }
-
-        // Fallback
-        return null;
-    }
+    // Fallback
+    return null;
+  }
 }

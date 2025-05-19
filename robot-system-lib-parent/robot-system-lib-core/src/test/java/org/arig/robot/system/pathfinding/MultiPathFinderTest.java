@@ -26,90 +26,90 @@ import java.util.Collections;
 @ContextConfiguration(classes = {PathFindingTestContext.class})
 class MultiPathFinderTest {
 
-    @Autowired
-    @Qualifier("multiPathTableJaune")
-    private MultiPathFinderImpl pf;
+  @Autowired
+  @Qualifier("multiPathTableJaune")
+  private MultiPathFinderImpl pf;
 
-    @Autowired
-    private AbstractRobotStatus rs;
+  @Autowired
+  private AbstractRobotStatus rs;
 
-    private Point from = new Point(89, 16);
-    private Point to = new Point(227, 178);
+  private Point from = new Point(89, 16);
+  private Point to = new Point(227, 178);
 
-    @Test
-    @SneakyThrows
-    void testStartNodeDoesntExist() {
-        pf.setAlgorithm(PathFinderAlgorithm.A_STAR);
-        Chemin c = pf.findPath(new Point(67, 81), to);
-        Assertions.assertNotNull(c);
-        Assertions.assertTrue(c.hasNext());
+  @Test
+  @SneakyThrows
+  void testStartNodeDoesntExist() {
+    pf.setAlgorithm(PathFinderAlgorithm.A_STAR);
+    Chemin c = pf.findPath(new Point(67, 81), to);
+    Assertions.assertNotNull(c);
+    Assertions.assertTrue(c.hasNext());
+  }
+
+  @Test
+  @SneakyThrows
+  void testEndNodeDoesntExist() {
+    pf.setAlgorithm(PathFinderAlgorithm.A_STAR);
+    try {
+      pf.findPath(from, new Point(225, 285));
+      Assertions.fail();
+    } catch (NoPathFoundException npfe) {
+      Assertions.assertEquals(NoPathFoundException.ErrorType.END_NODE_DOES_NOT_EXIST, npfe.getErrorType());
     }
+  }
 
-    @Test
-    @SneakyThrows
-    void testEndNodeDoesntExist() {
-        pf.setAlgorithm(PathFinderAlgorithm.A_STAR);
-        try {
-            pf.findPath(from, new Point(225, 285));
-            Assertions.fail();
-        } catch (NoPathFoundException npfe) {
-            Assertions.assertEquals(NoPathFoundException.ErrorType.END_NODE_DOES_NOT_EXIST, npfe.getErrorType());
-        }
-    }
+  @Test
+  @SneakyThrows
+  void testFindPathAStar() {
+    pf.setAlgorithm(PathFinderAlgorithm.A_STAR);
+    Chemin c = pf.findPath(from, to);
+    Assertions.assertNotNull(c);
+    Assertions.assertEquals(8, c.nbPoints());
+  }
 
-    @Test
-    @SneakyThrows
-    void testFindPathAStar() {
-        pf.setAlgorithm(PathFinderAlgorithm.A_STAR);
-        Chemin c = pf.findPath(from, to);
-        Assertions.assertNotNull(c);
-        Assertions.assertEquals(8, c.nbPoints());
-    }
+  @Test
+  @SneakyThrows
+  void testFindPathDijkstra() {
+    pf.setAlgorithm(PathFinderAlgorithm.DIJKSTRA);
+    Chemin c = pf.findPath(from, to);
+    Assertions.assertNotNull(c);
+    Assertions.assertEquals(6, c.nbPoints());
+  }
 
-    @Test
-    @SneakyThrows
-    void testFindPathDijkstra() {
-        pf.setAlgorithm(PathFinderAlgorithm.DIJKSTRA);
-        Chemin c = pf.findPath(from, to);
-        Assertions.assertNotNull(c);
-        Assertions.assertEquals(6, c.nbPoints());
-    }
+  @Test
+  @SneakyThrows
+  void testFindPathLazyThetaStar() {
+    pf.setAlgorithm(PathFinderAlgorithm.LAZY_THETA_STAR);
+    Chemin c = pf.findPath(from, to);
+    Assertions.assertNotNull(c);
+    Assertions.assertEquals(7, c.nbPoints());
+  }
 
-    @Test
-    @SneakyThrows
-    void testFindPathLazyThetaStar() {
-        pf.setAlgorithm(PathFinderAlgorithm.LAZY_THETA_STAR);
-        Chemin c = pf.findPath(from, to);
-        Assertions.assertNotNull(c);
-        Assertions.assertEquals(7, c.nbPoints());
-    }
+  @Test
+  @SneakyThrows
+  void testFindPathAnya16() {
+    rs.currentAction("Test find path ANYA16");
+    rs.otherPosition(70, 70);
 
-    @Test
-    @SneakyThrows
-    void testFindPathAnya16() {
-        rs.currentAction("Test find path ANYA16");
-        rs.otherPosition(70, 70);
+    pf.setAlgorithm(PathFinderAlgorithm.ANYA16);
+    Chemin c = pf.findPath(from, to);
+    Assertions.assertNotNull(c);
+    Assertions.assertEquals(6, c.nbPoints());
+  }
 
-        pf.setAlgorithm(PathFinderAlgorithm.ANYA16);
-        Chemin c = pf.findPath(from, to);
-        Assertions.assertNotNull(c);
-        Assertions.assertEquals(6, c.nbPoints());
-    }
+  @Test
+  @SneakyThrows
+  @DirtiesContext
+  void testFindPathLazyThetaStarAvecObstacle() {
+    pf.setAlgorithm(PathFinderAlgorithm.LAZY_THETA_STAR);
+    Chemin cheminSansObstacles = pf.findPath(from, to);
+    Assertions.assertNotNull(cheminSansObstacles);
+    Assertions.assertTrue(cheminSansObstacles.hasNext());
 
-    @Test
-    @SneakyThrows
-    @DirtiesContext
-    void testFindPathLazyThetaStarAvecObstacle() {
-        pf.setAlgorithm(PathFinderAlgorithm.LAZY_THETA_STAR);
-        Chemin cheminSansObstacles = pf.findPath(from, to);
-        Assertions.assertNotNull(cheminSansObstacles);
-        Assertions.assertTrue(cheminSansObstacles.hasNext());
+    pf.setObstacles(Collections.singletonList(new Ellipse2D.Double(195 - 20, 80 - 20, 40, 40)));
+    Chemin cheminAvecObstacles = pf.findPath(from, to);
+    Assertions.assertNotNull(cheminAvecObstacles);
+    Assertions.assertTrue(cheminAvecObstacles.hasNext());
 
-        pf.setObstacles(Collections.singletonList(new Ellipse2D.Double(195 - 20, 80 - 20, 40, 40)));
-        Chemin cheminAvecObstacles = pf.findPath(from, to);
-        Assertions.assertNotNull(cheminAvecObstacles);
-        Assertions.assertTrue(cheminAvecObstacles.hasNext());
-
-        Assertions.assertNotEquals(cheminSansObstacles.nbPoints(), cheminAvecObstacles.nbPoints());
-    }
+    Assertions.assertNotEquals(cheminSansObstacles.nbPoints(), cheminAvecObstacles.nbPoints());
+  }
 }

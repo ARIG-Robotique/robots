@@ -20,106 +20,106 @@ import org.springframework.shell.standard.ShellMethodAvailability;
 @ShellCommandGroup("Moteurs")
 public class NerellMoteursCommands {
 
-    private final AbstractRobotStatus rs;
-    private final NerellIOService ioService;
-    private final AbstractEnergyService energyService;
-    private final AbstractPropulsionsMotors propulsionsMotors;
-    private final Abstract2WheelsEncoders wheelsEncoders;
+  private final AbstractRobotStatus rs;
+  private final NerellIOService ioService;
+  private final AbstractEnergyService energyService;
+  private final AbstractPropulsionsMotors propulsionsMotors;
+  private final Abstract2WheelsEncoders wheelsEncoders;
 
-    public Availability alimentationOk() {
-        return ioService.auOk() && energyService.checkMoteurs()
-                ? Availability.available() : Availability.unavailable("Alimentation moteurs KO");
-    }
+  public Availability alimentationOk() {
+    return ioService.auOk() && energyService.checkMoteurs()
+      ? Availability.available() : Availability.unavailable("Alimentation moteurs KO");
+  }
 
-    @ShellMethodAvailability("alimentationOk")
-    @ShellMethod("Rotation des moteurs de propulsions")
-    public void moteursPropulsions(final int droite, final int gauche) {
-        rs.enableCapture();
-        propulsionsMotors.generateMouvement(gauche, droite);
-    }
+  @ShellMethodAvailability("alimentationOk")
+  @ShellMethod("Rotation des moteurs de propulsions")
+  public void moteursPropulsions(final int droite, final int gauche) {
+    rs.enableCapture();
+    propulsionsMotors.generateMouvement(gauche, droite);
+  }
 
-    @ShellMethodAvailability("alimentationOk")
-    @ShellMethod("Arret des moteurs de propulsions")
-    public void stopMoteursPropulsions() {
-        propulsionsMotors.generateMouvement(propulsionsMotors.getStopSpeed(), propulsionsMotors.getStopSpeed());
-        rs.disableCapture();
-    }
+  @ShellMethodAvailability("alimentationOk")
+  @ShellMethod("Arret des moteurs de propulsions")
+  public void stopMoteursPropulsions() {
+    propulsionsMotors.generateMouvement(propulsionsMotors.getStopSpeed(), propulsionsMotors.getStopSpeed());
+    rs.disableCapture();
+  }
 
-    @ShellMethodAvailability("alimentationOk")
-    @ShellMethod("Test déplacement a balles")
-    public void moteursABalle(int wait) {
-        rs.enableCapture();
-        propulsionsMotors.generateMouvement(propulsionsMotors.getMaxSpeed(), propulsionsMotors.getMaxSpeed());
-        ThreadUtils.sleep(wait);
+  @ShellMethodAvailability("alimentationOk")
+  @ShellMethod("Test déplacement a balles")
+  public void moteursABalle(int wait) {
+    rs.enableCapture();
+    propulsionsMotors.generateMouvement(propulsionsMotors.getMaxSpeed(), propulsionsMotors.getMaxSpeed());
+    ThreadUtils.sleep(wait);
 
-        propulsionsMotors.generateMouvement(propulsionsMotors.getStopSpeed(), propulsionsMotors.getStopSpeed());
-        ThreadUtils.sleep(1000);
+    propulsionsMotors.generateMouvement(propulsionsMotors.getStopSpeed(), propulsionsMotors.getStopSpeed());
+    ThreadUtils.sleep(1000);
 
-        propulsionsMotors.generateMouvement(-propulsionsMotors.getMaxSpeed(), propulsionsMotors.getMaxSpeed());
-        ThreadUtils.sleep(wait);
+    propulsionsMotors.generateMouvement(-propulsionsMotors.getMaxSpeed(), propulsionsMotors.getMaxSpeed());
+    ThreadUtils.sleep(wait);
 
-        propulsionsMotors.generateMouvement(propulsionsMotors.getStopSpeed(), propulsionsMotors.getStopSpeed());
-        rs.disableCapture();
-    }
+    propulsionsMotors.generateMouvement(propulsionsMotors.getStopSpeed(), propulsionsMotors.getStopSpeed());
+    rs.disableCapture();
+  }
 
-    @ShellMethodAvailability("alimentationOk")
-    @ShellMethod("Reglages des limites de moteurs")
-    public void limitMotors() {
-        int limitRightUp = -1;
-        int limitRightDown = -1;
-        int limitLeftUp = -1;
-        int limitLeftDown = -1;
+  @ShellMethodAvailability("alimentationOk")
+  @ShellMethod("Reglages des limites de moteurs")
+  public void limitMotors() {
+    int limitRightUp = -1;
+    int limitRightDown = -1;
+    int limitLeftUp = -1;
+    int limitLeftDown = -1;
 
-        int cmdRight = 0;
-        int cmdLeft = 0;
+    int cmdRight = 0;
+    int cmdLeft = 0;
 
-        int cycle = 0;
+    int cycle = 0;
 
-        rs.enableCapture();
+    rs.enableCapture();
 
-        wheelsEncoders.reset();
-        do {
-            propulsionsMotors.generateMouvement(cmdLeft, cmdRight);
-            log.info("Cycle UP {} : L {} / R {}", cycle, cmdLeft, cmdRight);
-            ThreadUtils.sleep(100);
-            wheelsEncoders.lectureValeurs();
-            if (wheelsEncoders.getGauche() > 80) {
-                limitLeftUp = cmdLeft;
-            } else {
-                cmdLeft += 10;
-            }
-            if (wheelsEncoders.getDroit() > 80) {
-                limitRightUp = cmdRight;
-            } else {
-                cmdRight += 10;
-            }
-        } while (limitLeftUp == -1 || limitRightUp == -1);
+    wheelsEncoders.reset();
+    do {
+      propulsionsMotors.generateMouvement(cmdLeft, cmdRight);
+      log.info("Cycle UP {} : L {} / R {}", cycle, cmdLeft, cmdRight);
+      ThreadUtils.sleep(100);
+      wheelsEncoders.lectureValeurs();
+      if (wheelsEncoders.getGauche() > 80) {
+        limitLeftUp = cmdLeft;
+      } else {
+        cmdLeft += 10;
+      }
+      if (wheelsEncoders.getDroit() > 80) {
+        limitRightUp = cmdRight;
+      } else {
+        cmdRight += 10;
+      }
+    } while (limitLeftUp == -1 || limitRightUp == -1);
 
-        wheelsEncoders.reset();
-        do {
-            propulsionsMotors.generateMouvement(cmdLeft, cmdRight);
-            log.info("Cycle DOWN {} : L {} / R {}", cycle, cmdLeft, cmdRight);
-            ThreadUtils.sleep(100);
-            wheelsEncoders.lectureValeurs();
-            if (wheelsEncoders.getGauche() < 70) {
-                limitLeftDown = cmdLeft;
-            } else {
-                cmdLeft -= 10;
-            }
-            if (wheelsEncoders.getDroit() < 70) {
-                limitRightDown = cmdRight;
-            } else {
-                cmdRight -= 10;
-            }
-        } while (limitLeftDown == -1 || limitRightDown == -1);
+    wheelsEncoders.reset();
+    do {
+      propulsionsMotors.generateMouvement(cmdLeft, cmdRight);
+      log.info("Cycle DOWN {} : L {} / R {}", cycle, cmdLeft, cmdRight);
+      ThreadUtils.sleep(100);
+      wheelsEncoders.lectureValeurs();
+      if (wheelsEncoders.getGauche() < 70) {
+        limitLeftDown = cmdLeft;
+      } else {
+        cmdLeft -= 10;
+      }
+      if (wheelsEncoders.getDroit() < 70) {
+        limitRightDown = cmdRight;
+      } else {
+        cmdRight -= 10;
+      }
+    } while (limitLeftDown == -1 || limitRightDown == -1);
 
-        log.info("Limit Right UP : {} / Limit Right Down : {}", limitRightUp, limitRightDown);
-        log.info("Limit Left UP  : {} / Limit Left Down  : {}", limitLeftUp, limitLeftDown);
+    log.info("Limit Right UP : {} / Limit Right Down : {}", limitRightUp, limitRightDown);
+    log.info("Limit Left UP  : {} / Limit Left Down  : {}", limitLeftUp, limitLeftDown);
 
-        propulsionsMotors.stopAll();
-        ThreadUtils.sleep(500);
-        wheelsEncoders.reset();
+    propulsionsMotors.stopAll();
+    ThreadUtils.sleep(500);
+    wheelsEncoders.reset();
 
-        rs.disableCapture();
-    }
+    rs.disableCapture();
+  }
 }

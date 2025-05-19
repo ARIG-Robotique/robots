@@ -8,4 +8,5 @@ import org.arig.robot.model.lidar.DeviceInfos;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class DeviceInfosResponse extends AbstractResponseWithData<LidarAction, DeviceInfos> {}
+public class DeviceInfosResponse extends AbstractResponseWithData<LidarAction, DeviceInfos> {
+}

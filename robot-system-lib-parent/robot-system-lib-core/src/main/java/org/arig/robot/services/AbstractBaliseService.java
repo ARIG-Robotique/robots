@@ -19,123 +19,123 @@ import java.io.Serializable;
 @Slf4j
 public abstract class AbstractBaliseService<DATA extends Serializable> {
 
-    @Autowired
-    protected IVisionBalise<DATA> balise;
+  @Autowired
+  protected IVisionBalise<DATA> balise;
 
-    protected boolean isOK = false;
+  protected boolean isOK = false;
 
-    protected boolean idle = true;
+  protected boolean idle = true;
 
-    protected BaliseMode mode = BaliseMode.MILLIMETER_2D;
+  protected BaliseMode mode = BaliseMode.MILLIMETER_2D;
 
-    protected String team = "";
+  protected String team = "";
 
-    public boolean startDetection() {
-        if (isOK && !isIdling()) return true;
+  public boolean startDetection() {
+    if (isOK && !isIdling()) return true;
 
-        if (updateStatus() &&
-            (!isIdling() || exitIdle())
-        ) {
-            log.info("Initialisation de la balise réussie");
-            return true;
-        } else {
-            return false;
-        }
+    if (updateStatus() &&
+      (!isIdling() || exitIdle())
+    ) {
+      log.info("Initialisation de la balise réussie");
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  public void stopDetection() {
+    balise.end();
+  }
+
+  public boolean configure(BaliseMode mode) {
+    EmptyResponse response = balise.setConfig(new ConfigQueryData(mode));
+
+    if (response == null) {
+      isOK = false;
+      return false;
     }
 
-    public void stopDetection() {
-        balise.end();
+    return response.isOk();
+  }
+
+  public boolean isOK() {
+    return isOK;
+  }
+
+  public boolean updateStatus() {
+    StatusResponse response = balise.getStatus();
+
+    if (response == null || !response.isOk() || response.getData() == null) {
+      isOK = false;
+      return false;
     }
 
-    public boolean configure(BaliseMode mode) {
-        EmptyResponse response = balise.setConfig(new ConfigQueryData(mode));
+    idle = response.getData().getIdle();
+    team = response.getData().getTeam();
+    mode = response.getData().getMode();
 
-        if (response == null) {
-            isOK = false;
-            return false;
-        }
+    isOK = response.getData().isAllOK();
+    return isOK;
+  }
 
-        return response.isOk();
+  public boolean setTeam(String newTeam) {
+    EmptyResponse response = balise.setTeam(new TeamQueryData(newTeam));
+
+    if (response == null) {
+      isOK = false;
+      return false;
     }
 
-    public boolean isOK() {
-        return isOK;
+    return response.isOk();
+  }
+
+  abstract public void updateData();
+
+  public ImageResponseData getImage() {
+    ImageResponse response = balise.getImage(new ImageQueryData());
+
+    if (response == null) {
+      isOK = false;
+      return null;
     }
 
-    public boolean updateStatus() {
-        StatusResponse response = balise.getStatus();
-
-        if (response == null || !response.isOk() || response.getData() == null) {
-            isOK = false;
-            return false;
-        }
-
-        idle = response.getData().getIdle();
-        team = response.getData().getTeam();
-        mode = response.getData().getMode();
-
-        isOK = response.getData().isAllOK();
-        return isOK;
+    if (!response.isOk() || response.getData() == null) {
+      return null;
     }
 
-    public boolean setTeam(String newTeam) {
-        EmptyResponse response = balise.setTeam(new TeamQueryData(newTeam));
+    return response.getData();
+  }
 
-        if (response == null) {
-            isOK = false;
-            return false;
-        }
+  public boolean isIdling() {
+    return idle;
+  }
 
-        return response.isOk();
+  public void idle() {
+    idle = true;
+    balise.setIdle(new IdleQueryData(true));
+  }
+
+  public boolean exitIdle() {
+    IdleResponse response = balise.setIdle(new IdleQueryData(false));
+
+    if (response == null) {
+      isOK = false;
+      return false;
     }
 
-    abstract public void updateData();
+    idle = !response.isOk();
+    return idle;
+  }
 
-    public ImageResponseData getImage() {
-        ImageResponse response = balise.getImage(new ImageQueryData());
+  public boolean sendKeepAlive() {
+    EmptyResponse response = balise.keepAlive();
 
-        if (response == null) {
-            isOK = false;
-            return null;
-        }
-
-        if (!response.isOk() || response.getData() == null) {
-            return null;
-        }
-
-        return response.getData();
+    if (response == null) {
+      isOK = false;
+      return false;
     }
 
-    public boolean isIdling() {
-        return idle;
-    }
-
-    public void idle() {
-        idle = true;
-        balise.setIdle(new IdleQueryData(true));
-    }
-
-    public boolean exitIdle() {
-        IdleResponse response = balise.setIdle(new IdleQueryData(false));
-
-        if (response == null) {
-            isOK = false;
-            return false;
-        }
-
-        idle = !response.isOk();
-        return idle;
-    }
-
-    public boolean sendKeepAlive() {
-        EmptyResponse response = balise.keepAlive();
-
-        if (response == null) {
-            isOK = false;
-            return false;
-        }
-
-        return response.isOk();
-    }
+    return response.isOk();
+  }
 
 }

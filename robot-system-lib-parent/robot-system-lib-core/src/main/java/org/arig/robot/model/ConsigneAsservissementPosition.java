@@ -11,5 +11,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ConsigneAsservissementPosition {
-    private long value;
+  private long value;
 }

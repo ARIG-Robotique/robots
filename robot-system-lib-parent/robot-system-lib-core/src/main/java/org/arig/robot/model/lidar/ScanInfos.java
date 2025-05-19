@@ -12,7 +12,7 @@ import java.util.List;
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ScanInfos implements Serializable {
-    private List<Scan> scan;
-    private Short ignored;
-    private Integer tailleObstacle = null;
+  private List<Scan> scan;
+  private Short ignored;
+  private Integer tailleObstacle = null;
 }

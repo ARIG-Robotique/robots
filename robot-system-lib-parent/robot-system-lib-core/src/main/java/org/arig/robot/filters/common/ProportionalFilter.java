@@ -7,28 +7,28 @@ import org.springframework.util.Assert;
 
 public class ProportionalFilter implements Filter<Double, Double> {
 
-    public static final String GAIN_NULL_MESSAGE = "Le gain ne peut être null";
+  public static final String GAIN_NULL_MESSAGE = "Le gain ne peut être null";
 
-    @Getter
-    private Double gain;
+  @Getter
+  private Double gain;
 
-    @Getter
-    @Accessors(fluent = true)
-    private Double lastResult;
+  @Getter
+  @Accessors(fluent = true)
+  private Double lastResult;
 
-    public ProportionalFilter(Double gain) {
-        setGain(gain);
-    }
+  public ProportionalFilter(Double gain) {
+    setGain(gain);
+  }
 
-    @Override
-    public Double filter(Double value) {
-        Assert.notNull(value, FILTER_VALUE_NULL_MESSAGE);
-        lastResult = gain * value;
-        return lastResult;
-    }
+  @Override
+  public Double filter(Double value) {
+    Assert.notNull(value, FILTER_VALUE_NULL_MESSAGE);
+    lastResult = gain * value;
+    return lastResult;
+  }
 
-    public void setGain(Double gain) {
-        Assert.notNull(gain, GAIN_NULL_MESSAGE);
-        this.gain = gain;
-    }
+  public void setGain(Double gain) {
+    Assert.notNull(gain, GAIN_NULL_MESSAGE);
+    this.gain = gain;
+  }
 }

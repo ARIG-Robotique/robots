@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 @Profile(ConstantesConfig.profileMonitoring)
 public class SystemController {
 
-    @GetMapping("/system")
-    public RobotInfo system() {
-        return RobotInfo.getInstance();
-    }
+  @GetMapping("/system")
+  public RobotInfo system() {
+    return RobotInfo.getInstance();
+  }
 }

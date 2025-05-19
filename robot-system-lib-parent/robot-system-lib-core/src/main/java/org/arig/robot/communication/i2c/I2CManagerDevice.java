@@ -9,22 +9,22 @@ import org.apache.commons.lang3.StringUtils;
 @Builder
 @Accessors(fluent = true)
 public class I2CManagerDevice<D> {
-    private final D device;
-    private final String deviceName;
-    private final byte[] scanCmd;
+  private final D device;
+  private final String deviceName;
+  private final byte[] scanCmd;
 
-    private final String multiplexerDeviceName;
-    private final Byte multiplexerChannel;
+  private final String multiplexerDeviceName;
+  private final Byte multiplexerChannel;
 
-    public boolean isMultiplexed() {
-        return StringUtils.isNotBlank(multiplexerDeviceName);
+  public boolean isMultiplexed() {
+    return StringUtils.isNotBlank(multiplexerDeviceName);
+  }
+
+  @Override
+  public String toString() {
+    if (isMultiplexed()) {
+      return deviceName + " multiplexe par " + multiplexerDeviceName + " sur le canal " + multiplexerChannel;
     }
-
-    @Override
-    public String toString() {
-        if (isMultiplexed()) {
-            return deviceName + " multiplexe par " + multiplexerDeviceName + " sur le canal " + multiplexerChannel;
-        }
-        return deviceName;
-    }
+    return deviceName;
+  }
 }

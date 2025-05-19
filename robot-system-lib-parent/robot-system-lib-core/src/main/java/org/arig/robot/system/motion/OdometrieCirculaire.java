@@ -10,18 +10,18 @@ import org.arig.robot.model.enums.TypeOdometrie;
  */
 public class OdometrieCirculaire extends AbstractOdometrie {
 
-    /**
-     * Instantiates a new circular odometrie.
-     */
-    public OdometrieCirculaire() {
-        super(TypeOdometrie.CIRCULAIRE);
-    }
+  /**
+   * Instantiates a new circular odometrie.
+   */
+  public OdometrieCirculaire() {
+    super(TypeOdometrie.CIRCULAIRE);
+  }
 
-    /**
-     * Calcul selon le postulat que le robot roule en courbe
-     */
-    @Override
-    protected void process() {
-        throw new NotYetImplementedException();
-    }
+  /**
+   * Calcul selon le postulat que le robot roule en courbe
+   */
+  @Override
+  protected void process() {
+    throw new NotYetImplementedException();
+  }
 }

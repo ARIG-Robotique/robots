@@ -8,18 +8,18 @@ import java.io.Serializable;
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public abstract class AbstractData3D<
-    NAME extends Enum<NAME>,
-    TYPE extends Enum<TYPE>,
-    TEAM extends Enum<TEAM>
-    > implements Serializable {
+  NAME extends Enum<NAME>,
+  TYPE extends Enum<TYPE>,
+  TEAM extends Enum<TEAM>
+  > implements Serializable {
 
-    protected NAME name;
-    protected TYPE type;
-    protected TEAM team;
-    private int r;
-    private int x;
-    private int y;
-    private long age;
-    private DataResponseMetadata metadata;
+  protected NAME name;
+  protected TYPE type;
+  protected TEAM team;
+  private int r;
+  private int x;
+  private int y;
+  private long age;
+  private DataResponseMetadata metadata;
 
 }

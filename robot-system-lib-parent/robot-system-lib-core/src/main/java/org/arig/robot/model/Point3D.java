@@ -14,15 +14,15 @@ import lombok.ToString;
 @ToString(callSuper = true)
 public class Point3D extends Point {
 
-    private double z;
+  private double z;
 
-    public Point3D(double x, double y, double z) {
-        super(x, y);
-        this.z = z;
+  public Point3D(double x, double y, double z) {
+    super(x, y);
+    this.z = z;
 
-    }
+  }
 
-    public void addDeltaZ(final double dZ) {
-        z += dZ;
-    }
+  public void addDeltaZ(final double dZ) {
+    z += dZ;
+  }
 }

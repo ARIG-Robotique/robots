@@ -37,104 +37,104 @@ import java.util.List;
 @RequiredArgsConstructor
 public class OdinAsservissementCommands {
 
-    private final MonitoringWrapper monitoringWrapper;
-    private final OdinIOService ioService;
-    private final AbstractEnergyService energyService;
-    private final TrajectoryManager trajectoryManager;
-    private final OdinRobotStatus rs;
-    private final ConvertionRobotUnit convRobot;
-    private final CommandeRobot cmdRobot;
-    private final Position currentPosition;
-    private final PidFilter pidDistance;
-    private final PidFilter pidOrientation;
+  private final MonitoringWrapper monitoringWrapper;
+  private final OdinIOService ioService;
+  private final AbstractEnergyService energyService;
+  private final TrajectoryManager trajectoryManager;
+  private final OdinRobotStatus rs;
+  private final ConvertionRobotUnit convRobot;
+  private final CommandeRobot cmdRobot;
+  private final Position currentPosition;
+  private final PidFilter pidDistance;
+  private final PidFilter pidOrientation;
 
-    private boolean monitoringRun = false;
+  private boolean monitoringRun = false;
 
-    private void startMonitoring() {
-        if (monitoringRun) {
-            endMonitoring();
-        }
-
-        monitoringRun = true;
-        final String execId = LocalDateTime.now().format(DateTimeFormatter.ofPattern(ConstantesConfig.executiondIdFormat));
-        System.setProperty(ConstantesConfig.keyExecutionId, execId);
-        rs.enableForceMonitoring();
-        monitoringWrapper.cleanAllPoints();
+  private void startMonitoring() {
+    if (monitoringRun) {
+      endMonitoring();
     }
 
-    @SneakyThrows
-    private void endMonitoring() {
-        monitoringRun = false;
-        monitoringWrapper.save();
-        rs.disableForceMonitoring();
+    monitoringRun = true;
+    final String execId = LocalDateTime.now().format(DateTimeFormatter.ofPattern(ConstantesConfig.executiondIdFormat));
+    System.setProperty(ConstantesConfig.keyExecutionId, execId);
+    rs.enableForceMonitoring();
+    monitoringWrapper.cleanAllPoints();
+  }
 
-        final String execId = System.getProperty(ConstantesConfig.keyExecutionId);
+  @SneakyThrows
+  private void endMonitoring() {
+    monitoringRun = false;
+    monitoringWrapper.save();
+    rs.disableForceMonitoring();
 
-        final File execFile = new File("./logs/" + execId + ".exec");
-        DateTimeFormatter execIdPattern = DateTimeFormatter.ofPattern(ConstantesConfig.executiondIdFormat);
-        DateTimeFormatter savePattern = DateTimeFormatter.ofPattern(ConstantesConfig.executiondDateFormat);
-        List<String> lines = new ArrayList<>();
-        lines.add(LocalDateTime.parse(execId, execIdPattern).format(savePattern));
-        lines.add(LocalDateTime.now().format(savePattern));
-        FileUtils.writeLines(execFile, lines);
+    final String execId = System.getProperty(ConstantesConfig.keyExecutionId);
 
-        log.info("Création du fichier de fin d'exécution {}", execFile.getAbsolutePath());
-    }
+    final File execFile = new File("./logs/" + execId + ".exec");
+    DateTimeFormatter execIdPattern = DateTimeFormatter.ofPattern(ConstantesConfig.executiondIdFormat);
+    DateTimeFormatter savePattern = DateTimeFormatter.ofPattern(ConstantesConfig.executiondDateFormat);
+    List<String> lines = new ArrayList<>();
+    lines.add(LocalDateTime.parse(execId, execIdPattern).format(savePattern));
+    lines.add(LocalDateTime.now().format(savePattern));
+    FileUtils.writeLines(execFile, lines);
 
-    public Availability alimentationOk() {
-        return ioService.auOk() && energyService.checkServos() && energyService.checkMoteurs()
-                ? Availability.available() : Availability.unavailable("Les alimentations ne sont pas bonnes");
-    }
+    log.info("Création du fichier de fin d'exécution {}", execFile.getAbsolutePath());
+  }
 
-    @ShellMethod("Réglage PID Distance")
-    public void pidDistance(@NotNull @Min(0) double kp, @NotNull @Min(0) double ki, @NotNull @Min(0) double kd) {
-        pidDistance.setTunings(kp, ki, kd);
-        pidDistance.reset();
-    }
+  public Availability alimentationOk() {
+    return ioService.auOk() && energyService.checkServos() && energyService.checkMoteurs()
+      ? Availability.available() : Availability.unavailable("Les alimentations ne sont pas bonnes");
+  }
 
-    @ShellMethod("Réglage PID Orientation")
-    public void pidOrientation(@NotNull @Min(0) double kp, @NotNull @Min(0) double ki, @NotNull @Min(0) double kd) {
-        pidOrientation.setTunings(kp, ki, kd);
-        pidOrientation.reset();
-    }
+  @ShellMethod("Réglage PID Distance")
+  public void pidDistance(@NotNull @Min(0) double kp, @NotNull @Min(0) double ki, @NotNull @Min(0) double kd) {
+    pidDistance.setTunings(kp, ki, kd);
+    pidDistance.reset();
+  }
 
-    @ShellMethod("Réglage des vitesses")
-    public void vitesseRobot(@NotNull long vitesseDistance, @NotNull long vitesseOrientation) {
-        trajectoryManager.setVitesse(vitesseDistance, vitesseOrientation);
-    }
+  @ShellMethod("Réglage PID Orientation")
+  public void pidOrientation(@NotNull @Min(0) double kp, @NotNull @Min(0) double ki, @NotNull @Min(0) double kd) {
+    pidOrientation.setTunings(kp, ki, kd);
+    pidOrientation.reset();
+  }
 
-    @ShellMethodAvailability("alimentationOk")
-    @ShellMethod("Asservissement du robot")
-    public void asservRobot(@NotNull long distance, @NotNull long orientation, SensDeplacement sens, TypeConsigne[] typeConsignes) {
-        startMonitoring();
+  @ShellMethod("Réglage des vitesses")
+  public void vitesseRobot(@NotNull long vitesseDistance, @NotNull long vitesseOrientation) {
+    trajectoryManager.setVitesse(vitesseDistance, vitesseOrientation);
+  }
 
-        cmdRobot.setTypes(ArrayUtils.getLength(typeConsignes) == 0 ? new TypeConsigne[]{TypeConsigne.DIST, TypeConsigne.ANGLE} : typeConsignes);
-        cmdRobot.setSensDeplacement(sens == null ? SensDeplacement.AUTO : sens);
-        cmdRobot.getConsigne().setDistance((long) convRobot.mmToPulse(distance));
-        cmdRobot.getConsigne().setOrientation((long) convRobot.degToPulse(orientation));
-        cmdRobot.setFrein(true);
+  @ShellMethodAvailability("alimentationOk")
+  @ShellMethod("Asservissement du robot")
+  public void asservRobot(@NotNull long distance, @NotNull long orientation, SensDeplacement sens, TypeConsigne[] typeConsignes) {
+    startMonitoring();
 
-        rs.enableAsserv();
-    }
+    cmdRobot.setTypes(ArrayUtils.getLength(typeConsignes) == 0 ? new TypeConsigne[]{TypeConsigne.DIST, TypeConsigne.ANGLE} : typeConsignes);
+    cmdRobot.setSensDeplacement(sens == null ? SensDeplacement.AUTO : sens);
+    cmdRobot.getConsigne().setDistance((long) convRobot.mmToPulse(distance));
+    cmdRobot.getConsigne().setOrientation((long) convRobot.degToPulse(orientation));
+    cmdRobot.setFrein(true);
 
-    @ShellMethod("Désactivation asservissement du robot")
-    public void disableAsservRobot() {
-        rs.disableAsserv();
-        endMonitoring();
-    }
+    rs.enableAsserv();
+  }
 
-    @ShellMethod("Lecture de la position actuelle")
-    public void readPosition() {
-        log.info("X: {}", trajectoryManager.currentXMm());
-        log.info("Y: {}", trajectoryManager.currentYMm());
-        log.info("A: {}", trajectoryManager.currentAngleDeg());
-    }
+  @ShellMethod("Désactivation asservissement du robot")
+  public void disableAsservRobot() {
+    rs.disableAsserv();
+    endMonitoring();
+  }
 
-    @ShellMethod("Réinitialisation de la position")
-    public void resetPosition() {
-        currentPosition.getPt().setX(0);
-        currentPosition.getPt().setY(0);
-        currentPosition.setAngle(0);
-        readPosition();
-    }
+  @ShellMethod("Lecture de la position actuelle")
+  public void readPosition() {
+    log.info("X: {}", trajectoryManager.currentXMm());
+    log.info("Y: {}", trajectoryManager.currentYMm());
+    log.info("A: {}", trajectoryManager.currentAngleDeg());
+  }
+
+  @ShellMethod("Réinitialisation de la position")
+  public void resetPosition() {
+    currentPosition.getPt().setX(0);
+    currentPosition.getPt().setY(0);
+    currentPosition.setAngle(0);
+    readPosition();
+  }
 }

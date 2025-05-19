@@ -28,6 +28,7 @@ package com.pi4j.gpio.extension.pca;
  * <http://www.gnu.org/licenses/lgpl-3.0.html>.
  * #L%
  */
+
 import com.pi4j.io.gpio.GpioProviderPinCache;
 import com.pi4j.io.gpio.Pin;
 
@@ -37,36 +38,36 @@ import com.pi4j.io.gpio.Pin;
  */
 public class PCA9685GpioProviderPinCache extends GpioProviderPinCache {
 
-    private int pwmOnValue = -1;
-    private int pwmOffValue = -1;
+  private int pwmOnValue = -1;
+  private int pwmOffValue = -1;
 
-    public PCA9685GpioProviderPinCache(Pin pin) {
-        super(pin);
-    }
+  public PCA9685GpioProviderPinCache(Pin pin) {
+    super(pin);
+  }
 
-    public int getPwmOnValue() {
-        return pwmOnValue;
-    }
+  public int getPwmOnValue() {
+    return pwmOnValue;
+  }
 
-    public void setPwmOnValue(int pwmOnValue) {
-        this.pwmOnValue = pwmOnValue;
-    }
+  public void setPwmOnValue(int pwmOnValue) {
+    this.pwmOnValue = pwmOnValue;
+  }
 
-    public int getPwmOffValue() {
-        return pwmOffValue;
-    }
+  public int getPwmOffValue() {
+    return pwmOffValue;
+  }
 
-    public void setPwmOffValue(int pwmOffValue) {
-        this.pwmOffValue = pwmOffValue;
-    }
+  public void setPwmOffValue(int pwmOffValue) {
+    this.pwmOffValue = pwmOffValue;
+  }
 
-    @Override
-    public int getPwmValue() {
-        throw new UnsupportedOperationException("Use getPwmOnValue() and getPwmOffValue() instead.");
-    }
+  @Override
+  public int getPwmValue() {
+    throw new UnsupportedOperationException("Use getPwmOnValue() and getPwmOffValue() instead.");
+  }
 
-    @Override
-    public void setPwmValue(int value) {
-        throw new UnsupportedOperationException("Use setPwmOnValue() and setPwmOffValue() instead.");
-    }
+  @Override
+  public void setPwmValue(int value) {
+    throw new UnsupportedOperationException("Use setPwmOnValue() and setPwmOffValue() instead.");
+  }
 }

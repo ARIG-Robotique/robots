@@ -9,6 +9,6 @@ import java.io.Serializable;
 @EqualsAndHashCode(callSuper = true)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Data2D
-    extends AbstractData2D
-    implements Serializable {
+  extends AbstractData2D
+  implements Serializable {
 }

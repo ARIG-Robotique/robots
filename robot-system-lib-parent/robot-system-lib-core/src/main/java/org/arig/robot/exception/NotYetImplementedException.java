@@ -5,17 +5,17 @@ package org.arig.robot.exception;
  */
 public class NotYetImplementedException extends RuntimeException {
 
-    private static final String MSG = "Not Yet Implemented";
+  private static final String MSG = "Not Yet Implemented";
 
-    public NotYetImplementedException() {
-        super(MSG);
-    }
+  public NotYetImplementedException() {
+    super(MSG);
+  }
 
-    public NotYetImplementedException(Throwable cause) {
-        super(MSG, cause);
-    }
+  public NotYetImplementedException(Throwable cause) {
+    super(MSG, cause);
+  }
 
-    protected NotYetImplementedException(Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(MSG, cause, enableSuppression, writableStackTrace);
-    }
+  protected NotYetImplementedException(Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+    super(MSG, cause, enableSuppression, writableStackTrace);
+  }
 }

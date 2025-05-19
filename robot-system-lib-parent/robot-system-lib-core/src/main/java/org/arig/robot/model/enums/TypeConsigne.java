@@ -10,12 +10,12 @@ import lombok.Getter;
  */
 @AllArgsConstructor
 public enum TypeConsigne {
-    XY(1),
-    DIST(2),
-    ANGLE(4),
-    LINE(8),
-    CIRCLE(16);
+  XY(1),
+  DIST(2),
+  ANGLE(4),
+  LINE(8),
+  CIRCLE(16);
 
-    @Getter
-    private final int value;
+  @Getter
+  private final int value;
 }

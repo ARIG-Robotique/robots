@@ -11,24 +11,24 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ExtendWith(SpringExtension.class)
 public class TestRobotConfig {
 
-    private static RobotConfig rc = new RobotConfig();
+  private static RobotConfig rc = new RobotConfig();
 
-    @BeforeAll
-    public static void initClass() {
-        rc.vitesseMin(100);
-        rc.vitesseOrientationMin(100);
-        rc.vitesseMax(1000);
-        rc.vitesseOrientationMax(1000);
-        rc.vitesseDefRatio(10);
+  @BeforeAll
+  public static void initClass() {
+    rc.vitesseMin(100);
+    rc.vitesseOrientationMin(100);
+    rc.vitesseMax(1000);
+    rc.vitesseOrientationMax(1000);
+    rc.vitesseDefRatio(10);
+  }
+
+  @Test
+  public void testVitesse() {
+    log.info("Test des valeurs ratio vitesse");
+
+    for (int i = 0; i <= 100; i++) {
+      log.info("PCT : {} : {} distance, {} orientation", i, rc.vitesse(i), rc.vitesseOrientation(i));
+      Assertions.assertEquals(rc.vitesse(i), rc.vitesseOrientation(i));
     }
-
-    @Test
-    public void testVitesse() {
-        log.info("Test des valeurs ratio vitesse");
-
-        for (int i = 0 ; i <= 100 ; i++) {
-            log.info("PCT : {} : {} distance, {} orientation", i, rc.vitesse(i), rc.vitesseOrientation(i));
-            Assertions.assertEquals(rc.vitesse(i), rc.vitesseOrientation(i));
-        }
-    }
+  }
 }

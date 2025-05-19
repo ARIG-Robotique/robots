@@ -12,33 +12,33 @@ import org.springframework.context.annotation.Primary;
 @Configuration
 public class PidTestContext {
 
-    @Bean
-    @Primary
-    public SimplePidFilter simplePID() {
-        SimplePidFilter pid = new SimplePidFilter("test");
-        pid.setTunings(1, 0, 0);
+  @Bean
+  @Primary
+  public SimplePidFilter simplePID() {
+    SimplePidFilter pid = new SimplePidFilter("test");
+    pid.setTunings(1, 0, 0);
 
-        return pid;
-    }
+    return pid;
+  }
 
-    @Bean
-    public SimplePidFilter simplePIDIntegralLimit() {
-        SimplePidFilter pid = new SimplePidFilter("test", 4096d);
-        pid.setTunings(1, 0, 0);
+  @Bean
+  public SimplePidFilter simplePIDIntegralLimit() {
+    SimplePidFilter pid = new SimplePidFilter("test", 4096d);
+    pid.setTunings(1, 0, 0);
 
-        return pid;
-    }
+    return pid;
+  }
 
-    @Bean
-    public DerivateInputPidFilter derivateInputPID() {
-        DerivateInputPidFilter pid = new DerivateInputPidFilter("test");
-        pid.setTunings(1, 0, 0);
+  @Bean
+  public DerivateInputPidFilter derivateInputPID() {
+    DerivateInputPidFilter pid = new DerivateInputPidFilter("test");
+    pid.setTunings(1, 0, 0);
 
-        return pid;
-    }
+    return pid;
+  }
 
-    @Bean
-    public MonitoringWrapper monitoringWrapper() {
-        return new MonitoringJsonWrapper();
-    }
+  @Bean
+  public MonitoringWrapper monitoringWrapper() {
+    return new MonitoringJsonWrapper();
+  }
 }

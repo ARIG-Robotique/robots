@@ -12,40 +12,40 @@ import org.arig.robot.tinker.services.ServosServices;
 @RequiredArgsConstructor
 public class JoyConLeftEventListener implements ControllerEventListener {
 
-    private final ServosServices servosServices;
-    private final AbstractPropulsionsMotors motors;
+  private final ServosServices servosServices;
+  private final AbstractPropulsionsMotors motors;
 
-    @Override
-    public void handleInput(final ControllerEvent event) {
-        event.getNewInputs().forEach((button, enable) -> {
-            if (!enable) {
-                return;
-            }
+  @Override
+  public void handleInput(final ControllerEvent event) {
+    event.getNewInputs().forEach((button, enable) -> {
+      if (!enable) {
+        return;
+      }
 
-            if (button == ControllerConstants.right) {
-                servosServices.toggleFourche();
-            }
-            if (button == ControllerConstants.up) {
-                servosServices.toggleBlocageGauche();
-            }
-            if (button == ControllerConstants.down) {
-                servosServices.toggleBlocageDroit();
-            }
-            if (button == ControllerConstants.sl) {
-                servosServices.translateurGauche();
-            }
-            if (button == ControllerConstants.sr) {
-                servosServices.translateurDroite();
-            }
-        });
+      if (button == ControllerConstants.right) {
+        servosServices.toggleFourche();
+      }
+      if (button == ControllerConstants.up) {
+        servosServices.toggleBlocageGauche();
+      }
+      if (button == ControllerConstants.down) {
+        servosServices.toggleBlocageDroit();
+      }
+      if (button == ControllerConstants.sl) {
+        servosServices.translateurGauche();
+      }
+      if (button == ControllerConstants.sr) {
+        servosServices.translateurDroite();
+      }
+    });
 
-        float h = -event.getVertical();
-        float v = event.getHorizontal();
+    float h = -event.getVertical();
+    float v = event.getHorizontal();
 
-        int g = (int) ((v + h) * 127);
-        int d = (int) ((v - h) * 127);
+    int g = (int) ((v + h) * 127);
+    int d = (int) ((v - h) * 127);
 
-        motors.moteurDroit(d);
-        motors.moteurGauche(g);
-    }
+    motors.moteurDroit(d);
+    motors.moteurGauche(g);
+  }
 }

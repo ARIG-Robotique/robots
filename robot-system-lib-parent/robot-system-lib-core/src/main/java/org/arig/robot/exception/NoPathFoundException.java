@@ -8,31 +8,31 @@ import lombok.Getter;
  */
 public class NoPathFoundException extends Exception {
 
+  @Getter
+  private ErrorType errorType;
+
+  public NoPathFoundException(ErrorType errorType) {
+    super(errorType.getMessage());
+    this.errorType = errorType;
+  }
+
+  public NoPathFoundException(ErrorType errorType, Throwable cause) {
+    super(errorType.getMessage(), cause);
+    this.errorType = errorType;
+  }
+
+  public NoPathFoundException(ErrorType errorType, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+    super(errorType.getMessage(), cause, enableSuppression, writableStackTrace);
+    this.errorType = errorType;
+  }
+
+  @AllArgsConstructor
+  public enum ErrorType {
+    NO_PATH_FOUND("Aucun chemin disponible"),
+    START_NODE_DOES_NOT_EXIST("Le noeud de départ n'existe pas"),
+    END_NODE_DOES_NOT_EXIST("Le noeud d'arrivée n'existe pas");
+
     @Getter
-    private ErrorType errorType;
-
-    public NoPathFoundException(ErrorType errorType) {
-        super(errorType.getMessage());
-        this.errorType = errorType;
-    }
-
-    public NoPathFoundException(ErrorType errorType, Throwable cause) {
-        super(errorType.getMessage(), cause);
-        this.errorType = errorType;
-    }
-
-    public NoPathFoundException(ErrorType errorType, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(errorType.getMessage(), cause, enableSuppression, writableStackTrace);
-        this.errorType = errorType;
-    }
-
-    @AllArgsConstructor
-    public enum ErrorType {
-        NO_PATH_FOUND("Aucun chemin disponible"),
-        START_NODE_DOES_NOT_EXIST("Le noeud de départ n'existe pas"),
-        END_NODE_DOES_NOT_EXIST("Le noeud d'arrivée n'existe pas");
-
-        @Getter
-        private String message;
-    }
+    private String message;
+  }
 }

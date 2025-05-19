@@ -40,6 +40,7 @@ public class ARIG2024CanPropulsionsMotors extends AbstractPropulsionsMotors impl
     GET_VERSION(16);
 
     private final int id;
+
     private static CanFilter[] filters() {
       CanFilter[] filters = new CanFilter[ARIG2024CanPropulsionsMotorsManual.values().length];
       for (ARIG2024CanPropulsionsMotorsManual message : ARIG2024CanPropulsionsMotorsManual.values()) {
@@ -80,7 +81,7 @@ public class ARIG2024CanPropulsionsMotors extends AbstractPropulsionsMotors impl
     }
 
     final CanFrame encoderConfigurationFrame = CanFrame.create(ARIG2024CanPropulsionsMotorsManual.SET_MOTOR_CONFIGURATION.id,
-        CanFrame.FD_NO_FLAGS, new byte[]{config});
+      CanFrame.FD_NO_FLAGS, new byte[]{config});
     try {
       manualChannel.write(encoderConfigurationFrame);
     } catch (IOException e) {
@@ -99,7 +100,8 @@ public class ARIG2024CanPropulsionsMotors extends AbstractPropulsionsMotors impl
 
         byte[] data = new byte[response.getDataLength()];
         response.getData(data, 0, data.length);
-        version = new String(data, StandardCharsets.UTF_8);;
+        version = new String(data, StandardCharsets.UTF_8);
+        ;
       } catch (IOException e) {
         log.error("Error while sending version request", e);
         version = StringUtils.EMPTY;
@@ -137,7 +139,7 @@ public class ARIG2024CanPropulsionsMotors extends AbstractPropulsionsMotors impl
       int absMotor1 = Math.abs(speedMoteur1);
       int absMotor2 = Math.abs(speedMoteur2);
 
-      byte [] data = new byte[5];
+      byte[] data = new byte[5];
       data[0] = (byte) (absMotor1 >> 8);
       data[1] = (byte) (absMotor1 & 0xFF);
       data[2] = (byte) (absMotor2 >> 8);
@@ -145,7 +147,7 @@ public class ARIG2024CanPropulsionsMotors extends AbstractPropulsionsMotors impl
       data[4] = (byte) ((speedMoteur1 < 0 ? 1 : 0) | (speedMoteur2 < 0 ? 2 : 0));
 
       final CanFrame frame = CanFrame.create(ARIG2024CanPropulsionsMotorsManual.SET_MOTOR_SPEED.id,
-          CanFrame.FD_NO_FLAGS, data);
+        CanFrame.FD_NO_FLAGS, data);
       manualChannel.write(frame);
     } catch (IOException e) {
       log.error("Error while sending set motor speed request", e);

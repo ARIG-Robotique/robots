@@ -11,28 +11,28 @@ import java.util.List;
 
 public abstract class AbstractChainFilter<T> implements Filter<T, T> {
 
-    @Getter(AccessLevel.PROTECTED)
-    private final List<Filter<T, T>> filters = new LinkedList<>();
+  @Getter(AccessLevel.PROTECTED)
+  private final List<Filter<T, T>> filters = new LinkedList<>();
 
-    @Getter
-    @Accessors(fluent = true)
-    private T lastResult;
+  @Getter
+  @Accessors(fluent = true)
+  private T lastResult;
 
-    protected abstract T doFilter(T value);
+  protected abstract T doFilter(T value);
 
-    public void addFilter(Filter<T, T> filter) {
-        filters.add(filter);
-    }
+  public void addFilter(Filter<T, T> filter) {
+    filters.add(filter);
+  }
 
-    @Override
-    public final T filter(final T value) {
-        Assert.notNull(value, FILTER_VALUE_NULL_MESSAGE);
-        lastResult = doFilter(value);
-        return lastResult;
-    }
+  @Override
+  public final T filter(final T value) {
+    Assert.notNull(value, FILTER_VALUE_NULL_MESSAGE);
+    lastResult = doFilter(value);
+    return lastResult;
+  }
 
-    @Override
-    public final void reset() {
-        filters.forEach(Filter::reset);
-    }
+  @Override
+  public final void reset() {
+    filters.forEach(Filter::reset);
+  }
 }

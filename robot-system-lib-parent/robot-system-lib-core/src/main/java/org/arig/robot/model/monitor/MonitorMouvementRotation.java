@@ -11,9 +11,9 @@ import org.arig.robot.model.enums.TypeMouvement;
 @EqualsAndHashCode(callSuper = true)
 public class MonitorMouvementRotation extends AbstractMonitorMouvement {
 
-    private final TypeMouvement type = TypeMouvement.ROTATION;
+  private final TypeMouvement type = TypeMouvement.ROTATION;
 
-    private Double angle;
-    private Double fromAngle;
-    private Double toAngle;
+  private Double angle;
+  private Double fromAngle;
+  private Double toAngle;
 }

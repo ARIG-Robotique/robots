@@ -8,8 +8,8 @@ import org.arig.robot.communication.socket.lidar.enums.LidarAction;
 @EqualsAndHashCode(callSuper = true)
 public class SetSpeedQuery extends StartScanQuery {
 
-    public SetSpeedQuery(short speed) {
-        super(LidarAction.SET_SPEED);
-        this.setSpeed(speed);
-    }
+  public SetSpeedQuery(short speed) {
+    super(LidarAction.SET_SPEED);
+    this.setSpeed(speed);
+  }
 }

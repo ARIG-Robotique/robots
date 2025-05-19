@@ -8,14 +8,14 @@ import lombok.experimental.Accessors;
 @Accessors(fluent = true)
 @RequiredArgsConstructor
 public class ControllerButton {
-    private final String name;
-    private final int adress;
+  private final String name;
+  private final int adress;
 
-    public int on() {
-        return adress;
-    }
+  public int on() {
+    return adress;
+  }
 
-    public int off() {
-        return -on();
-    }
+  public int off() {
+    return -on();
+  }
 }

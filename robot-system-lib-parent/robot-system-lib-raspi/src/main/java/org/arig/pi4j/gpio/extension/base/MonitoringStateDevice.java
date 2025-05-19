@@ -40,9 +40,11 @@ import java.util.concurrent.TimeUnit;
  */
 public interface MonitoringStateDevice extends Runnable {
 
-    void shutdown();
+  void shutdown();
 
-    long getWaitTime();
-    void setWaitTime(long waitTimeMs);
-    void setWaitTime(long waitTime, TimeUnit unit);
+  long getWaitTime();
+
+  void setWaitTime(long waitTimeMs);
+
+  void setWaitTime(long waitTime, TimeUnit unit);
 }

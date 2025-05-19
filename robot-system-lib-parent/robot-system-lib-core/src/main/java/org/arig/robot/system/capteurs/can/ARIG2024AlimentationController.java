@@ -48,6 +48,7 @@ public class ARIG2024AlimentationController implements IAlimentationSensor, CAND
     GET_SOUND(10);
 
     private final int id;
+
     private static CanFilter[] filters() {
       CanFilter[] filters = new CanFilter[AlimControlerManual.values().length];
       for (AlimControlerManual message : AlimControlerManual.values()) {
@@ -67,6 +68,7 @@ public class ARIG2024AlimentationController implements IAlimentationSensor, CAND
 
 
     private final int id;
+
     private static CanFilter[] filters() {
       CanFilter[] filters = new CanFilter[AlimControlerFlux.values().length];
       for (AlimControlerFlux message : AlimControlerFlux.values()) {
@@ -83,7 +85,7 @@ public class ARIG2024AlimentationController implements IAlimentationSensor, CAND
     this.fluxChannel = CanChannels.newRawChannel(canDevice);
     this.fluxChannel.setOption(CanSocketOptions.FILTER, AlimControlerFlux.filters());
 
-    for (int i = 0 ; i < alimentations.length ; i++) {
+    for (int i = 0; i < alimentations.length; i++) {
       alimentations[i] = new AlimentationSensorValue();
     }
 
@@ -171,7 +173,8 @@ public class ARIG2024AlimentationController implements IAlimentationSensor, CAND
 
         byte[] data = new byte[response.getDataLength()];
         response.getData(data, 0, data.length);
-        version = new String(data, StandardCharsets.UTF_8);;
+        version = new String(data, StandardCharsets.UTF_8);
+        ;
       } catch (IOException e) {
         log.error("Error while sending version request", e);
         version = StringUtils.EMPTY;
@@ -238,10 +241,10 @@ public class ARIG2024AlimentationController implements IAlimentationSensor, CAND
       frame.getData(data, 0, data.length);
       log.warn("Battery state not yet implemented");
       battery.percentage(50).voltage(15.32)
-          .cell1Percentage(50).cell1Voltage(3.83)
-          .cell2Percentage(50).cell2Voltage(3.83)
-          .cell3Percentage(50).cell3Voltage(3.83)
-          .cell4Percentage(50).cell4Voltage(3.83);
+        .cell1Percentage(50).cell1Voltage(3.83)
+        .cell2Percentage(50).cell2Voltage(3.83)
+        .cell3Percentage(50).cell3Voltage(3.83)
+        .cell4Percentage(50).cell4Voltage(3.83);
       log.info("Battery : {}", battery.infos());
     }
   };

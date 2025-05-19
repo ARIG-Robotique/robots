@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 public abstract class AbstractPamiMacroAction extends AbstractMacroAction {
 
-    @Autowired
-    protected PamiRobotStatus rs;
+  @Autowired
+  protected PamiRobotStatus rs;
 
 }

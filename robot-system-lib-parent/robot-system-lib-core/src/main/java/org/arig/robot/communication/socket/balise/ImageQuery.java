@@ -8,15 +8,15 @@ import java.io.Serializable;
 
 @EqualsAndHashCode(callSuper = true)
 public class ImageQuery
-    extends AbstractQueryWithData<BaliseAction, ImageQueryData>
-    implements Serializable {
+  extends AbstractQueryWithData<BaliseAction, ImageQueryData>
+  implements Serializable {
 
-    public ImageQuery() {
-        super(BaliseAction.IMAGE);
-    }
+  public ImageQuery() {
+    super(BaliseAction.IMAGE);
+  }
 
-    public ImageQuery(ImageQueryData data) {
-        super(BaliseAction.IMAGE, data);
-    }
+  public ImageQuery(ImageQueryData data) {
+    super(BaliseAction.IMAGE, data);
+  }
 
 }

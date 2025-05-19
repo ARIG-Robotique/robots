@@ -8,11 +8,11 @@ import java.io.Serializable;
 
 @EqualsAndHashCode(callSuper = true)
 public class ProcessQuery
-    extends AbstractQuery<BaliseAction>
-    implements Serializable {
+  extends AbstractQuery<BaliseAction>
+  implements Serializable {
 
   public ProcessQuery() {
     super(BaliseAction.PROCESS);
-    }
+  }
 
 }

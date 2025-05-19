@@ -21,104 +21,104 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class TasksScheduler implements InitializingBean {
 
-    private static final int MS_TO_NS = 1000000;
+  private static final int MS_TO_NS = 1000000;
 
-    @Autowired
-    private MonitoringWrapper monitoringWrapper;
+  @Autowired
+  private MonitoringWrapper monitoringWrapper;
 
-    @Autowired
-    private AbstractRobotStatus rs;
+  @Autowired
+  private AbstractRobotStatus rs;
 
-    @Autowired
-    private StrategyManager strategyManager;
+  @Autowired
+  private StrategyManager strategyManager;
 
-    @Autowired
-    private TrajectoryManager trajectoryManager;
+  @Autowired
+  private TrajectoryManager trajectoryManager;
 
-    @Autowired
-    private CalageService calageService;
+  @Autowired
+  private CalageService calageService;
 
-    @Autowired
-    private IOService ioService;
+  @Autowired
+  private IOService ioService;
 
-    @Autowired
-    private RobotConfig robotConfig;
+  @Autowired
+  private RobotConfig robotConfig;
 
     /*
     @Autowired
     private RobotGroup group;
     */
 
-    @Override
-    public void afterPropertiesSet() {
-        Thread processThread = new Thread(() -> {
-            long lastTimeAsserv = System.nanoTime();
-            long lastTimeI2C = lastTimeAsserv;
-            long lastTimeCalage = lastTimeAsserv;
-            long lastTimeRefreshState = lastTimeAsserv;
-            long lastTimeRefreshPosition = lastTimeAsserv;
+  @Override
+  public void afterPropertiesSet() {
+    Thread processThread = new Thread(() -> {
+      long lastTimeAsserv = System.nanoTime();
+      long lastTimeI2C = lastTimeAsserv;
+      long lastTimeCalage = lastTimeAsserv;
+      long lastTimeRefreshState = lastTimeAsserv;
+      long lastTimeRefreshPosition = lastTimeAsserv;
 
-            rs.enableMainThread();
-            while (rs.mainThread()) {
-                // calage
-                long timeStartCalage = System.nanoTime();
-                long ellapsedCalage = timeStartCalage - lastTimeCalage;
+      rs.enableMainThread();
+      while (rs.mainThread()) {
+        // calage
+        long timeStartCalage = System.nanoTime();
+        long ellapsedCalage = timeStartCalage - lastTimeCalage;
 
-                boolean calageCourt = rs.calage().contains(TypeCalage.PRISE_PRODUIT_PINCE_AVANT)
-                        || rs.calage().contains(TypeCalage.PRISE_PRODUIT_PINCE_ARRIERE);
-                if (ellapsedCalage >= robotConfig.calageTimeMs(calageCourt) * MS_TO_NS) {
-                    lastTimeCalage = timeStartCalage;
+        boolean calageCourt = rs.calage().contains(TypeCalage.PRISE_PRODUIT_PINCE_AVANT)
+          || rs.calage().contains(TypeCalage.PRISE_PRODUIT_PINCE_ARRIERE);
+        if (ellapsedCalage >= robotConfig.calageTimeMs(calageCourt) * MS_TO_NS) {
+          lastTimeCalage = timeStartCalage;
 
-                    if (!rs.calage().isEmpty()) {
-                        calageService.process();
-                    }
-                }
+          if (!rs.calage().isEmpty()) {
+            calageService.process();
+          }
+        }
 
-                // asservissement
-                long timeStartAsserv = System.nanoTime();
-                long ellapsedAsserv = timeStartAsserv - lastTimeAsserv;
+        // asservissement
+        long timeStartAsserv = System.nanoTime();
+        long ellapsedAsserv = timeStartAsserv - lastTimeAsserv;
 
-                if (ellapsedAsserv >= robotConfig.asservTimeMs() * MS_TO_NS) {
-                    lastTimeAsserv = timeStartAsserv;
+        if (ellapsedAsserv >= robotConfig.asservTimeMs() * MS_TO_NS) {
+          lastTimeAsserv = timeStartAsserv;
 
-                    if (rs.asservEnabled()) {
-                        trajectoryManager.process(TimeUnit.MICROSECONDS.toMillis(ellapsedAsserv));
-                    } else {
-                        if (!rs.captureEnabled()) {
-                            trajectoryManager.stop();
-                        }
-                    }
+          if (rs.asservEnabled()) {
+            trajectoryManager.process(TimeUnit.MICROSECONDS.toMillis(ellapsedAsserv));
+          } else {
+            if (!rs.captureEnabled()) {
+              trajectoryManager.stop();
+            }
+          }
 
-                    MonitorTimeSerie serie = new MonitorTimeSerie()
-                            .measurementName("tasks")
-                            .addTag(MonitorTimeSerie.TAG_NAME, "asservissementPropulsions")
-                            .addField("rate", robotConfig.asservTimeMs())
-                            .addField("runTime", System.nanoTime() - timeStartAsserv)
-                            .addField("execTime", ellapsedAsserv);
+          MonitorTimeSerie serie = new MonitorTimeSerie()
+            .measurementName("tasks")
+            .addTag(MonitorTimeSerie.TAG_NAME, "asservissementPropulsions")
+            .addField("rate", robotConfig.asservTimeMs())
+            .addField("runTime", System.nanoTime() - timeStartAsserv)
+            .addField("execTime", ellapsedAsserv);
 
-                    monitoringWrapper.addTimeSeriePoint(serie);
-                }
+          monitoringWrapper.addTimeSeriePoint(serie);
+        }
 
-                // lecture I2C
-                long timeStartI2C = System.nanoTime();
-                long ellapsedI2C = timeStartI2C - lastTimeI2C;
+        // lecture I2C
+        long timeStartI2C = System.nanoTime();
+        long ellapsedI2C = timeStartI2C - lastTimeI2C;
 
-                if (ellapsedI2C >= (long) robotConfig.i2cReadTimeMs() * MS_TO_NS) {
-                    lastTimeI2C = timeStartI2C;
+        if (ellapsedI2C >= (long) robotConfig.i2cReadTimeMs() * MS_TO_NS) {
+          lastTimeI2C = timeStartI2C;
 
-                    ioService.refreshAllIO();
+          ioService.refreshAllIO();
 
-                    MonitorTimeSerie serie = new MonitorTimeSerie()
-                            .measurementName("tasks")
-                            .addTag(MonitorTimeSerie.TAG_NAME, "lectureI2C")
-                            .addField("rate", robotConfig.i2cReadTimeMs())
-                            .addField("runTime", System.nanoTime() - timeStartI2C)
-                            .addField("execTime", ellapsedI2C);
+          MonitorTimeSerie serie = new MonitorTimeSerie()
+            .measurementName("tasks")
+            .addTag(MonitorTimeSerie.TAG_NAME, "lectureI2C")
+            .addField("rate", robotConfig.i2cReadTimeMs())
+            .addField("runTime", System.nanoTime() - timeStartI2C)
+            .addField("execTime", ellapsedI2C);
 
-                    monitoringWrapper.addTimeSeriePoint(serie);
-                }
+          monitoringWrapper.addTimeSeriePoint(serie);
+        }
 
-                // position
+        // position
                 /*
                 if (rs.groupOk() && rs.matchEnabled()) {
                     long timeStartRefreshPosition = System.nanoTime();
@@ -130,24 +130,24 @@ public class TasksScheduler implements InitializingBean {
                 }
                 */
 
-                // state
-                long timeStartRefreshState = System.nanoTime();
-                long ellapsedRefreshState = timeStartRefreshState - lastTimeRefreshState;
-                if (ellapsedRefreshState >= 1000 * MS_TO_NS) {
-                    lastTimeRefreshState = timeStartRefreshState;
-                    rs.refreshState();
-                }
-            }
-        });
-
-        processThread.setName("process");
-        processThread.start();
-    }
-
-    @Scheduled(fixedDelay = 1)
-    public void strategyTask() {
-        if (rs.matchEnabled()) {
-            strategyManager.execute();
+        // state
+        long timeStartRefreshState = System.nanoTime();
+        long ellapsedRefreshState = timeStartRefreshState - lastTimeRefreshState;
+        if (ellapsedRefreshState >= 1000 * MS_TO_NS) {
+          lastTimeRefreshState = timeStartRefreshState;
+          rs.refreshState();
         }
+      }
+    });
+
+    processThread.setName("process");
+    processThread.start();
+  }
+
+  @Scheduled(fixedDelay = 1)
+  public void strategyTask() {
+    if (rs.matchEnabled()) {
+      strategyManager.execute();
     }
+  }
 }

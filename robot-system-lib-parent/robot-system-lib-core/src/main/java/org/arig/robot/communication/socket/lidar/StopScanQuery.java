@@ -9,8 +9,8 @@ import org.arig.robot.communication.socket.lidar.enums.LidarAction;
 @EqualsAndHashCode(callSuper = true)
 public class StopScanQuery extends AbstractQuery<LidarAction> {
 
-    public StopScanQuery() {
-        super(LidarAction.STOP_SCAN);
-    }
+  public StopScanQuery() {
+    super(LidarAction.STOP_SCAN);
+  }
 
 }

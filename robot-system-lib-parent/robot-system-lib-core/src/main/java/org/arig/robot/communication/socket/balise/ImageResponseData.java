@@ -16,16 +16,16 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ImageResponseData implements Serializable {
 
-    private List<Camera> cameras;
+  private List<Camera> cameras;
 
-    @Getter
-    @EqualsAndHashCode
-    @RequiredArgsConstructor
-    public static class Camera implements Serializable {
+  @Getter
+  @EqualsAndHashCode
+  @RequiredArgsConstructor
+  public static class Camera implements Serializable {
 
-        private String name;
-        private String data;
+    private String name;
+    private String data;
 
-    }
+  }
 
 }

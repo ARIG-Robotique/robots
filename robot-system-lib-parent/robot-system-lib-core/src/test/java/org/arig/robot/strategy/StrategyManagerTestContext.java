@@ -24,63 +24,63 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class StrategyManagerTestContext {
 
-    @Bean
-    public StrategyManager strategyManager() {
-        return new StrategyManager();
-    }
+  @Bean
+  public StrategyManager strategyManager() {
+    return new StrategyManager();
+  }
 
-    @Bean
-    public AbstractRobotStatus robotStatus() {
-        return new TestRobotStatus();
-    }
+  @Bean
+  public AbstractRobotStatus robotStatus() {
+    return new TestRobotStatus();
+  }
 
-    @Bean
-    public RobotGroup robotGroup() {
-        return new RobotGroupTest();
-    }
+  @Bean
+  public RobotGroup robotGroup() {
+    return new RobotGroupTest();
+  }
 
-    @Bean
-    public ConvertionRobotUnit conv() {
-        return new ConvertionRobotUnit(1, 1);
-    }
+  @Bean
+  public ConvertionRobotUnit conv() {
+    return new ConvertionRobotUnit(1, 1);
+  }
 
-    @Bean
-    public TableUtils tableUtils() {
-        return new TableUtils(3000, 2000, 150);
-    }
+  @Bean
+  public TableUtils tableUtils() {
+    return new TableUtils(3000, 2000, 150);
+  }
 
-    @Bean(name = "currentPosition")
-    public Position currentPosition()  {
-        return new Position();
-    }
+  @Bean(name = "currentPosition")
+  public Position currentPosition() {
+    return new Position();
+  }
 
-    @Bean("rplidar")
-    public ILidarTelemeter lidarTelemeter() {
-        return new LidarTelemeterMock();
-    }
+  @Bean("rplidar")
+  public ILidarTelemeter lidarTelemeter() {
+    return new LidarTelemeterMock();
+  }
 
-    @Bean
-    public RobotConfig robotConfig() {
-        return new RobotConfig();
-    }
+  @Bean
+  public RobotConfig robotConfig() {
+    return new RobotConfig();
+  }
 
-    @Bean
-    public PathFinder pathFinder() {
-        return new NoPathFinderImpl();
-    }
+  @Bean
+  public PathFinder pathFinder() {
+    return new NoPathFinderImpl();
+  }
 
-    @Bean
-    public LidarService lidarService() {
-        return new LidarService();
-    }
+  @Bean
+  public LidarService lidarService() {
+    return new LidarService();
+  }
 
-    @Bean
-    public Action oneShotAction() {
-        return new OneShotAction();
-    }
+  @Bean
+  public Action oneShotAction() {
+    return new OneShotAction();
+  }
 
-    @Bean
-    public Action invalidDuring10Seconds() {
-        return new InvalidWhenNotRunAfter10SecondsAndCompletedAfter2ExecutionAction();
-    }
+  @Bean
+  public Action invalidDuring10Seconds() {
+    return new InvalidWhenNotRunAfter10SecondsAndCompletedAfter2ExecutionAction();
+  }
 }

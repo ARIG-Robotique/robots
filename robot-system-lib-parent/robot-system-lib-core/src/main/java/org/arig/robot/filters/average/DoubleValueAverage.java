@@ -7,26 +7,26 @@ import java.util.function.BinaryOperator;
  */
 public class DoubleValueAverage extends AbstractCircularFifoValueAverage<Double> {
 
-    public DoubleValueAverage() {
-        this(3);
-    }
+  public DoubleValueAverage() {
+    this(3);
+  }
 
-    public DoubleValueAverage(int limit) {
-        super(limit);
-    }
+  public DoubleValueAverage(int limit) {
+    super(limit);
+  }
 
-    @Override
-    protected Double identityValue() {
-        return 0d;
-    }
+  @Override
+  protected Double identityValue() {
+    return 0d;
+  }
 
-    @Override
-    protected BinaryOperator<Double> reduceFunction() {
-        return Double::sum;
-    }
+  @Override
+  protected BinaryOperator<Double> reduceFunction() {
+    return Double::sum;
+  }
 
-    @Override
-    protected Double effectiveAverage(Double reducedValue, int queueSize) {
-        return reducedValue / queueSize;
-    }
+  @Override
+  protected Double effectiveAverage(Double reducedValue, int queueSize) {
+    return reducedValue / queueSize;
+  }
 }

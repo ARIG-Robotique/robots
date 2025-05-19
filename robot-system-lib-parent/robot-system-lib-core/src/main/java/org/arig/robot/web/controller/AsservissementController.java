@@ -24,58 +24,58 @@ import java.util.Map;
 @Profile(ConstantesConfig.profileMonitoring)
 public class AsservissementController {
 
-    private final TrajectoryManager mv;
-    private final PidFilter pidDistance;
-    private final PidFilter pidOrientation;
-    private final RampFilter rampDistance;
-    private final RampFilter rampOrientation;
+  private final TrajectoryManager mv;
+  private final PidFilter pidDistance;
+  private final PidFilter pidOrientation;
+  private final RampFilter rampDistance;
+  private final RampFilter rampOrientation;
 
 
-    @GetMapping("/{type}")
-    public Map<String, Double> getPid(@PathVariable("type") final String type) {
-        final Map<String, Double> values = new HashMap<>();
+  @GetMapping("/{type}")
+  public Map<String, Double> getPid(@PathVariable("type") final String type) {
+    final Map<String, Double> values = new HashMap<>();
 
-        if ("ANGLE".equals(type)) {
-            values.putAll(pidOrientation.getTunings());
-            values.putAll(rampOrientation.getRamps());
-            values.put("vitesse", (double) mv.vitesseOrientation());
+    if ("ANGLE".equals(type)) {
+      values.putAll(pidOrientation.getTunings());
+      values.putAll(rampOrientation.getRamps());
+      values.put("vitesse", (double) mv.vitesseOrientation());
 
-        } else if ("DIST".equals(type)) {
-            values.putAll(pidDistance.getTunings());
-            values.putAll(rampDistance.getRamps());
-            values.put("vitesse", (double) mv.vitesseDistance());
+    } else if ("DIST".equals(type)) {
+      values.putAll(pidDistance.getTunings());
+      values.putAll(rampDistance.getRamps());
+      values.put("vitesse", (double) mv.vitesseDistance());
 
-        } else {
-            log.warn("Type d'asservissement invalide");
-        }
-
-        return values;
+    } else {
+      log.warn("Type d'asservissement invalide");
     }
 
-    @PostMapping("/{type}")
-    public void setPid(@PathVariable("type") final String type,
-                       @RequestParam("kp") final double kp,
-                       @RequestParam("ki") final double ki,
-                       @RequestParam("kd") final double kd,
-                       @RequestParam("rampAcc") final double rampAcc,
-                       @RequestParam("rampDec") final double rampDec,
-                       @RequestParam("vitesse") final double vitesse) {
-        if ("ANGLE".equals(type)) {
-            pidOrientation.setTunings(kp, ki, kd);
-            pidOrientation.reset();
-            rampOrientation.setRamps(rampAcc, rampDec);
-            log.info("Vitesse orientation {}", vitesse);
-            mv.setVitesse(mv.vitesseDistance(), (long) vitesse);
+    return values;
+  }
 
-        } else if ("DIST".equals(type)) {
-            pidDistance.setTunings(kp, ki, kd);
-            pidDistance.reset();
-            rampDistance.setRamps(rampAcc, rampDec);
-            log.info("Vitesse distance {}", vitesse);
-            mv.setVitesse((long) vitesse, mv.vitesseOrientation());
+  @PostMapping("/{type}")
+  public void setPid(@PathVariable("type") final String type,
+                     @RequestParam("kp") final double kp,
+                     @RequestParam("ki") final double ki,
+                     @RequestParam("kd") final double kd,
+                     @RequestParam("rampAcc") final double rampAcc,
+                     @RequestParam("rampDec") final double rampDec,
+                     @RequestParam("vitesse") final double vitesse) {
+    if ("ANGLE".equals(type)) {
+      pidOrientation.setTunings(kp, ki, kd);
+      pidOrientation.reset();
+      rampOrientation.setRamps(rampAcc, rampDec);
+      log.info("Vitesse orientation {}", vitesse);
+      mv.setVitesse(mv.vitesseDistance(), (long) vitesse);
 
-        } else {
-            log.warn("Type d'asservissement invalide");
-        }
+    } else if ("DIST".equals(type)) {
+      pidDistance.setTunings(kp, ki, kd);
+      pidDistance.reset();
+      rampDistance.setRamps(rampAcc, rampDec);
+      log.info("Vitesse distance {}", vitesse);
+      mv.setVitesse((long) vitesse, mv.vitesseOrientation());
+
+    } else {
+      log.warn("Type d'asservissement invalide");
     }
+  }
 }

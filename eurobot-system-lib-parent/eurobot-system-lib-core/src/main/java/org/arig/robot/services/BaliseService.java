@@ -24,41 +24,40 @@ import java.util.stream.Collectors;
 @Slf4j
 public class BaliseService extends AbstractBaliseService<BaliseData> {
 
-    @Autowired
-    private EurobotStatus rs;
+  @Autowired
+  private EurobotStatus rs;
 
-    @Autowired
-    private TableUtils tableUtils;
+  @Autowired
+  private TableUtils tableUtils;
 
-    private List<Data3D> data3D;
+  private List<Data3D> data3D;
 
-    public void updateData() {
-        DataResponse response = (DataResponse)
-            balise.getData(new DataQueryData<>(
-                FiltreBalise.ROBOT,
-                FiltreBalise.RAW_TRIBUNE
-              )
-            );
+  public void updateData() {
+    DataResponse response = (DataResponse)
+      balise.getData(new DataQueryData<>(
+          FiltreBalise.ROBOT,
+          FiltreBalise.RAW_TRIBUNE
+        )
+      );
 
-        if (response == null) {
-            isOK = false;
-            return;
-        }
-
-        if (response.isError() || response.getData().getData3D() == null) {
-            return;
-        }
-
-        data3D = response.getData().getData3D();
-
-        updatePositionAdverse();
-        updateStocksRawTribune();
-        updateMines();
+    if (response == null) {
+      isOK = false;
+      return;
     }
 
+    if (response.isError() || response.getData().getData3D() == null) {
+      return;
+    }
+
+    data3D = response.getData().getData3D();
+
+    updatePositionAdverse();
+    updateStocksRawTribune();
+    updateMines();
+  }
 
 
-    private void updateStocksRawTribune() {
+  private void updateStocksRawTribune() {
         /*
         data3D.stream()
                 .filter(object -> object.getType() == Data3DType.RAW_TRIBUNE)
@@ -74,56 +73,56 @@ public class BaliseService extends AbstractBaliseService<BaliseData> {
                     }
                 });
          */
+  }
+
+  private void updatePositionAdverse() {
+    List<Point> positions = data3D.stream()
+      .filter(object -> object.getType() == Data3DType.ROBOT)
+      .filter(robot -> {
+        Team robotTeam = Data3DName.getRobotTeam(robot.getName());
+        return robotTeam != null && robotTeam != rs.team()
+          && robot.getAge() < 1000
+          && tableUtils.isInTable(new Point(robot.getX(), robot.getY()));
+      })
+      .map(robot -> new Point(robot.getX(), robot.getY()))
+      .collect(Collectors.toList());
+
+    rs.adversaryPosition(positions);
+  }
+
+  private void updateMines() {
+    List<ZoneQueryData.Zone> zones = Arrays.stream(ZoneMines.values())
+      .filter(zone -> zone.getTeam() == null || zone.getTeam() == rs.team())
+      .map(ZoneMines::toQueryZone)
+      .toList();
+
+    ZoneResponse response = balise.getMines(new ZoneQueryData(zones));
+
+    if (response == null) {
+      isOK = false;
+      return;
     }
 
-    private void updatePositionAdverse() {
-        List<Point> positions = data3D.stream()
-                .filter(object -> object.getType() == Data3DType.ROBOT)
-                .filter(robot -> {
-                    Team robotTeam = Data3DName.getRobotTeam(robot.getName());
-                    return robotTeam != null && robotTeam != rs.team()
-                            && robot.getAge() < 1000
-                            && tableUtils.isInTable(new Point(robot.getX(), robot.getY()));
-                })
-                .map(robot -> new Point(robot.getX(), robot.getY()))
-                .collect(Collectors.toList());
-
-        rs.adversaryPosition(positions);
+    if (response.isError() || response.getData().getZones() == null) {
+      return;
     }
 
-    private void updateMines() {
-        List<ZoneQueryData.Zone> zones = Arrays.stream(ZoneMines.values())
-            .filter(zone -> zone.getTeam() == null || zone.getTeam() == rs.team())
-            .map(ZoneMines::toQueryZone)
-            .toList();
-
-        ZoneResponse response = balise.getMines(new ZoneQueryData(zones));
-
-        if (response == null) {
-            isOK = false;
-            return;
+    List<ZoneMines> zoneBloquees = response.getData().getZones().stream()
+      .map(zoneString -> {
+        if (!rs.mines().contains(ZoneMines.valueOf(zoneString))) {
+          log.info("[RS] Zone {} miné", zoneString);
         }
 
-        if (response.isError() || response.getData().getZones() == null) {
-            return;
-        }
+        return ZoneMines.valueOf(zoneString);
+      })
+      .toList();
 
-        List<ZoneMines> zoneBloquees = response.getData().getZones().stream()
-            .map(zoneString -> {
-                if (!rs.mines().contains(ZoneMines.valueOf(zoneString))) {
-                    log.info("[RS] Zone {} miné", zoneString);
-                }
+    rs.mines().forEach(mine -> {
+      if (!response.getData().getZones().contains(mine.name())) {
+        log.info("[RS] Zone {} plus miné", mine);
+      }
+    });
 
-                return ZoneMines.valueOf(zoneString);
-            })
-            .toList();
-
-        rs.mines().forEach(mine -> {
-            if (!response.getData().getZones().contains(mine.name())) {
-                log.info("[RS] Zone {} plus miné", mine);
-            }
-        });
-
-        rs.mines(zoneBloquees);
-    }
+    rs.mines(zoneBloquees);
+  }
 }

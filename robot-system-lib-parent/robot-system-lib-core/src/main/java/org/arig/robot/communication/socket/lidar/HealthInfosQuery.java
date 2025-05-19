@@ -9,8 +9,8 @@ import org.arig.robot.communication.socket.lidar.enums.LidarAction;
 @EqualsAndHashCode(callSuper = true)
 public class HealthInfosQuery extends AbstractQuery<LidarAction> {
 
-    public HealthInfosQuery() {
-        super(LidarAction.HEALTH_INFO);
-    }
+  public HealthInfosQuery() {
+    super(LidarAction.HEALTH_INFO);
+  }
 
 }

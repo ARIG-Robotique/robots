@@ -9,35 +9,35 @@ import org.springframework.stereotype.Service;
 @Service
 public class OdinEnergyServiceRobot extends AbstractEnergyService {
 
-    @Autowired
-    private SD21Servos sd21Servos;
+  @Autowired
+  private SD21Servos sd21Servos;
 
-    @Autowired
-    private OdinIOServiceRobot iioService;
+  @Autowired
+  private OdinIOServiceRobot iioService;
 
-    @Override
-    public double tensionServos() {
-        if (iioService.auOk()) {
-            return sd21Servos.getTension();
-        } else {
-            return 0;
-        }
+  @Override
+  public double tensionServos() {
+    if (iioService.auOk()) {
+      return sd21Servos.getTension();
+    } else {
+      return 0;
     }
+  }
 
-    @Override
-    public double courantServos() {
-        return 0;
-    }
+  @Override
+  public double courantServos() {
+    return 0;
+  }
 
-    @Override
-    public double tensionMoteurs() {
-        return iioService.auOk() ? 12 : 0;
-    }
+  @Override
+  public double tensionMoteurs() {
+    return iioService.auOk() ? 12 : 0;
+  }
 
-    @Override
-    public double courantMoteurs() {
-        return 0;
-    }
+  @Override
+  public double courantMoteurs() {
+    return 0;
+  }
 
     /*
     private static final byte CHANNEL_SERVOS = 1;

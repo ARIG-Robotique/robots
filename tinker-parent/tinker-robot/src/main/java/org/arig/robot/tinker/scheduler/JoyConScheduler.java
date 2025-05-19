@@ -11,28 +11,28 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class JoyConScheduler {
 
-    private final JoyConLeft joyConLeft;
-    private final JoyConRight joyConRight;
-    private final ProController pro;
+  private final JoyConLeft joyConLeft;
+  private final JoyConRight joyConRight;
+  private final ProController pro;
 
-    @Scheduled(fixedDelay = 3000)
-    public void leftConnection() {
-        if (!joyConLeft.connected() && !joyConRight.connected() && !pro.connected()) {
-            joyConLeft.open();
-        }
+  @Scheduled(fixedDelay = 3000)
+  public void leftConnection() {
+    if (!joyConLeft.connected() && !joyConRight.connected() && !pro.connected()) {
+      joyConLeft.open();
     }
+  }
 
-    @Scheduled(fixedDelay = 3000)
-    public void rightConnection() {
-        if (!joyConRight.connected() && !joyConLeft.connected() && !pro.connected()) {
-            joyConRight.open();
-        }
+  @Scheduled(fixedDelay = 3000)
+  public void rightConnection() {
+    if (!joyConRight.connected() && !joyConLeft.connected() && !pro.connected()) {
+      joyConRight.open();
     }
+  }
 
-    @Scheduled(fixedDelay = 3000)
-    public void proConnection() {
-        if (!pro.connected() && !joyConLeft.connected() && !joyConRight.connected()) {
-            pro.open();
-        }
+  @Scheduled(fixedDelay = 3000)
+  public void proConnection() {
+    if (!pro.connected() && !joyConLeft.connected() && !joyConRight.connected()) {
+      pro.open();
     }
+  }
 }

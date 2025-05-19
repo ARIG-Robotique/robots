@@ -17,28 +17,28 @@ import java.io.Serializable;
 
 public interface IVisionBalise<DATA extends Serializable> {
 
-    void openSocket() throws Exception;
+  void openSocket() throws Exception;
 
-    boolean isOpen();
+  boolean isOpen();
 
-    void end();
+  void end();
 
-    EmptyResponse keepAlive();
+  EmptyResponse keepAlive();
 
-    EmptyResponse setConfig(ConfigQueryData queryData);
+  EmptyResponse setConfig(ConfigQueryData queryData);
 
-    StatusResponse getStatus();
+  StatusResponse getStatus();
 
-    EmptyResponse setTeam(TeamQueryData queryData);
+  EmptyResponse setTeam(TeamQueryData queryData);
 
-    AbstractBaliseResponseWithData<DATA> getData(DataQueryData<?> queryData);
+  AbstractBaliseResponseWithData<DATA> getData(DataQueryData<?> queryData);
 
-    ImageResponse getImage(ImageQueryData queryData);
+  ImageResponse getImage(ImageQueryData queryData);
 
-    EmptyResponse process();
+  EmptyResponse process();
 
-    ZoneResponse getMines(ZoneQueryData queryData);
+  ZoneResponse getMines(ZoneQueryData queryData);
 
-    IdleResponse setIdle(IdleQueryData queryData);
+  IdleResponse setIdle(IdleQueryData queryData);
 
 }

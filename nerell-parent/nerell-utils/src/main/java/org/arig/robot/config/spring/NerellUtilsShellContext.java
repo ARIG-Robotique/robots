@@ -14,13 +14,13 @@ import org.springframework.shell.jline.PromptProvider;
 @ComponentScan("org.arig.robot.nerell.utils")
 public class NerellUtilsShellContext {
 
-    @Bean
-    public PromptProvider myPromptProvider() {
-        return () -> new AttributedString("nerell-utils:> ", AttributedStyle.DEFAULT.background(AttributedStyle.YELLOW));
-    }
+  @Bean
+  public PromptProvider myPromptProvider() {
+    return () -> new AttributedString("nerell-utils:> ", AttributedStyle.DEFAULT.background(AttributedStyle.YELLOW));
+  }
 
-    @Bean
-    public NerellShellInputReader shellInputReader(@Lazy LineReader lineReader) {
-        return new NerellShellInputReader(lineReader);
-    }
+  @Bean
+  public NerellShellInputReader shellInputReader(@Lazy LineReader lineReader) {
+    return new NerellShellInputReader(lineReader);
+  }
 }

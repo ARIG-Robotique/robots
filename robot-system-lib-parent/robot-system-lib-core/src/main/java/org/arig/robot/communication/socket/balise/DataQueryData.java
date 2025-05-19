@@ -11,11 +11,11 @@ import java.util.stream.Stream;
 @Data
 public class DataQueryData<FILTER extends Enum<FILTER>> implements Serializable {
 
-    private List<FILTER> filters;
+  private List<FILTER> filters;
 
-    @SafeVarargs
-    public DataQueryData(FILTER... filters) {
-        this.filters = Stream.of(filters).filter(Objects::nonNull).collect(Collectors.toList());
-    }
+  @SafeVarargs
+  public DataQueryData(FILTER... filters) {
+    this.filters = Stream.of(filters).filter(Objects::nonNull).collect(Collectors.toList());
+  }
 
 }

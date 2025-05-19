@@ -11,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 @EqualsAndHashCode(callSuper = true)
 public class NerellRobotStatus extends EurobotStatus {
 
-    public NerellRobotStatus() {
-        super(true);
-    }
+  public NerellRobotStatus() {
+    super(true);
+  }
 }

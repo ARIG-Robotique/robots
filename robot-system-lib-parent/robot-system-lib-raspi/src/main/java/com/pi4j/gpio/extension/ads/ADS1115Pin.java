@@ -40,7 +40,7 @@ import java.util.EnumSet;
 /**
  * <p>
  * This GPIO provider implements the TI ADS1115 analog to digital converter chip as native Pi4J GPIO pins.
- *
+ * <p>
  * More information about the board can be found here: *
  * http://www.ti.com/lit/ds/symlink/ads1115.pdf
  * http://adafruit.com/datasheets/ads1115.pdf
@@ -53,18 +53,17 @@ import java.util.EnumSet;
  * </p>
  *
  * @author Robert Savage
- *
  */
 public class ADS1115Pin {
 
-    public static final Pin INPUT_A0 = createAnalogInputPin(0, "ANALOG INPUT 0");
-    public static final Pin INPUT_A1 = createAnalogInputPin(1, "ANALOG INPUT 1");
-    public static final Pin INPUT_A2 = createAnalogInputPin(2, "ANALOG INPUT 2");
-    public static final Pin INPUT_A3 = createAnalogInputPin(3, "ANALOG INPUT 3");
+  public static final Pin INPUT_A0 = createAnalogInputPin(0, "ANALOG INPUT 0");
+  public static final Pin INPUT_A1 = createAnalogInputPin(1, "ANALOG INPUT 1");
+  public static final Pin INPUT_A2 = createAnalogInputPin(2, "ANALOG INPUT 2");
+  public static final Pin INPUT_A3 = createAnalogInputPin(3, "ANALOG INPUT 3");
 
-    public static Pin[] ALL = { ADS1115Pin.INPUT_A0, ADS1115Pin.INPUT_A1, ADS1115Pin.INPUT_A2, ADS1115Pin.INPUT_A3 };
+  public static Pin[] ALL = {ADS1115Pin.INPUT_A0, ADS1115Pin.INPUT_A1, ADS1115Pin.INPUT_A2, ADS1115Pin.INPUT_A3};
 
-    private static Pin createAnalogInputPin(int address, String name) {
-        return new PinImpl(ADS1115GpioProvider.NAME, address, name, EnumSet.of(PinMode.ANALOG_INPUT));
-    }
+  private static Pin createAnalogInputPin(int address, String name) {
+    return new PinImpl(ADS1115GpioProvider.NAME, address, name, EnumSet.of(PinMode.ANALOG_INPUT));
+  }
 }

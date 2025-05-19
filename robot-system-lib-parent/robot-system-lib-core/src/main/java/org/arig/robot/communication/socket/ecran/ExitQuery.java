@@ -9,8 +9,8 @@ import org.arig.robot.communication.socket.ecran.enums.EcranAction;
 @EqualsAndHashCode(callSuper = true)
 public class ExitQuery extends AbstractQuery<EcranAction> {
 
-    public ExitQuery() {
-        super(EcranAction.EXIT);
-    }
+  public ExitQuery() {
+    super(EcranAction.EXIT);
+  }
 
 }

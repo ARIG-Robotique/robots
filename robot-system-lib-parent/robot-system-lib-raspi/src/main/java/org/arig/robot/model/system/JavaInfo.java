@@ -8,28 +8,28 @@ import com.pi4j.system.SystemInfo;
  */
 public class JavaInfo {
 
-    @JsonGetter
-    public String getVendor() {
-        return SystemInfo.getJavaVendor();
-    }
+  @JsonGetter
+  public String getVendor() {
+    return SystemInfo.getJavaVendor();
+  }
 
-    @JsonGetter
-    public String getVendorUrl() {
-        return SystemInfo.getJavaVendorUrl();
-    }
+  @JsonGetter
+  public String getVendorUrl() {
+    return SystemInfo.getJavaVendorUrl();
+  }
 
-    @JsonGetter
-    public String getVersion() {
-        return SystemInfo.getJavaVersion();
-    }
+  @JsonGetter
+  public String getVersion() {
+    return SystemInfo.getJavaVersion();
+  }
 
-    @JsonGetter
-    public String getVirtualMachine() {
-        return SystemInfo.getJavaVirtualMachine();
-    }
+  @JsonGetter
+  public String getVirtualMachine() {
+    return SystemInfo.getJavaVirtualMachine();
+  }
 
-    @JsonGetter
-    public String getRuntime() {
-        return SystemInfo.getJavaRuntime();
-    }
+  @JsonGetter
+  public String getRuntime() {
+    return SystemInfo.getJavaRuntime();
+  }
 }

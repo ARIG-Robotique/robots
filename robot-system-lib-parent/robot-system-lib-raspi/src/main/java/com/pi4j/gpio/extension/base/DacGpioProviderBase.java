@@ -34,7 +34,6 @@ import com.pi4j.io.gpio.GpioProviderBase;
 import com.pi4j.io.gpio.Pin;
 
 /**
- *
  * <p>
  * This base GPIO provider defined the required interfaces and implements the base functionality for DAC
  * (digital to analog) expansion chips as native Pi4J GPIO pins.
@@ -44,150 +43,148 @@ import com.pi4j.io.gpio.Pin;
  */
 public abstract class DacGpioProviderBase extends GpioProviderBase implements DacGpioProvider {
 
-    // used to store the pins used in this implementation
-    protected Pin[] allPins = null;
+  // used to store the pins used in this implementation
+  protected Pin[] allPins = null;
 
-    // use to store the configured shutdown value for the
-    protected Double[] shutdownValues = null;
+  // use to store the configured shutdown value for the
+  protected Double[] shutdownValues = null;
 
-    // ------------------------------------------------------------------------------------------
-    // DEFAULT CONSTRUCTOR
-    // ------------------------------------------------------------------------------------------
+  // ------------------------------------------------------------------------------------------
+  // DEFAULT CONSTRUCTOR
+  // ------------------------------------------------------------------------------------------
 
-    /**
-     * Default Constructor
-     *
-     * @param pins the collection of all GPIO pins used with this ADC provider implementation
-     */
-    public DacGpioProviderBase(Pin[] pins){
-        this.allPins = pins;                       // initialize pins collection
+  /**
+   * Default Constructor
+   *
+   * @param pins the collection of all GPIO pins used with this ADC provider implementation
+   */
+  public DacGpioProviderBase(Pin[] pins) {
+    this.allPins = pins;                       // initialize pins collection
 
-        // create collection for shutdown values for each analog output pin
-        shutdownValues = new Double[pins.length];
-        for(int index = 0; index < shutdownValues.length; index++) {
-        		shutdownValues[index] = null;
+    // create collection for shutdown values for each analog output pin
+    shutdownValues = new Double[pins.length];
+    for (int index = 0; index < shutdownValues.length; index++) {
+      shutdownValues[index] = null;
+    }
+  }
+
+  // ------------------------------------------------------------------------------------------
+  // PUBLIC METHODS
+  // ------------------------------------------------------------------------------------------
+
+  /**
+   * Set the current value in a percentage of the available range instead of a raw value.
+   *
+   * @param pin
+   * @param percent percentage value between 0 and 100.
+   */
+  public void setPercentValue(Pin pin, Number percent) {
+    // validate range
+    if (percent.doubleValue() <= 0) {
+      setValue(pin, getMinSupportedValue());
+    } else if (percent.doubleValue() >= 100) {
+      setValue(pin, getMaxSupportedValue());
+    } else {
+      double value = (getMaxSupportedValue() - getMinSupportedValue()) * (percent.doubleValue() / 100f);
+      setValue(pin, value);
+    }
+  }
+
+  /**
+   * Set the current analog value as a percentage of the available range instead of a raw value.
+   * Thr framework will automatically convert the percentage to a scaled number in the ADC's value range.
+   *
+   * @return percentage value between 0 and 100.
+   */
+  @Override
+  public void setPercentValue(GpioPinAnalogOutput pin, Number percent) {
+    setPercentValue(pin.getPin(), percent);
+  }
+
+  /**
+   * Set the requested analog output pin's conversion value.
+   *
+   * @param pin   to get conversion values for
+   * @param value analog output pin conversion value
+   */
+  @Override
+  public void setValue(Pin pin, Number value) {
+    super.setValue(pin, value.doubleValue());
+  }
+
+  /**
+   * This method is used by the framework to shutdown the
+   * DAC instance and apply any configured shutdown values to the DAC pins.
+   */
+  @Override
+  public void shutdown() {
+
+    // prevent reentrant invocation
+    if (isShutdown())
+      return;
+
+    // perform shutdown login in base
+    super.shutdown();
+
+    try {
+      // iterate over all pins and apply shutdown values if configured for the pin instance
+      for (Pin pin : allPins) {
+        Double value = getShutdownValue(pin).doubleValue();
+        if (value != null) {
+          setValue(pin, value);
         }
+      }
+    } catch (Exception e) {
+      throw new RuntimeException(e);
     }
+  }
 
-    // ------------------------------------------------------------------------------------------
-    // PUBLIC METHODS
-    // ------------------------------------------------------------------------------------------
-
-    /**
-     * Set the current value in a percentage of the available range instead of a raw value.
-     *
-     * @param pin
-     * @param percent percentage value between 0 and 100.
-     */
-    public void setPercentValue(Pin pin, Number percent){
-        // validate range
-        if(percent.doubleValue() <= 0){
-            setValue(pin, getMinSupportedValue());
-        }
-        else if(percent.doubleValue() >= 100){
-            setValue(pin, getMaxSupportedValue());
-        }
-        else{
-            double value = (getMaxSupportedValue() - getMinSupportedValue()) * (percent.doubleValue()/100f);
-            setValue(pin, value);
-        }
+  /**
+   * Set the shutdown/terminate value that the DAC should apply to the given GPIO pin
+   * when the class is destroyed/terminated.
+   *
+   * @param value the shutdown value to apply to the given pin(s)
+   * @param pin   analog output pin (vararg: one or more pins)
+   */
+  public void setShutdownValue(Number value, Pin... pin) {
+    for (Pin p : pin) {
+      shutdownValues[p.getAddress()] = value.doubleValue();
     }
+  }
 
-    /**
-     * Set the current analog value as a percentage of the available range instead of a raw value.
-     * Thr framework will automatically convert the percentage to a scaled number in the ADC's value range.
-     *
-     * @return percentage value between 0 and 100.
-     */
-    @Override
-    public void setPercentValue(GpioPinAnalogOutput pin, Number percent){
-        setPercentValue(pin.getPin(), percent);
+  /**
+   * Get the shutdown/terminate value that the DAC should apply to the given GPIO pin
+   * when the class is destroyed/terminated.
+   *
+   * @param pin analog output pin
+   * @return return the shutdown value if one has been defined, else NULL.
+   */
+  public Number getShutdownValue(Pin pin) {
+    return shutdownValues[pin.getAddress()];
+  }
+
+
+  /**
+   * Set the shutdown/terminate value that the DAC should apply to the given GPIO pin
+   * when the class is destroyed/terminated.
+   *
+   * @param value the shutdown value to apply to the given pin(s)
+   * @param pin   analog output pin (vararg: one or more pins)
+   */
+  public void setShutdownValue(Number value, GpioPinAnalogOutput... pin) {
+    for (GpioPinAnalogOutput p : pin) {
+      setShutdownValue(value, p.getPin());
     }
+  }
 
-    /**
-     * Set the requested analog output pin's conversion value.
-     *
-     * @param pin to get conversion values for
-     * @param value analog output pin conversion value
-     */
-    @Override
-    public void setValue(Pin pin, Number value) {
-        super.setValue(pin, value.doubleValue());
-    }
-
-    /**
-     * This method is used by the framework to shutdown the
-     * DAC instance and apply any configured shutdown values to the DAC pins.
-     */
-    @Override
-    public void shutdown() {
-
-        // prevent reentrant invocation
-        if(isShutdown())
-            return;
-
-        // perform shutdown login in base
-        super.shutdown();
-
-        try {
-            // iterate over all pins and apply shutdown values if configured for the pin instance
-            for(Pin pin : allPins){
-                Double value = getShutdownValue(pin).doubleValue();
-                if(value != null){
-                    setValue(pin, value);
-                }
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    /**
-     * Set the shutdown/terminate value that the DAC should apply to the given GPIO pin
-     * when the class is destroyed/terminated.
-     *
-     * @param value the shutdown value to apply to the given pin(s)
-     * @param pin analog output pin (vararg: one or more pins)
-     */
-    public void setShutdownValue(Number value, Pin ... pin){
-        for(Pin p : pin){
-            shutdownValues[p.getAddress()] = value.doubleValue();
-        }
-    }
-
-    /**
-     * Get the shutdown/terminate value that the DAC should apply to the given GPIO pin
-     * when the class is destroyed/terminated.
-     *
-     * @param pin analog output pin
-     * @return return the shutdown value if one has been defined, else NULL.
-     */
-    public Number getShutdownValue(Pin pin){
-        return shutdownValues[pin.getAddress()];
-    }
-
-
-    /**
-     * Set the shutdown/terminate value that the DAC should apply to the given GPIO pin
-     * when the class is destroyed/terminated.
-     *
-     * @param value the shutdown value to apply to the given pin(s)
-     * @param pin analog output pin (vararg: one or more pins)
-     */
-    public void setShutdownValue(Number value, GpioPinAnalogOutput ... pin){
-        for(GpioPinAnalogOutput p : pin) {
-            setShutdownValue(value, p.getPin());
-        }
-    }
-
-    /**
-     * Get the shutdown/terminate value that the DAC should apply to the given GPIO pin
-     * when the class is destroyed/terminated.
-     *
-     * @param pin analog output pin
-     * @return return the shutdown value if one has been defined, else NULL.
-     */
-    public Number getShutdownValue(GpioPinAnalogOutput pin){
-        return getShutdownValue(pin.getPin());
-    }
+  /**
+   * Get the shutdown/terminate value that the DAC should apply to the given GPIO pin
+   * when the class is destroyed/terminated.
+   *
+   * @param pin analog output pin
+   * @return return the shutdown value if one has been defined, else NULL.
+   */
+  public Number getShutdownValue(GpioPinAnalogOutput pin) {
+    return getShutdownValue(pin.getPin());
+  }
 }

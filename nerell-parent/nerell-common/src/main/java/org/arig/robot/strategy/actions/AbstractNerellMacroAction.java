@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 public abstract class AbstractNerellMacroAction extends AbstractMacroAction {
 
-    @Autowired
-    protected NerellRobotStatus rs;
+  @Autowired
+  protected NerellRobotStatus rs;
 
 }

@@ -8,6 +8,6 @@ import java.io.Serializable;
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EcranPhoto implements Serializable {
-    String photo;
-    String message;
+  String photo;
+  String message;
 }

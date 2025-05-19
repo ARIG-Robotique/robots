@@ -12,8 +12,8 @@ import org.springframework.context.annotation.Configuration;
 @ComponentScan({"org.arig.robot.strategy.actions.active.common", "org.arig.robot.strategy.actions.active.robot"})
 public class NerellCommonStrategyContext {
 
-    @Bean
-    public StrategyManager strategyManager() {
-        return new StrategyManager();
-    }
+  @Bean
+  public StrategyManager strategyManager() {
+    return new StrategyManager();
+  }
 }

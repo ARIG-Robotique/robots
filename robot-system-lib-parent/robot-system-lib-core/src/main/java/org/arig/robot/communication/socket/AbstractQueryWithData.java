@@ -11,20 +11,20 @@ import java.io.Serializable;
 @EqualsAndHashCode(callSuper = true)
 public abstract class AbstractQueryWithData<T extends Enum<T>, D extends Serializable> extends AbstractQuery<T> {
 
-    @JsonInclude(content = JsonInclude.Include.NON_NULL)
-    private D data;
+  @JsonInclude(content = JsonInclude.Include.NON_NULL)
+  private D data;
 
-    protected AbstractQueryWithData(T action) {
-        super(action);
-    }
+  protected AbstractQueryWithData(T action) {
+    super(action);
+  }
 
-    protected AbstractQueryWithData(T action, D data) {
-        super(action);
-        setData(data);
-    }
+  protected AbstractQueryWithData(T action, D data) {
+    super(action);
+    setData(data);
+  }
 
-    @JsonIgnore
-    protected boolean hasData() {
-        return data != null;
-    }
+  @JsonIgnore
+  protected boolean hasData() {
+    return data != null;
+  }
 }

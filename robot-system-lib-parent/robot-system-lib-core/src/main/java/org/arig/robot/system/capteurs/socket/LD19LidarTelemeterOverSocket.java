@@ -24,6 +24,6 @@ public class LD19LidarTelemeterOverSocket extends AbstractTelemeterOverSocket {
   public void printDeviceInfo() {
     DeviceInfos d = deviceInfo();
     log.info("LD19 Lidar D500 version [Bridge driver : {} ; Firmware : {} ; Hardware {} ; Serial number : {}]",
-        d.getDriver(), d.getFirmwareVersion(), d.getHardwareVersion(), d.getSerialNumber());
+      d.getDriver(), d.getFirmwareVersion(), d.getHardwareVersion(), d.getSerialNumber());
   }
 }

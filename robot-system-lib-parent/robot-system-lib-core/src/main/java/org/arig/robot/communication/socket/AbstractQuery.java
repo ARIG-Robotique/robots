@@ -8,6 +8,6 @@ import lombok.Data;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 public abstract class AbstractQuery<T extends Enum<T>> {
 
-    private final T action;
+  private final T action;
 
 }

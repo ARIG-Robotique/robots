@@ -8,11 +8,11 @@ import java.io.Serializable;
 
 @EqualsAndHashCode(callSuper = true)
 public class AliveQuery
-    extends AbstractQuery<BaliseAction>
-    implements Serializable {
+  extends AbstractQuery<BaliseAction>
+  implements Serializable {
 
   public AliveQuery() {
     super(BaliseAction.ALIVE);
-    }
+  }
 
 }

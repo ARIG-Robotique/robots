@@ -19,11 +19,11 @@ import org.springframework.web.reactive.config.WebFluxConfigurer;
 @Profile(ConstantesConfig.profileMonitoring)
 public class NerellCommonWebAppContext implements WebFluxConfigurer {
 
-    @Override
-    public void addCorsMappings(final CorsRegistry registry) {
-        registry.addMapping("/**")
-                .allowedOrigins("*")
-                .allowedMethods("*")
-                .maxAge(3600);
-    }
+  @Override
+  public void addCorsMappings(final CorsRegistry registry) {
+    registry.addMapping("/**")
+      .allowedOrigins("*")
+      .allowedMethods("*")
+      .maxAge(3600);
+  }
 }

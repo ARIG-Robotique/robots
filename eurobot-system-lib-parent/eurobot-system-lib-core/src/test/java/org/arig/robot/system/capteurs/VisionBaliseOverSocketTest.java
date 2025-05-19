@@ -32,26 +32,26 @@ class VisionBaliseOverSocketTest {
 
   private static VisionBaliseOverSocket balise;
 
-    @BeforeAll
-    @SneakyThrows
-    static void initTest() {
-        String host = "localhost";
-      int port = 50667;
-        Assumptions.assumeTrue(SocketUtils.serverListening(host, port));
+  @BeforeAll
+  @SneakyThrows
+  static void initTest() {
+    String host = "localhost";
+    int port = 50667;
+    Assumptions.assumeTrue(SocketUtils.serverListening(host, port));
 
-      balise = new VisionBaliseOverSocket(host, port);
-      balise.openSocket();
-      Assertions.assertTrue(balise.isOpen());
-      IdleQueryData queryData = new IdleQueryData(false);
-      balise.setIdle(queryData);
-    }
+    balise = new VisionBaliseOverSocket(host, port);
+    balise.openSocket();
+    Assertions.assertTrue(balise.isOpen());
+    IdleQueryData queryData = new IdleQueryData(false);
+    balise.setIdle(queryData);
+  }
 
-    @AfterAll
-    static void stopTest() {
-      if (balise != null) {
-        balise.end();
-      }
+  @AfterAll
+  static void stopTest() {
+    if (balise != null) {
+      balise.end();
     }
+  }
 
   @BeforeEach
   @SneakyThrows
@@ -75,29 +75,29 @@ class VisionBaliseOverSocketTest {
     Assertions.assertTrue(response.isOk());
     StatusResponse status = balise.getStatus();
     Assertions.assertEquals(BaliseMode.MILLIMETER_2D, status.getData().getMode());
-    }
+  }
 
-    @Test
-    @SneakyThrows
-    void testSetConfigModeFloat2D() {
-      ConfigQueryData queryData = new ConfigQueryData(BaliseMode.FLOAT_2D);
-      EmptyResponse response = balise.setConfig(queryData);
-      Assertions.assertNotNull(response);
-      Assertions.assertTrue(response.isOk());
-      StatusResponse status = balise.getStatus();
-      Assertions.assertEquals(BaliseMode.FLOAT_2D, status.getData().getMode());
-    }
+  @Test
+  @SneakyThrows
+  void testSetConfigModeFloat2D() {
+    ConfigQueryData queryData = new ConfigQueryData(BaliseMode.FLOAT_2D);
+    EmptyResponse response = balise.setConfig(queryData);
+    Assertions.assertNotNull(response);
+    Assertions.assertTrue(response.isOk());
+    StatusResponse status = balise.getStatus();
+    Assertions.assertEquals(BaliseMode.FLOAT_2D, status.getData().getMode());
+  }
 
-    @Test
-    @SneakyThrows
-    void testGetStatus() {
-      StatusResponse response = balise.getStatus();
-      Assertions.assertNotNull(response);
-      Assertions.assertTrue(response.isOk());
-      Assertions.assertNotNull(response.getData());
-      Assertions.assertFalse(response.getData().getStatusMessage().isEmpty());
-      Assertions.assertTrue(response.getData().isAllOK());
-    }
+  @Test
+  @SneakyThrows
+  void testGetStatus() {
+    StatusResponse response = balise.getStatus();
+    Assertions.assertNotNull(response);
+    Assertions.assertTrue(response.isOk());
+    Assertions.assertNotNull(response.getData());
+    Assertions.assertFalse(response.getData().getStatusMessage().isEmpty());
+    Assertions.assertTrue(response.getData().isAllOK());
+  }
 
   @Test
   @SneakyThrows
@@ -172,7 +172,7 @@ class VisionBaliseOverSocketTest {
     Assertions.assertTrue(response.isOk());
     StatusResponse status = balise.getStatus();
     Assertions.assertEquals(true, status.getData().getIdle());
-    }
+  }
 
   @Test
   @SneakyThrows

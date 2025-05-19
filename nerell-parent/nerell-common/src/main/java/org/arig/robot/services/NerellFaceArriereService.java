@@ -13,7 +13,7 @@ import org.arig.robot.utils.ThreadUtils;
 public class NerellFaceArriereService extends AbstractNerellFaceService {
 
   public NerellFaceArriereService(NerellRobotStatus rs, TrajectoryManager mv,
-                                NerellRobotServosService servos, NerellIOService ioService) {
+                                  NerellRobotServosService servos, NerellIOService ioService) {
     super(rs, mv, servos, ioService);
   }
 
@@ -99,24 +99,24 @@ public class NerellFaceArriereService extends AbstractNerellFaceService {
   @Override
   protected boolean iosPinces() {
     return ThreadUtils.waitUntil(
-        () -> ioService.pinceArriereGauche(true) && ioService.pinceArriereDroite(true),
-        20, 1000
+      () -> ioService.pinceArriereGauche(true) && ioService.pinceArriereDroite(true),
+      20, 1000
     );
   }
 
   @Override
   protected boolean iosTiroir() {
     return ThreadUtils.waitUntil(
-        () -> ioService.tiroirArriereBas(true) && ioService.tiroirArriereHaut(true),
-        20, 1000
+      () -> ioService.tiroirArriereBas(true) && ioService.tiroirArriereHaut(true),
+      20, 1000
     );
   }
 
   @Override
   protected boolean iosColonnesSol() {
     return ThreadUtils.waitUntil(
-        () -> ioService.solArriereGauche(true) && ioService.solArriereDroite(true),
-        20, 1000
+      () -> ioService.solArriereGauche(true) && ioService.solArriereDroite(true),
+      20, 1000
     );
   }
 
@@ -190,10 +190,10 @@ public class NerellFaceArriereService extends AbstractNerellFaceService {
     }
 
     if (face.tiroirBas() &&
-        face.solGauche() &&
-        face.solDroite() &&
-        !face.pinceGauche() &&
-        !face.pinceDroite()
+      face.solGauche() &&
+      face.solDroite() &&
+      !face.pinceGauche() &&
+      !face.pinceDroite()
     ) {
       log.info("Récupération des colonnes en stock depuis le sol");
       servos.groupePincesArrierePriseSol(true);

@@ -17,44 +17,44 @@ import org.springframework.shell.standard.ShellMethodAvailability;
 @RequiredArgsConstructor
 public class OdinMoteursCommands {
 
-    private final AbstractRobotStatus rs;
-    private final OdinIOService ioService;
-    private final AbstractEnergyService energyService;
-    private final AbstractPropulsionsMotors propulsionsMotors;
+  private final AbstractRobotStatus rs;
+  private final OdinIOService ioService;
+  private final AbstractEnergyService energyService;
+  private final AbstractPropulsionsMotors propulsionsMotors;
 
-    public Availability alimentationOk() {
-        return ioService.auOk() && energyService.checkMoteurs()
-                ? Availability.available() : Availability.unavailable("Alimentation moteurs KO");
-    }
+  public Availability alimentationOk() {
+    return ioService.auOk() && energyService.checkMoteurs()
+      ? Availability.available() : Availability.unavailable("Alimentation moteurs KO");
+  }
 
-    @ShellMethodAvailability("alimentationOk")
-    @ShellMethod("Rotation des moteurs de propulsions")
-    public void moteursPropulsions(final int droite, final int gauche) {
-        rs.enableCapture();
-        propulsionsMotors.generateMouvement(gauche, droite);
-    }
+  @ShellMethodAvailability("alimentationOk")
+  @ShellMethod("Rotation des moteurs de propulsions")
+  public void moteursPropulsions(final int droite, final int gauche) {
+    rs.enableCapture();
+    propulsionsMotors.generateMouvement(gauche, droite);
+  }
 
-    @ShellMethodAvailability("alimentationOk")
-    @ShellMethod("Arret des moteurs de propulsions")
-    public void stopMoteursPropulsions() {
-        propulsionsMotors.generateMouvement(propulsionsMotors.getStopSpeed(), propulsionsMotors.getStopSpeed());
-        rs.disableCapture();
-    }
+  @ShellMethodAvailability("alimentationOk")
+  @ShellMethod("Arret des moteurs de propulsions")
+  public void stopMoteursPropulsions() {
+    propulsionsMotors.generateMouvement(propulsionsMotors.getStopSpeed(), propulsionsMotors.getStopSpeed());
+    rs.disableCapture();
+  }
 
-    @ShellMethodAvailability("alimentationOk")
-    @ShellMethod("Test déplacement a balles")
-    public void moteursABalle(int wait) {
-        rs.enableCapture();
-        propulsionsMotors.generateMouvement(propulsionsMotors.getMaxSpeed(), propulsionsMotors.getMaxSpeed());
-        ThreadUtils.sleep(wait);
+  @ShellMethodAvailability("alimentationOk")
+  @ShellMethod("Test déplacement a balles")
+  public void moteursABalle(int wait) {
+    rs.enableCapture();
+    propulsionsMotors.generateMouvement(propulsionsMotors.getMaxSpeed(), propulsionsMotors.getMaxSpeed());
+    ThreadUtils.sleep(wait);
 
-        propulsionsMotors.generateMouvement(propulsionsMotors.getStopSpeed(), propulsionsMotors.getStopSpeed());
-        ThreadUtils.sleep(1000);
+    propulsionsMotors.generateMouvement(propulsionsMotors.getStopSpeed(), propulsionsMotors.getStopSpeed());
+    ThreadUtils.sleep(1000);
 
-        propulsionsMotors.generateMouvement(-propulsionsMotors.getMaxSpeed(), propulsionsMotors.getMaxSpeed());
-        ThreadUtils.sleep(wait);
+    propulsionsMotors.generateMouvement(-propulsionsMotors.getMaxSpeed(), propulsionsMotors.getMaxSpeed());
+    ThreadUtils.sleep(wait);
 
-        propulsionsMotors.generateMouvement(propulsionsMotors.getStopSpeed(), propulsionsMotors.getStopSpeed());
-        rs.disableCapture();
-    }
+    propulsionsMotors.generateMouvement(propulsionsMotors.getStopSpeed(), propulsionsMotors.getStopSpeed());
+    rs.disableCapture();
+  }
 }

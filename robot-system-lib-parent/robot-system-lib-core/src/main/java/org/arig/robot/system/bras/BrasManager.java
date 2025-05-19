@@ -7,5 +7,5 @@ import org.arig.robot.model.Point3D;
  */
 public interface BrasManager {
 
-    void toP(Point3D P);
+  void toP(Point3D P);
 }

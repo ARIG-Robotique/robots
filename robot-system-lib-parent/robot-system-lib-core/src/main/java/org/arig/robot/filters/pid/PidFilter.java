@@ -12,31 +12,32 @@ import java.util.concurrent.TimeUnit;
  */
 public interface PidFilter extends Filter<Double, Double> {
 
-    /**
-     * Sets the tunings.
-     *
-     * @param kp the kp
-     * @param ki the ki
-     * @param kd the kd
-     */
-    void setTunings(double kp, double ki, double kd);
+  /**
+   * Sets the tunings.
+   *
+   * @param kp the kp
+   * @param ki the ki
+   * @param kd the kd
+   */
+  void setTunings(double kp, double ki, double kd);
 
-    Map<String, Double> getTunings();
+  Map<String, Double> getTunings();
 
-    /**
-     * Consigne
-     *
-     * @param consigne La consigne a atteindre
-     */
-    void consigne(Double consigne);
+  /**
+   * Consigne
+   *
+   * @param consigne La consigne a atteindre
+   */
+  void consigne(Double consigne);
 
-    void setSampleTimeMs(double value);
+  void setSampleTimeMs(double value);
 
-    void setSampleTime(double value, TimeUnit unit);
+  void setSampleTime(double value, TimeUnit unit);
 
-    /**
-     * Récupérer de l'erreur sum de pid
-     * @return
-     */
-    Double getErrorSum();
+  /**
+   * Récupérer de l'erreur sum de pid
+   *
+   * @return
+   */
+  Double getErrorSum();
 }

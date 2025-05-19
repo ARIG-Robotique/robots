@@ -24,24 +24,25 @@ import lombok.Data;
 @AllArgsConstructor
 public class Position {
 
-    private Point pt;
-    private double angle;
+  private Point pt;
+  private double angle;
 
-    public Position() {
-        pt = new Point();
-        updatePosition(0, 0, 0);
-    }
+  public Position() {
+    pt = new Point();
+    updatePosition(0, 0, 0);
+  }
 
-    public void updatePosition(final double x, final double y, final double angle) {
-        pt.setX(x);
-        pt.setY(y);
-        setAngle(angle);
-    }
+  public void updatePosition(final double x, final double y, final double angle) {
+    pt.setX(x);
+    pt.setY(y);
+    setAngle(angle);
+  }
 
-    public void addDeltaX(final double dX) {
-        pt.addDeltaX(dX);
-    }
-    public void addDeltaY(final double dY) {
-        pt.addDeltaY(dY);
-    }
+  public void addDeltaX(final double dX) {
+    pt.addDeltaX(dX);
+  }
+
+  public void addDeltaY(final double dY) {
+    pt.addDeltaY(dY);
+  }
 }

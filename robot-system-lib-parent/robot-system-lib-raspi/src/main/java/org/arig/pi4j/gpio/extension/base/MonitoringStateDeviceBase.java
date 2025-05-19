@@ -46,71 +46,72 @@ import java.util.concurrent.TimeUnit;
  */
 public abstract class MonitoringStateDeviceBase<D, P extends GpioPinDigital> extends Thread implements MonitoringStateDevice {
 
-    @Getter(AccessLevel.PROTECTED)
-    private final D device;
+  @Getter(AccessLevel.PROTECTED)
+  private final D device;
 
-    @Getter(AccessLevel.PROTECTED)
-    private P irqPin = null;
+  @Getter(AccessLevel.PROTECTED)
+  private P irqPin = null;
 
-    private boolean shuttingDown = false;
+  private boolean shuttingDown = false;
 
-    @Getter
-    private long waitTime = 50;
+  @Getter
+  private long waitTime = 50;
 
-    protected abstract boolean irqRead();
-    protected abstract void doRead() throws IOException;
+  protected abstract boolean irqRead();
 
-    protected MonitoringStateDeviceBase(D device) {
-        this.device = device;
-    }
+  protected abstract void doRead() throws IOException;
 
-    protected MonitoringStateDeviceBase(D device, P irqPin) {
-        this(device);
-        this.irqPin = irqPin;
-    }
+  protected MonitoringStateDeviceBase(D device) {
+    this.device = device;
+  }
 
-    protected MonitoringStateDeviceBase(D device, P irqPin, long waitTimeMs) {
-        this(device, irqPin);
-        waitTime = waitTimeMs;
-    }
+  protected MonitoringStateDeviceBase(D device, P irqPin) {
+    this(device);
+    this.irqPin = irqPin;
+  }
 
-    protected MonitoringStateDeviceBase(D device, P irqPin, long waitTime, TimeUnit unit) {
-        this(device, irqPin);
-        this.waitTime = unit.toMillis(waitTime);
-    }
+  protected MonitoringStateDeviceBase(D device, P irqPin, long waitTimeMs) {
+    this(device, irqPin);
+    waitTime = waitTimeMs;
+  }
 
-    @Override
-    public void setWaitTime(long waitTimeMs) {
-        this.waitTime = waitTimeMs;
-    }
+  protected MonitoringStateDeviceBase(D device, P irqPin, long waitTime, TimeUnit unit) {
+    this(device, irqPin);
+    this.waitTime = unit.toMillis(waitTime);
+  }
 
-    @Override
-    public void setWaitTime(long waitTime, TimeUnit unit) {
-        this.waitTime = unit.toMillis(waitTime);
-    }
+  @Override
+  public void setWaitTime(long waitTimeMs) {
+    this.waitTime = waitTimeMs;
+  }
 
-    @Override
-    public final void shutdown() {
-        shuttingDown = true;
-    }
+  @Override
+  public void setWaitTime(long waitTime, TimeUnit unit) {
+    this.waitTime = unit.toMillis(waitTime);
+  }
 
-    @Override
-    public final void run() {
-        while (!shuttingDown) {
-            try {
-                // read device pins state.
-                // if an IRQ pin is registered, read only if an interruption is read
-                // /!\ Usage of IRQ pin isn't compatible when the same pin is used for more than 1 device
-                if (irqPin == null || irqRead()) {
-                    doRead();
-                }
+  @Override
+  public final void shutdown() {
+    shuttingDown = true;
+  }
 
-                // ... lets take a short breather ...
-                Thread.currentThread();
-                Thread.sleep(waitTime);
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
+  @Override
+  public final void run() {
+    while (!shuttingDown) {
+      try {
+        // read device pins state.
+        // if an IRQ pin is registered, read only if an interruption is read
+        // /!\ Usage of IRQ pin isn't compatible when the same pin is used for more than 1 device
+        if (irqPin == null || irqRead()) {
+          doRead();
         }
+
+        // ... lets take a short breather ...
+        Thread.currentThread();
+        Thread.sleep(waitTime);
+      } catch (Exception ex) {
+        ex.printStackTrace();
+      }
     }
+  }
 }

@@ -10,15 +10,15 @@ import java.io.Serializable;
 @EqualsAndHashCode(callSuper = true)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DataQuery
-    extends AbstractQueryWithData<BaliseAction, DataQueryData<? extends Enum<?>>>
-    implements Serializable {
+  extends AbstractQueryWithData<BaliseAction, DataQueryData<? extends Enum<?>>>
+  implements Serializable {
 
-    public DataQuery() {
-        super(BaliseAction.DATA);
-    }
+  public DataQuery() {
+    super(BaliseAction.DATA);
+  }
 
-    public DataQuery(DataQueryData<?> data) {
-        super(BaliseAction.DATA, data);
-    }
+  public DataQuery(DataQueryData<?> data) {
+    super(BaliseAction.DATA, data);
+  }
 
 }

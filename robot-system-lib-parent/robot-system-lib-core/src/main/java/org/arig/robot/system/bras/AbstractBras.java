@@ -24,23 +24,22 @@ import org.arig.robot.model.Point3D;
 @AllArgsConstructor
 public abstract class AbstractBras implements BrasManager {
 
-    @Getter(AccessLevel.PROTECTED)
-    private final Point3D P1;
+  @Getter(AccessLevel.PROTECTED)
+  private final Point3D P1;
 
-    /**
-     * Retourne l'angle entre a et b avec les longueurs des segments connu.
-     *
-     * @param a longueur du segment a
-     * @param b longueur du segment b
-     * @param c longueur du segment c
-     *
-     * @return Gamma en Radian
-     */
-    protected double alKashiAngleRad(double a, double b, double c) {
-        return Math.acos((Math.pow(a, 2) + Math.pow(b, 2) - Math.pow(c, 2)) / (2 * a * b));
-    }
+  /**
+   * Retourne l'angle entre a et b avec les longueurs des segments connu.
+   *
+   * @param a longueur du segment a
+   * @param b longueur du segment b
+   * @param c longueur du segment c
+   * @return Gamma en Radian
+   */
+  protected double alKashiAngleRad(double a, double b, double c) {
+    return Math.acos((Math.pow(a, 2) + Math.pow(b, 2) - Math.pow(c, 2)) / (2 * a * b));
+  }
 
-    protected double alKashiCote(double gamma, double a, double b) {
-        return Math.sqrt(Math.pow(a, 2) + Math.pow(b, 2) - (2 * a * b * Math.cos(gamma)));
-    }
+  protected double alKashiCote(double gamma, double a, double b) {
+    return Math.sqrt(Math.pow(a, 2) + Math.pow(b, 2) - (2 * a * b * Math.cos(gamma)));
+  }
 }

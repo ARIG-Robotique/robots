@@ -107,16 +107,16 @@ public class NerellFaceAvantService extends AbstractNerellFaceService {
   @Override
   protected boolean iosTiroir() {
     return ThreadUtils.waitUntil(
-        () -> ioService.tiroirAvantBas(true) && ioService.tiroirAvantHaut(true),
-        20, 1000
+      () -> ioService.tiroirAvantBas(true) && ioService.tiroirAvantHaut(true),
+      20, 1000
     );
   }
 
   @Override
   protected boolean iosColonnesSol() {
     return ThreadUtils.waitUntil(
-        () -> ioService.solAvantGauche(true) && ioService.solAvantDroite(true),
-        20, 1000
+      () -> ioService.solAvantGauche(true) && ioService.solAvantDroite(true),
+      20, 1000
     );
   }
 
@@ -190,10 +190,10 @@ public class NerellFaceAvantService extends AbstractNerellFaceService {
     }
 
     if (face.tiroirBas() &&
-        face.solGauche() &&
-        face.solDroite() &&
-        !face.pinceGauche() &&
-        !face.pinceDroite()
+      face.solGauche() &&
+      face.solDroite() &&
+      !face.pinceGauche() &&
+      !face.pinceDroite()
     ) {
       log.info("Récupération des colonnes en stock depuis le sol");
       servos.groupePincesAvantPriseSol(true);

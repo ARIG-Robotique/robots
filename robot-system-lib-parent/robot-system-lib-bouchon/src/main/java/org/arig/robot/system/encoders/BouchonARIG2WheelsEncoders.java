@@ -19,73 +19,73 @@ import java.util.stream.Collectors;
 @Slf4j
 public class BouchonARIG2WheelsEncoders extends ARIGI2C2WheelsEncoders {
 
-    @Autowired
-    private AbstractPropulsionsMotors motors;
+  @Autowired
+  private AbstractPropulsionsMotors motors;
 
-    private final Random rand = new Random();
-    private final List<BouchonEncoderValues> values;
+  private final Random rand = new Random();
+  private final List<BouchonEncoderValues> values;
 
-    public BouchonARIG2WheelsEncoders(final List<BouchonEncoderValues> values) {
-        super("Codeur Gauche", "Codeur Droit");
-        this.values = values;
-    }
+  public BouchonARIG2WheelsEncoders(final List<BouchonEncoderValues> values) {
+    super("Codeur Gauche", "Codeur Droit");
+    this.values = values;
+  }
 
-    public void printLimiterValues() {
-        Optional<Integer> minGauche, minDroit;
-        // Positive
-        minGauche = values.parallelStream()
-                .filter(BouchonEncoderValues::vitessePositive)
-                .filter(b -> b.gauche() != 0)
-                .sorted(Comparator.comparingInt(BouchonEncoderValues::vitesseMoteur))
-                .findFirst()
-                .map(BouchonEncoderValues::vitesseMoteur);
+  public void printLimiterValues() {
+    Optional<Integer> minGauche, minDroit;
+    // Positive
+    minGauche = values.parallelStream()
+      .filter(BouchonEncoderValues::vitessePositive)
+      .filter(b -> b.gauche() != 0)
+      .sorted(Comparator.comparingInt(BouchonEncoderValues::vitesseMoteur))
+      .findFirst()
+      .map(BouchonEncoderValues::vitesseMoteur);
 
-        minDroit = values.parallelStream()
-                .filter(BouchonEncoderValues::vitessePositive)
-                .filter(b -> b.droit() != 0)
-                .sorted(Comparator.comparingInt(BouchonEncoderValues::vitesseMoteur))
-                .findFirst()
-                .map(BouchonEncoderValues::vitesseMoteur);
+    minDroit = values.parallelStream()
+      .filter(BouchonEncoderValues::vitessePositive)
+      .filter(b -> b.droit() != 0)
+      .sorted(Comparator.comparingInt(BouchonEncoderValues::vitesseMoteur))
+      .findFirst()
+      .map(BouchonEncoderValues::vitesseMoteur);
 
-        log.info("Positive Min moteur Gauche : {}", minGauche.get());
-        log.info("Positive Min moteur Droit : {}", minDroit.get());
+    log.info("Positive Min moteur Gauche : {}", minGauche.get());
+    log.info("Positive Min moteur Droit : {}", minDroit.get());
 
-        // Negative
-        minGauche = values.parallelStream()
-                .filter(BouchonEncoderValues::vitesseNegative)
-                .filter(b -> b.gauche() != 0)
-                .sorted(Collections.reverseOrder(Comparator.comparingInt(BouchonEncoderValues::vitesseMoteur)))
-                .findFirst()
-                .map(BouchonEncoderValues::vitesseMoteur);
+    // Negative
+    minGauche = values.parallelStream()
+      .filter(BouchonEncoderValues::vitesseNegative)
+      .filter(b -> b.gauche() != 0)
+      .sorted(Collections.reverseOrder(Comparator.comparingInt(BouchonEncoderValues::vitesseMoteur)))
+      .findFirst()
+      .map(BouchonEncoderValues::vitesseMoteur);
 
-        minDroit = values.parallelStream()
-                .filter(BouchonEncoderValues::vitesseNegative)
-                .filter(b -> b.droit() != 0)
-                .sorted(Collections.reverseOrder(Comparator.comparingInt(BouchonEncoderValues::vitesseMoteur)))
-                .findFirst()
-                .map(BouchonEncoderValues::vitesseMoteur);
+    minDroit = values.parallelStream()
+      .filter(BouchonEncoderValues::vitesseNegative)
+      .filter(b -> b.droit() != 0)
+      .sorted(Collections.reverseOrder(Comparator.comparingInt(BouchonEncoderValues::vitesseMoteur)))
+      .findFirst()
+      .map(BouchonEncoderValues::vitesseMoteur);
 
-        log.info("Negative Min moteur Gauche : {}", minGauche.get());
-        log.info("Negative Min moteur Droit : {}", minDroit.get());
-    }
+    log.info("Negative Min moteur Gauche : {}", minGauche.get());
+    log.info("Negative Min moteur Droit : {}", minDroit.get());
+  }
 
-    @Override
-    protected double lectureDroit() {
-        int vitesse = motors.currentSpeedDroit();
-        return getRandomValueForVitesse(vitesse).droit();
-    }
+  @Override
+  protected double lectureDroit() {
+    int vitesse = motors.currentSpeedDroit();
+    return getRandomValueForVitesse(vitesse).droit();
+  }
 
-    @Override
-    protected double lectureGauche() {
-        int vitesse = motors.currentSpeedGauche();
-        return getRandomValueForVitesse(vitesse).gauche();
-    }
+  @Override
+  protected double lectureGauche() {
+    int vitesse = motors.currentSpeedGauche();
+    return getRandomValueForVitesse(vitesse).gauche();
+  }
 
-    private BouchonEncoderValues getRandomValueForVitesse(int vitesse) {
-        List<BouchonEncoderValues> filter = values.parallelStream()
-                .filter(v -> v.vitesseMoteur() == vitesse)
-                .collect(Collectors.toList());
+  private BouchonEncoderValues getRandomValueForVitesse(int vitesse) {
+    List<BouchonEncoderValues> filter = values.parallelStream()
+      .filter(v -> v.vitesseMoteur() == vitesse)
+      .collect(Collectors.toList());
 
-        return filter.get(rand.nextInt(filter.size()));
-    }
+    return filter.get(rand.nextInt(filter.size()));
+  }
 }

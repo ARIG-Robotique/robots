@@ -13,21 +13,21 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
  */
 @Slf4j
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = { PidTestContext.class })
+@ContextConfiguration(classes = {PidTestContext.class})
 public class SimplePidIntegralLimitTest extends AbstractPidTest {
 
-    @Autowired
-    @Qualifier("simplePIDIntegralLimit")
-    private SimplePidFilter pid;
+  @Autowired
+  @Qualifier("simplePIDIntegralLimit")
+  private SimplePidFilter pid;
 
-    @Override
-    protected PidFilter pid() {
-        return pid;
-    }
+  @Override
+  protected PidFilter pid() {
+    return pid;
+  }
 
-    @BeforeEach
-    public void before() {
-        super.before();
-        setHasIntegralLimiter(true);
-    }
+  @BeforeEach
+  public void before() {
+    super.before();
+    setHasIntegralLimiter(true);
+  }
 }

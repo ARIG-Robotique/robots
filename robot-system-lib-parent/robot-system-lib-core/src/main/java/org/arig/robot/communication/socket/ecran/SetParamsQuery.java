@@ -9,7 +9,7 @@ import org.arig.robot.model.ecran.EcranParams;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class SetParamsQuery extends AbstractQueryWithData<EcranAction, EcranParams> {
-    public SetParamsQuery() {
-        super(EcranAction.SET_PARAMS);
-    }
+  public SetParamsQuery() {
+    super(EcranAction.SET_PARAMS);
+  }
 }

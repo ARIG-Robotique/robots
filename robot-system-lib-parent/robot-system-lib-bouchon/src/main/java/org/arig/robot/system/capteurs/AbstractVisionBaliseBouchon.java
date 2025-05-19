@@ -22,111 +22,111 @@ import java.util.Collections;
 
 public abstract class AbstractVisionBaliseBouchon<DATA extends Serializable> implements IVisionBalise<DATA> {
 
-    @Override
-    public void openSocket() {
-    }
+  @Override
+  public void openSocket() {
+  }
 
-    @Override
-    public boolean isOpen() {
-        return true;
-    }
+  @Override
+  public boolean isOpen() {
+    return true;
+  }
 
-    @Override
-    public void end() {
-    }
+  @Override
+  public void end() {
+  }
 
-    @Override
-    public EmptyResponse keepAlive() {
-        EmptyResponse response = new EmptyResponse();
+  @Override
+  public EmptyResponse keepAlive() {
+    EmptyResponse response = new EmptyResponse();
 
-        response.setIndex(0);
-        response.setAction(BaliseAction.ALIVE);
-        response.setStatus(org.arig.robot.communication.socket.enums.StatusResponse.OK);
+    response.setIndex(0);
+    response.setAction(BaliseAction.ALIVE);
+    response.setStatus(org.arig.robot.communication.socket.enums.StatusResponse.OK);
 
-        return response;
-    }
+    return response;
+  }
 
-    @Override
-    public EmptyResponse setConfig(ConfigQueryData queryData) {
-        EmptyResponse response = new EmptyResponse();
+  @Override
+  public EmptyResponse setConfig(ConfigQueryData queryData) {
+    EmptyResponse response = new EmptyResponse();
 
-        response.setIndex(0);
-        response.setAction(BaliseAction.CONFIG);
-        response.setStatus(org.arig.robot.communication.socket.enums.StatusResponse.OK);
+    response.setIndex(0);
+    response.setAction(BaliseAction.CONFIG);
+    response.setStatus(org.arig.robot.communication.socket.enums.StatusResponse.OK);
 
-        return response;
-    }
+    return response;
+  }
 
-    @Override
-    public StatusResponse getStatus() {
-        StatusResponse response = new StatusResponse();
+  @Override
+  public StatusResponse getStatus() {
+    StatusResponse response = new StatusResponse();
 
-        response.setIndex(0);
-        response.setAction(BaliseAction.STATUS);
-        response.setStatus(org.arig.robot.communication.socket.enums.StatusResponse.OK);
+    response.setIndex(0);
+    response.setAction(BaliseAction.STATUS);
+    response.setStatus(org.arig.robot.communication.socket.enums.StatusResponse.OK);
 
-        StatusResponseData data = new StatusResponseData(
-            org.arig.robot.communication.socket.enums.StatusResponse.OK,
-            org.arig.robot.communication.socket.enums.StatusResponse.OK,
-            org.arig.robot.communication.socket.enums.StatusResponse.OK,
-            "status message",
-            BaliseMode.MILLIMETER_2D,
-            "UNKNOWN",
-            false
-        );
-        response.setData(data);
+    StatusResponseData data = new StatusResponseData(
+      org.arig.robot.communication.socket.enums.StatusResponse.OK,
+      org.arig.robot.communication.socket.enums.StatusResponse.OK,
+      org.arig.robot.communication.socket.enums.StatusResponse.OK,
+      "status message",
+      BaliseMode.MILLIMETER_2D,
+      "UNKNOWN",
+      false
+    );
+    response.setData(data);
 
-        return response;
-    }
+    return response;
+  }
 
-    @Override
-    public EmptyResponse setTeam(TeamQueryData queryData) {
-        EmptyResponse response = new EmptyResponse();
+  @Override
+  public EmptyResponse setTeam(TeamQueryData queryData) {
+    EmptyResponse response = new EmptyResponse();
 
-        response.setIndex(0);
-        response.setAction(BaliseAction.TEAM);
-        response.setStatus(org.arig.robot.communication.socket.enums.StatusResponse.OK);
+    response.setIndex(0);
+    response.setAction(BaliseAction.TEAM);
+    response.setStatus(org.arig.robot.communication.socket.enums.StatusResponse.OK);
 
-        return response;
-    }
+    return response;
+  }
 
-    @Override
-    public ImageResponse getImage(ImageQueryData queryData) {
-        ImageResponse response = new ImageResponse();
+  @Override
+  public ImageResponse getImage(ImageQueryData queryData) {
+    ImageResponse response = new ImageResponse();
 
-        response.setIndex(0);
-        response.setAction(BaliseAction.IMAGE);
-        response.setStatus(org.arig.robot.communication.socket.enums.StatusResponse.OK);
-        response.setData(new ImageResponseData(Collections.emptyList()));
+    response.setIndex(0);
+    response.setAction(BaliseAction.IMAGE);
+    response.setStatus(org.arig.robot.communication.socket.enums.StatusResponse.OK);
+    response.setData(new ImageResponseData(Collections.emptyList()));
 
-        return response;
-    }
+    return response;
+  }
 
-    @Override
-    public EmptyResponse process() {
-        EmptyResponse response = new EmptyResponse();
+  @Override
+  public EmptyResponse process() {
+    EmptyResponse response = new EmptyResponse();
 
-        response.setIndex(0);
-        response.setAction(BaliseAction.PROCESS);
-        response.setStatus(org.arig.robot.communication.socket.enums.StatusResponse.OK);
+    response.setIndex(0);
+    response.setAction(BaliseAction.PROCESS);
+    response.setStatus(org.arig.robot.communication.socket.enums.StatusResponse.OK);
 
-        return response;
-    }
+    return response;
+  }
 
-    @Override
-    public ZoneResponse getMines(ZoneQueryData queryData) {
-        return null;
-    }
+  @Override
+  public ZoneResponse getMines(ZoneQueryData queryData) {
+    return null;
+  }
 
-    @Override
-    public IdleResponse setIdle(IdleQueryData queryData) {
-        IdleResponse response = new IdleResponse();
+  @Override
+  public IdleResponse setIdle(IdleQueryData queryData) {
+    IdleResponse response = new IdleResponse();
 
-        response.setIndex(0);
-        response.setAction(BaliseAction.IDLE);
-        response.setStatus(org.arig.robot.communication.socket.enums.StatusResponse.OK);
+    response.setIndex(0);
+    response.setAction(BaliseAction.IDLE);
+    response.setStatus(org.arig.robot.communication.socket.enums.StatusResponse.OK);
 
-        return response;
-    }
+    return response;
+  }
 
 }

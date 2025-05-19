@@ -16,6 +16,6 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ZoneResponseData implements Serializable {
 
-    List<String> zones;
+  List<String> zones;
 
 }

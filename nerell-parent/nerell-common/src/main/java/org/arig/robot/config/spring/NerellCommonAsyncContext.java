@@ -15,8 +15,8 @@ import java.util.concurrent.ThreadPoolExecutor;
 @Configuration
 public class NerellCommonAsyncContext {
 
-    @Bean(destroyMethod = "shutdown")
-    public ThreadPoolExecutor threadPoolTaskExecutor() {
-        return (ThreadPoolExecutor) Executors.newFixedThreadPool(NerellConstantesConfig.nbThreadAsyncExecutor);
-    }
+  @Bean(destroyMethod = "shutdown")
+  public ThreadPoolExecutor threadPoolTaskExecutor() {
+    return (ThreadPoolExecutor) Executors.newFixedThreadPool(NerellConstantesConfig.nbThreadAsyncExecutor);
+  }
 }

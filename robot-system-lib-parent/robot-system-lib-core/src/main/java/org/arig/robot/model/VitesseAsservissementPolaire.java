@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class VitesseAsservissementPolaire {
-    private long distance;
-    private long orientation;
+  private long distance;
+  private long orientation;
 }

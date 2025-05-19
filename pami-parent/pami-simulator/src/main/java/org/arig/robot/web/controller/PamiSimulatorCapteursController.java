@@ -11,18 +11,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class PamiSimulatorCapteursController {
 
-    @Autowired
-    private PamiIOServiceSimulator ioServiceBouchon;
+  @Autowired
+  private PamiIOServiceSimulator ioServiceBouchon;
 
-    @PostMapping(AbstractCapteursController.ROOT_PATH + "/tirette")
-    public void setTirette(@RequestBody Boolean value) {
-        log.info("Définition de la valeur de la tirette : {}", value);
-        ioServiceBouchon.tirette(value);
-    }
+  @PostMapping(AbstractCapteursController.ROOT_PATH + "/tirette")
+  public void setTirette(@RequestBody Boolean value) {
+    log.info("Définition de la valeur de la tirette : {}", value);
+    ioServiceBouchon.tirette(value);
+  }
 
-    @PostMapping(AbstractCapteursController.ROOT_PATH + "/au")
-    public void setAu(@RequestBody Boolean value) {
-        log.info("Définition de la valeur de l'arret d'urgence : {}", value);
-        ioServiceBouchon.au(value);
-    }
+  @PostMapping(AbstractCapteursController.ROOT_PATH + "/au")
+  public void setAu(@RequestBody Boolean value) {
+    log.info("Définition de la valeur de l'arret d'urgence : {}", value);
+    ioServiceBouchon.au(value);
+  }
 }

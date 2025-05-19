@@ -11,31 +11,31 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ExtendWith(SpringExtension.class)
 public class BooleanValueAverageTest {
 
-    @Test
-    public void testFullTrueAverage() {
-        BooleanValueAverage avg = new BooleanValueAverage();
-        Assertions.assertTrue(avg.filter(true));
-        Assertions.assertTrue(avg.filter(true));
-        Assertions.assertTrue(avg.filter(true));
-    }
+  @Test
+  public void testFullTrueAverage() {
+    BooleanValueAverage avg = new BooleanValueAverage();
+    Assertions.assertTrue(avg.filter(true));
+    Assertions.assertTrue(avg.filter(true));
+    Assertions.assertTrue(avg.filter(true));
+  }
 
-    @Test
-    public void testFullFalseAverage() {
-        BooleanValueAverage avg = new BooleanValueAverage();
-        Assertions.assertFalse(avg.filter(false));
-        Assertions.assertFalse(avg.filter(false));
-        Assertions.assertFalse(avg.filter(false));
-    }
+  @Test
+  public void testFullFalseAverage() {
+    BooleanValueAverage avg = new BooleanValueAverage();
+    Assertions.assertFalse(avg.filter(false));
+    Assertions.assertFalse(avg.filter(false));
+    Assertions.assertFalse(avg.filter(false));
+  }
 
-    @Test
-    public void testIntermitentAverage() {
-        BooleanValueAverage avg = new BooleanValueAverage();
-        Assertions.assertFalse(avg.filter(false));
-        Assertions.assertTrue(avg.filter(true));
-        Assertions.assertTrue(avg.filter(true));
-        Assertions.assertTrue(avg.filter(true));
-        Assertions.assertTrue(avg.filter(false));
-        Assertions.assertFalse(avg.filter(false));
-        Assertions.assertFalse(avg.filter(false));
-    }
+  @Test
+  public void testIntermitentAverage() {
+    BooleanValueAverage avg = new BooleanValueAverage();
+    Assertions.assertFalse(avg.filter(false));
+    Assertions.assertTrue(avg.filter(true));
+    Assertions.assertTrue(avg.filter(true));
+    Assertions.assertTrue(avg.filter(true));
+    Assertions.assertTrue(avg.filter(false));
+    Assertions.assertFalse(avg.filter(false));
+    Assertions.assertFalse(avg.filter(false));
+  }
 }

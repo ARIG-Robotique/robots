@@ -9,8 +9,8 @@ import org.arig.robot.communication.socket.lidar.enums.LidarAction;
 @EqualsAndHashCode(callSuper = true)
 public class ExitQuery extends AbstractQuery<LidarAction> {
 
-    public ExitQuery() {
-        super(LidarAction.EXIT);
-    }
+  public ExitQuery() {
+    super(LidarAction.EXIT);
+  }
 
 }

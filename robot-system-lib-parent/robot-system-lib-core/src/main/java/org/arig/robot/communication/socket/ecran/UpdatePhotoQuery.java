@@ -10,7 +10,7 @@ import org.arig.robot.model.ecran.EcranPhoto;
 @EqualsAndHashCode(callSuper = true)
 public class UpdatePhotoQuery extends AbstractQueryWithData<EcranAction, EcranPhoto> {
 
-    public UpdatePhotoQuery() {
-        super(EcranAction.UPDATE_PHOTO);
-    }
+  public UpdatePhotoQuery() {
+    super(EcranAction.UPDATE_PHOTO);
+  }
 }

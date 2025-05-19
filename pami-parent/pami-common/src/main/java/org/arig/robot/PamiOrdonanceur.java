@@ -27,264 +27,264 @@ import org.springframework.boot.logging.LogLevel;
 @Slf4j
 public class PamiOrdonanceur extends AbstractOrdonanceur {
 
-    @Autowired
-    private PamiRobotStatus pamiRobotStatus;
+  @Autowired
+  private PamiRobotStatus pamiRobotStatus;
 
-    @Autowired
-    private PamiIOService pamiIOService;
+  @Autowired
+  private PamiIOService pamiIOService;
 
-    @Autowired
-    private RobotGroupService groupService;
+  @Autowired
+  private RobotGroupService groupService;
 
-    @Autowired
-    private PamiEcranService pamiEcranService;
+  @Autowired
+  private PamiEcranService pamiEcranService;
 
-    @Autowired
-    private PamiRobotServosService pamiServosService;
+  @Autowired
+  private PamiRobotServosService pamiServosService;
 
-    @Autowired
-    private ARIG2025IoPamiLeds leds;
+  @Autowired
+  private ARIG2025IoPamiLeds leds;
 
-    private int getX(int x) {
-        return tableUtils.getX(pamiRobotStatus.team() == Team.BLEU, x);
+  private int getX(int x) {
+    return tableUtils.getX(pamiRobotStatus.team() == Team.BLEU, x);
+  }
+
+  private int getX(double x) {
+    return getX((int) x);
+  }
+
+  @Override
+  public String getPathfinderMap() {
+    return pamiRobotStatus.team().pathfinderMap("pamis");
+  }
+
+  @Override
+  protected void connectGroups() {
+    if (!groupService.getGroup().isOpen()) {
+      robotStatus.robotGroupOk(groupService.getGroup().tryConnect());
     }
+  }
 
-    private int getX(double x) {
-        return getX((int) x);
+  @Override
+  protected void initRun() {
+    leds.setAllLeds(ARIG2025IoPamiLeds.LedColor.Red);
+  }
+
+  @Override
+  protected void initLidar() {
+    super.initLidar();
+    lidar.setConfiguration(true, -33, 50, 1500);
+  }
+
+  @Override
+  protected void startLidar() {
+    log.info("Pas de Lidar sur un pami !");
+  }
+
+  @Override
+  protected void exitFromScreen() {
+    super.exitFromScreen();
+    if (groupService.isQuit()) {
+      ecranService.displayMessage("Arret du programme depuis Nerell");
+      throw new ExitProgram(true);
     }
+  }
 
-    @Override
-    public String getPathfinderMap() {
-        return pamiRobotStatus.team().pathfinderMap("pamis");
+  @Override
+  protected void customWaitAu() {
+    pamiIOService.sound();
+  }
+
+  @Override
+  public void afterInit() {
+    choixEquipeStrategy();
+  }
+
+  @Override
+  public void addDeadZones() {
+  }
+
+  @Override
+  public void beforeMatch(boolean skip) {
+    if (!skip) {
+      positionStrategy();
     }
+    choixConfig();
+  }
 
-    @Override
-    protected void connectGroups() {
-        if (!groupService.getGroup().isOpen()) {
-            robotStatus.robotGroupOk(groupService.getGroup().tryConnect());
+  @Override
+  protected boolean waitTirette() {
+    return robotStatus.robotGroupOk() ? !groupService.isStart() : io.tirette();
+  }
+
+  @Override
+  public void startMatch() {
+    // Nope
+    leds.setAllLeds(ARIG2025IoPamiLeds.LedColor.White);
+  }
+
+  @Override
+  public void inMatch() {
+    if (robotStatus.getRemainingTime() <= EurobotConfig.pamiStartRemainingTimeMs && !pamiRobotStatus.showTime()) {
+      log.info("Start show time animation \\°/");
+      pamiRobotStatus.enableShowTime();
+    }
+  }
+
+  @Override
+  public void afterMatch() {
+  }
+
+  @Override
+  public void beforePowerOff() {
+    pamiServosService.handFerme(true);
+    leds.setAllLeds(ARIG2025IoPamiLeds.LedColor.Red);
+    ThreadUtils.sleep(2000);
+  }
+
+  /**
+   * Etape du choix de l'équipe/stratégie
+   */
+  private void choixEquipeStrategy() {
+    ChangeFilter<Team> teamChangeFilter = new ChangeFilter<>(null);
+    ChangeFilter<Strategy> strategyChangeFilter = new ChangeFilter<>(null);
+    ChangeFilter<Boolean> groupChangeFilter = new ChangeFilter<>(null);
+
+    leds.setAllLeds(ARIG2025IoPamiLeds.LedColor.Black);
+    leds.setLedAU(ARIG2025IoPamiLeds.LedColor.Green);
+
+    boolean done;
+    do {
+      exitFromScreen();
+      connectGroups();
+
+      if (Boolean.TRUE.equals(groupChangeFilter.filter(robotStatus.robotGroupOk()))) {
+        if (robotStatus.robotGroupOk()) {
+          pamiEcranService.displayMessage("Attente configuration Nerell");
+        } else {
+          pamiEcranService.displayMessage("Choix équipe et lancement calage bordure");
         }
-    }
+      }
 
-    @Override
-    protected void initRun() {
-        leds.setAllLeds(ARIG2025IoPamiLeds.LedColor.Red);
-    }
+      if (robotStatus.robotGroupOk()) {
+        done = groupService.isCalage();
 
-    @Override
-    protected void initLidar() {
-        super.initLidar();
-        lidar.setConfiguration(true, -33, 50, 1500);
-    }
-
-    @Override
-    protected void startLidar() {
-        log.info("Pas de Lidar sur un pami !");
-    }
-
-    @Override
-    protected void exitFromScreen() {
-        super.exitFromScreen();
-        if (groupService.isQuit()) {
-            ecranService.displayMessage("Arret du programme depuis Nerell");
-            throw new ExitProgram(true);
+      } else {
+        if (Boolean.TRUE.equals(teamChangeFilter.filter(pamiEcranService.config().getTeam()))) {
+          pamiRobotStatus.team(pamiEcranService.config().getTeam());
+          log.info("Team {}", pamiRobotStatus.team().name());
         }
-    }
 
-    @Override
-    protected void customWaitAu() {
-        pamiIOService.sound();
-    }
-
-    @Override
-    public void afterInit() {
-        choixEquipeStrategy();
-    }
-
-    @Override
-    public void addDeadZones() {
-    }
-
-    @Override
-    public void beforeMatch(boolean skip) {
-        if (!skip) {
-            positionStrategy();
+        if (Boolean.TRUE.equals(strategyChangeFilter.filter(pamiEcranService.config().getStrategy()))) {
+          pamiRobotStatus.strategy(pamiEcranService.config().getStrategy());
+          log.info("Strategy {}", pamiRobotStatus.strategy().name());
         }
-        choixConfig();
-    }
 
-    @Override
-    protected boolean waitTirette() {
-        return robotStatus.robotGroupOk() ? !groupService.isStart() : io.tirette();
-    }
+        pamiRobotStatus.twoRobots(pamiEcranService.config().isTwoRobots());
+        pamiRobotStatus.limiter2Etages(pamiEcranService.config().hasOption(StrategyOption.LIMITER_2_ETAGES.description()));
+        pamiRobotStatus.eviterCoteAdverse(pamiEcranService.config().hasOption(StrategyOption.EVITER_COTE_ADVERSE.description()));
+        pamiRobotStatus.useTwoFaces(pamiEcranService.config().hasOption(StrategyOption.USE_TWO_FACES.description()));
+        pamiRobotStatus.ejectionCoupDePute(pamiEcranService.config().hasOption(StrategyOption.EJECTION_COUP_DE_PUTE.description()));
 
-    @Override
-    public void startMatch() {
-        // Nope
-        leds.setAllLeds(ARIG2025IoPamiLeds.LedColor.White);
-    }
+        done = pamiEcranService.config().isStartCalibration();
+      }
 
-    @Override
-    public void inMatch() {
-        if (robotStatus.getRemainingTime() <= EurobotConfig.pamiStartRemainingTimeMs && !pamiRobotStatus.showTime()) {
-            log.info("Start show time animation \\°/");
-            pamiRobotStatus.enableShowTime();
+      if (pamiRobotStatus.team() != null) {
+        leds.setLedTeam(pamiRobotStatus.team() == Team.JAUNE ? ARIG2025IoPamiLeds.LedColor.Yellow : ARIG2025IoPamiLeds.LedColor.Blue);
+      }
+
+      ThreadUtils.sleep(1000);
+    } while (!done);
+
+    leds.setLedCalage(ARIG2025IoPamiLeds.LedColor.Red);
+  }
+
+  /**
+   * Calage sur la bordure
+   */
+  @Override
+  public void calageBordure(boolean skip) {
+    pamiEcranService.displayMessage("Calage bordure");
+
+    try {
+      robotStatus.disableAvoidance();
+
+      position.setPt(new Point(
+        conv.mmToPulse(getX(200)),
+        conv.mmToPulse(1775)
+      ));
+      if (pamiRobotStatus.team() == Team.JAUNE) {
+        position.setAngle(conv.degToPulse(0));
+      } else {
+        position.setAngle(conv.degToPulse(180));
+      }
+
+      if (!skip) {
+        robotStatus.enableCalageTempo(2000);
+        mv.reculeMMSansAngle(300);
+
+        RobotName.RobotIdentification id = robotName.id();
+        double x = getX(PamiConstantesConfig.dstCallageArriere);
+        double yBase = 1550;
+        if (id == RobotName.RobotIdentification.PAMI_TRIANGLE) {
+          position.setPt(new Point(
+            conv.mmToPulse(x),
+            //conv.mmToPulse(yBase + PamiConstantesConfig.dstCallageCote)
+            conv.mmToPulse(2000 - 100)
+          ));
+          groupService.initStep(InitStep.PAMI_TRIANGLE_CALAGE_TERMINE);
+
+        } else if (id == RobotName.RobotIdentification.PAMI_CARRE) {
+          position.setPt(new Point(
+            conv.mmToPulse(x),
+            //conv.mmToPulse(yBase + 3 * PamiConstantesConfig.dstCallageCote)
+            conv.mmToPulse(2000 - 225)
+          ));
+          groupService.initStep(InitStep.PAMI_CARRE_CALAGE_TERMINE);
+
+        } else if (id == RobotName.RobotIdentification.PAMI_ROND) {
+          position.setPt(new Point(
+            conv.mmToPulse(x),
+            //conv.mmToPulse(yBase + 5 * PamiConstantesConfig.dstCallageArriere)
+            conv.mmToPulse(2000 - 375)
+          ));
+          groupService.initStep(InitStep.PAMI_ROND_CALAGE_TERMINE);
+
+        } else {
+          position.setPt(new Point(
+            conv.mmToPulse(x),
+            conv.mmToPulse(yBase + 7 * PamiConstantesConfig.dstCallageCote)
+          ));
+          groupService.initStep(InitStep.PAMI_CARRE_CALAGE_TERMINE);
         }
-    }
 
-    @Override
-    public void afterMatch() {
-    }
-
-    @Override
-    public void beforePowerOff() {
-        pamiServosService.handFerme(true);
-        leds.setAllLeds(ARIG2025IoPamiLeds.LedColor.Red);
-        ThreadUtils.sleep(2000);
-    }
-
-    /**
-     * Etape du choix de l'équipe/stratégie
-     */
-    private void choixEquipeStrategy() {
-        ChangeFilter<Team> teamChangeFilter = new ChangeFilter<>(null);
-        ChangeFilter<Strategy> strategyChangeFilter = new ChangeFilter<>(null);
-        ChangeFilter<Boolean> groupChangeFilter = new ChangeFilter<>(null);
-
-        leds.setAllLeds(ARIG2025IoPamiLeds.LedColor.Black);
-        leds.setLedAU(ARIG2025IoPamiLeds.LedColor.Green);
-
-        boolean done;
-        do {
-            exitFromScreen();
-            connectGroups();
-
-            if (Boolean.TRUE.equals(groupChangeFilter.filter(robotStatus.robotGroupOk()))) {
-                if (robotStatus.robotGroupOk()) {
-                    pamiEcranService.displayMessage("Attente configuration Nerell");
-                } else {
-                    pamiEcranService.displayMessage("Choix équipe et lancement calage bordure");
-                }
-            }
-
-            if (robotStatus.robotGroupOk()) {
-                done = groupService.isCalage();
-
-            } else {
-                if (Boolean.TRUE.equals(teamChangeFilter.filter(pamiEcranService.config().getTeam()))) {
-                    pamiRobotStatus.team(pamiEcranService.config().getTeam());
-                    log.info("Team {}", pamiRobotStatus.team().name());
-                }
-
-                if (Boolean.TRUE.equals(strategyChangeFilter.filter(pamiEcranService.config().getStrategy()))) {
-                    pamiRobotStatus.strategy(pamiEcranService.config().getStrategy());
-                    log.info("Strategy {}", pamiRobotStatus.strategy().name());
-                }
-
-                pamiRobotStatus.twoRobots(pamiEcranService.config().isTwoRobots());
-                pamiRobotStatus.limiter2Etages(pamiEcranService.config().hasOption(StrategyOption.LIMITER_2_ETAGES.description()));
-                pamiRobotStatus.eviterCoteAdverse(pamiEcranService.config().hasOption(StrategyOption.EVITER_COTE_ADVERSE.description()));
-                pamiRobotStatus.useTwoFaces(pamiEcranService.config().hasOption(StrategyOption.USE_TWO_FACES.description()));
-                pamiRobotStatus.ejectionCoupDePute(pamiEcranService.config().hasOption(StrategyOption.EJECTION_COUP_DE_PUTE.description()));
-
-                done = pamiEcranService.config().isStartCalibration();
-            }
-
-            if (pamiRobotStatus.team() != null) {
-                leds.setLedTeam(pamiRobotStatus.team() == Team.JAUNE ? ARIG2025IoPamiLeds.LedColor.Yellow : ARIG2025IoPamiLeds.LedColor.Blue);
-            }
-
-            ThreadUtils.sleep(1000);
-        } while (!done);
-
-        leds.setLedCalage(ARIG2025IoPamiLeds.LedColor.Red);
-    }
-
-    /**
-     * Calage sur la bordure
-     */
-    @Override
-    public void calageBordure(boolean skip) {
-        pamiEcranService.displayMessage("Calage bordure");
-
-        try {
-            robotStatus.disableAvoidance();
-
-            position.setPt(new Point(
-                    conv.mmToPulse(getX(200)),
-                    conv.mmToPulse(1775)
-            ));
-            if (pamiRobotStatus.team() == Team.JAUNE) {
-                position.setAngle(conv.degToPulse(0));
-            } else {
-                position.setAngle(conv.degToPulse(180));
-            }
-
-            if (!skip) {
-                robotStatus.enableCalageTempo(2000);
-                mv.reculeMMSansAngle(300);
-
-                RobotName.RobotIdentification id = robotName.id();
-                double x = getX(PamiConstantesConfig.dstCallageArriere);
-                double yBase = 1550;
-                if (id == RobotName.RobotIdentification.PAMI_TRIANGLE) {
-                    position.setPt(new Point(
-                        conv.mmToPulse(x),
-                        //conv.mmToPulse(yBase + PamiConstantesConfig.dstCallageCote)
-                        conv.mmToPulse(2000 - 100)
-                    ));
-                    groupService.initStep(InitStep.PAMI_TRIANGLE_CALAGE_TERMINE);
-
-                } else if (id == RobotName.RobotIdentification.PAMI_CARRE) {
-                    position.setPt(new Point(
-                        conv.mmToPulse(x),
-                        //conv.mmToPulse(yBase + 3 * PamiConstantesConfig.dstCallageCote)
-                        conv.mmToPulse(2000 - 225)
-                    ));
-                    groupService.initStep(InitStep.PAMI_CARRE_CALAGE_TERMINE);
-
-                } else if (id == RobotName.RobotIdentification.PAMI_ROND) {
-                    position.setPt(new Point(
-                        conv.mmToPulse(x),
-                        //conv.mmToPulse(yBase + 5 * PamiConstantesConfig.dstCallageArriere)
-                        conv.mmToPulse(2000 - 375)
-                    ));
-                    groupService.initStep(InitStep.PAMI_ROND_CALAGE_TERMINE);
-
-                } else {
-                    position.setPt(new Point(
-                        conv.mmToPulse(x),
-                        conv.mmToPulse(yBase + 7 *  PamiConstantesConfig.dstCallageCote)
-                    ));
-                    groupService.initStep(InitStep.PAMI_CARRE_CALAGE_TERMINE);
-                }
-
-                if (pamiRobotStatus.team() == Team.JAUNE) {
-                    position.setAngle(conv.degToPulse(0));
-                } else {
-                    position.setAngle(conv.degToPulse(180));
-                }
-
-                if (!io.auOk()) {
-                    pamiEcranService.displayMessage("Echappement calage bordure car mauvais sens", LogLevel.ERROR);
-                    throw new ExitProgram(true);
-                }
-            }
-
-            leds.setLedCalage(ARIG2025IoPamiLeds.LedColor.Green);
-        } catch (AvoidingException e) {
-            pamiEcranService.displayMessage("Erreur lors du calage bordure", LogLevel.ERROR);
-            throw new RuntimeException("Impossible de se placer pour le départ", e);
+        if (pamiRobotStatus.team() == Team.JAUNE) {
+          position.setAngle(conv.degToPulse(0));
+        } else {
+          position.setAngle(conv.degToPulse(180));
         }
+
+        if (!io.auOk()) {
+          pamiEcranService.displayMessage("Echappement calage bordure car mauvais sens", LogLevel.ERROR);
+          throw new ExitProgram(true);
+        }
+      }
+
+      leds.setLedCalage(ARIG2025IoPamiLeds.LedColor.Green);
+    } catch (AvoidingException e) {
+      pamiEcranService.displayMessage("Erreur lors du calage bordure", LogLevel.ERROR);
+      throw new RuntimeException("Impossible de se placer pour le départ", e);
     }
+  }
 
-    /**
-     * Positionnement en fonction de la stratégie
-     */
-    public void positionStrategy() {
-        pamiEcranService.displayMessage("Mise en place");
+  /**
+   * Positionnement en fonction de la stratégie
+   */
+  public void positionStrategy() {
+    pamiEcranService.displayMessage("Mise en place");
 
-        try {
-            mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
+    try {
+      mv.setVitesse(robotConfig.vitesse(), robotConfig.vitesseOrientation());
 
             /*switch (pamiRobotStatus.strategy()) {
                 case FINALE_1:
@@ -309,88 +309,88 @@ public class PamiOrdonanceur extends AbstractOrdonanceur {
                     //groupService.initStep(InitStep.ODIN_EN_POSITION);
                     break;
             }*/
-        } catch (/*AvoidingException*/ Exception e) {
-            pamiEcranService.displayMessage("Erreur lors du calage stratégique", LogLevel.ERROR);
-            throw new RuntimeException("Impossible de se placer sur la strategie pour le départ", e);
+    } catch (/*AvoidingException*/ Exception e) {
+      pamiEcranService.displayMessage("Erreur lors du calage stratégique", LogLevel.ERROR);
+      throw new RuntimeException("Impossible de se placer sur la strategie pour le départ", e);
+    }
+  }
+
+  /**
+   * Etape du choix des options
+   */
+  private void choixConfig() {
+    if (robotStatus.robotGroupOk()) {
+      pamiEcranService.displayMessage("Attente démarrage Nerell");
+
+      while (!groupService.isReady()) {
+        exitFromScreen();
+        robotStatus.twoRobots(true);
+        avoidingService.setSafeAvoidance(pamiEcranService.config().isSafeAvoidance());
+        ThreadUtils.sleep(200);
+      }
+
+    } else {
+      pamiEcranService.displayMessage("Attente mise de la tirette, choix config ou mode manuel");
+
+      SignalEdgeFilter manuelRisingEdge = new SignalEdgeFilter(pamiEcranService.config().isModeManuel(), Type.RISING);
+      SignalEdgeFilter manuelFallingEdge = new SignalEdgeFilter(pamiEcranService.config().isModeManuel(), Type.FALLING);
+
+      boolean manuel = pamiEcranService.config().isModeManuel();
+
+      while (!io.tirette()) {
+        exitFromScreen();
+
+        if (Boolean.TRUE.equals(manuelRisingEdge.filter(pamiEcranService.config().isModeManuel()))) {
+          manuel = true;
+          pamiEcranService.displayMessage("!!!! Mode manuel !!!!");
+          startMonitoring();
+        } else if (manuel && Boolean.TRUE.equals(manuelFallingEdge.filter(pamiEcranService.config().isModeManuel()))) {
+          manuel = false;
+          endMonitoring();
+          pamiEcranService.displayMessage("Attente mise de la tirette, choix config ou mode manuel");
         }
+
+        // Si on est pas en manuel, gestion de la config
+        if (!manuel && !pamiEcranService.config().isSkipCalageBordure()) {
+          pamiEcranService.displayMessage("Attente mise de la tirette, choix config ou mode manuel");
+        }
+
+        robotStatus.twoRobots(pamiEcranService.config().isTwoRobots());
+        avoidingService.setSafeAvoidance(pamiEcranService.config().isSafeAvoidance());
+
+        ThreadUtils.sleep(manuel ? 4000 : 200);
+      }
     }
 
-    /**
-     * Etape du choix des options
-     */
-    private void choixConfig() {
-        if (robotStatus.robotGroupOk()) {
-            pamiEcranService.displayMessage("Attente démarrage Nerell");
-
-            while (!groupService.isReady()) {
-                exitFromScreen();
-                robotStatus.twoRobots(true);
-                avoidingService.setSafeAvoidance(pamiEcranService.config().isSafeAvoidance());
-                ThreadUtils.sleep(200);
-            }
-
-        } else {
-            pamiEcranService.displayMessage("Attente mise de la tirette, choix config ou mode manuel");
-
-            SignalEdgeFilter manuelRisingEdge = new SignalEdgeFilter(pamiEcranService.config().isModeManuel(), Type.RISING);
-            SignalEdgeFilter manuelFallingEdge = new SignalEdgeFilter(pamiEcranService.config().isModeManuel(), Type.FALLING);
-
-            boolean manuel = pamiEcranService.config().isModeManuel();
-
-            while (!io.tirette()) {
-                exitFromScreen();
-
-                if (Boolean.TRUE.equals(manuelRisingEdge.filter(pamiEcranService.config().isModeManuel()))) {
-                    manuel = true;
-                    pamiEcranService.displayMessage("!!!! Mode manuel !!!!");
-                    startMonitoring();
-                } else if (manuel && Boolean.TRUE.equals(manuelFallingEdge.filter(pamiEcranService.config().isModeManuel()))) {
-                    manuel = false;
-                    endMonitoring();
-                    pamiEcranService.displayMessage("Attente mise de la tirette, choix config ou mode manuel");
-                }
-
-                // Si on est pas en manuel, gestion de la config
-                if (!manuel && !pamiEcranService.config().isSkipCalageBordure()) {
-                    pamiEcranService.displayMessage("Attente mise de la tirette, choix config ou mode manuel");
-                }
-
-                robotStatus.twoRobots(pamiEcranService.config().isTwoRobots());
-                avoidingService.setSafeAvoidance(pamiEcranService.config().isSafeAvoidance());
-
-                ThreadUtils.sleep(manuel ? 4000 : 200);
-            }
-        }
-
-        // Sound screen vérrouillé
-        leds.setAllLeds(ARIG2025IoPamiLeds.LedColor.Green);
-        for (int i = 0 ; i < 10 ; i++) {
-            pamiIOService.sound();
-            ThreadUtils.sleep(300);
-        }
+    // Sound screen vérrouillé
+    leds.setAllLeds(ARIG2025IoPamiLeds.LedColor.Green);
+    for (int i = 0; i < 10; i++) {
+      pamiIOService.sound();
+      ThreadUtils.sleep(300);
     }
+  }
 
-    @Override
-    protected void cycleFin() {
-        ecranService.displayMessage(
-            String.format("FIN - Tirette Nerell et AU OK pour fin - Score %s",
-                robotStatus.calculerPoints())
-        );
+  @Override
+  protected void cycleFin() {
+    ecranService.displayMessage(
+      String.format("FIN - Tirette Nerell et AU OK pour fin - Score %s",
+        robotStatus.calculerPoints())
+    );
 
-        while (!groupService.isEnd() || !io.auOk()) {
-            if (!io.auOk()) {
-                pamiRobotStatus.disableShowTime();
-            } else {
-                pamiRobotStatus.enableShowTime();
-            }
-
-            ThreadUtils.sleep(1000);
-        }
+    while (!groupService.isEnd() || !io.auOk()) {
+      if (!io.auOk()) {
         pamiRobotStatus.disableShowTime();
+      } else {
+        pamiRobotStatus.enableShowTime();
+      }
 
-        ecranService.displayMessage("FIN - Extinction");
-        ThreadUtils.sleep(500);
-
-        beforePowerOff(); // impl
+      ThreadUtils.sleep(1000);
     }
+    pamiRobotStatus.disableShowTime();
+
+    ecranService.displayMessage("FIN - Extinction");
+    ThreadUtils.sleep(500);
+
+    beforePowerOff(); // impl
+  }
 }

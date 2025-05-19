@@ -13,24 +13,24 @@ import lombok.extern.slf4j.Slf4j;
 @EqualsAndHashCode(callSuper = true)
 public class PamiRobotStatus extends EurobotStatus {
 
-    public PamiRobotStatus() {
-        super(false, true);
-    }
+  public PamiRobotStatus() {
+    super(false, true);
+  }
 
-    @Setter(AccessLevel.NONE)
-    private boolean showTime = false;
+  @Setter(AccessLevel.NONE)
+  private boolean showTime = false;
 
-    public void enableShowTime() {
-        if (!showTime) {
-            log.info("[RS] Enabling show time");
-            showTime = true;
-        }
+  public void enableShowTime() {
+    if (!showTime) {
+      log.info("[RS] Enabling show time");
+      showTime = true;
     }
+  }
 
-    public void disableShowTime() {
-        if (showTime) {
-            log.info("[RS] Disabling show time");
-            showTime = false;
-        }
+  public void disableShowTime() {
+    if (showTime) {
+      log.info("[RS] Disabling show time");
+      showTime = false;
     }
+  }
 }

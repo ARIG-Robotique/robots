@@ -6,75 +6,75 @@ import lombok.experimental.Accessors;
 
 public abstract class AbstractIOServiceBouchon implements IOService {
 
-    @Setter
-    @Accessors(fluent = true)
-    private boolean au = true;
+  @Setter
+  @Accessors(fluent = true)
+  private boolean au = true;
 
-    @Setter
-    @Accessors(fluent = true)
-    private boolean tirette = false;
+  @Setter
+  @Accessors(fluent = true)
+  private boolean tirette = false;
 
-    @Getter
-    @Accessors(fluent = true)
-    private boolean alimServos = false;
+  @Getter
+  @Accessors(fluent = true)
+  private boolean alimServos = false;
 
-    @Getter
-    @Accessors(fluent = true)
-    private boolean alimMoteurs = false;
+  @Getter
+  @Accessors(fluent = true)
+  private boolean alimMoteurs = false;
 
-    // --------------------------------------------------------- //
-    // --------------------- INFOS TECHNIQUE ------------------- //
-    // --------------------------------------------------------- //
+  // --------------------------------------------------------- //
+  // --------------------- INFOS TECHNIQUE ------------------- //
+  // --------------------------------------------------------- //
 
-    @Override
-    public void refreshAllIO() {
-    }
+  @Override
+  public void refreshAllIO() {
+  }
 
-    @Override
-    public boolean auOk() {
-        return au;
-    }
+  @Override
+  public boolean auOk() {
+    return au;
+  }
 
-    @Override
-    public boolean tirette() {
-        return tirette;
-    }
+  @Override
+  public boolean tirette() {
+    return tirette;
+  }
 
-    // --------------------------------------------------------- //
-    // -------------------------- INPUT ------------------------ //
-    // --------------------------------------------------------- //
+  // --------------------------------------------------------- //
+  // -------------------------- INPUT ------------------------ //
+  // --------------------------------------------------------- //
 
-    @Override
-    public boolean puissanceServosOk() {
-        return alimServos;
-    }
+  @Override
+  public boolean puissanceServosOk() {
+    return alimServos;
+  }
 
-    @Override
-    public boolean puissanceMoteursOk() {
-        return alimMoteurs;
-    }
+  @Override
+  public boolean puissanceMoteursOk() {
+    return alimMoteurs;
+  }
 
-    // --------------------------------------------------------- //
-    // -------------------------- OUTPUT ----------------------- //
-    // --------------------------------------------------------- //
+  // --------------------------------------------------------- //
+  // -------------------------- OUTPUT ----------------------- //
+  // --------------------------------------------------------- //
 
-    @Override
-    public void enableAlimServos() {
-        alimServos = true;
-    }
+  @Override
+  public void enableAlimServos() {
+    alimServos = true;
+  }
 
-    @Override
-    public void disableAlimServos() {
-        alimServos = false;
-    }
+  @Override
+  public void disableAlimServos() {
+    alimServos = false;
+  }
 
-    @Override
-    public void enableAlimMoteurs() {
-        alimMoteurs = true;
-    }
+  @Override
+  public void enableAlimMoteurs() {
+    alimMoteurs = true;
+  }
 
-    @Override
-    public void disableAlimMoteurs() {
-        alimMoteurs = false;
-    }
+  @Override
+  public void disableAlimMoteurs() {
+    alimMoteurs = false;
+  }
 }

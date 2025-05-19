@@ -9,19 +9,31 @@ import org.arig.robot.model.lidar.ScanInfos;
  */
 public interface ILidarTelemeter {
 
-    boolean isEnabled();
-    void setEnabled(boolean enabled);
-    boolean isClusterable();
-    boolean isOpen();
-    void printDeviceInfo();
-    void end();
+  boolean isEnabled();
 
-    DeviceInfos deviceInfo();
-    HealthInfos healthInfo();
-    void startScan();
-    void startScan(Short speed);
-    void stopScan();
-    void setSpeed(Short speed);
-    void setConfiguration(boolean reverse, int offsetAngle, int excludeLowerThan, int excludeGreaterThan);
-    ScanInfos grabData();
+  void setEnabled(boolean enabled);
+
+  boolean isClusterable();
+
+  boolean isOpen();
+
+  void printDeviceInfo();
+
+  void end();
+
+  DeviceInfos deviceInfo();
+
+  HealthInfos healthInfo();
+
+  void startScan();
+
+  void startScan(Short speed);
+
+  void stopScan();
+
+  void setSpeed(Short speed);
+
+  void setConfiguration(boolean reverse, int offsetAngle, int excludeLowerThan, int excludeGreaterThan);
+
+  ScanInfos grabData();
 }

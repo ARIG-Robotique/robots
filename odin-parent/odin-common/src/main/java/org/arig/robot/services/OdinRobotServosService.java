@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 public class OdinRobotServosService extends AbstractCommonRobotServosService {
-    public OdinRobotServosService(SD21Servos sd21Servos) {
-        super(sd21Servos);
-    }
+  public OdinRobotServosService(SD21Servos sd21Servos) {
+    super(sd21Servos);
+  }
 }

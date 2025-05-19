@@ -20,39 +20,39 @@ import java.util.concurrent.Executor;
 @Slf4j
 public abstract class AbstractBidirectionalSocket<T extends Enum<T>> extends AbstractSocketServer<T> {
 
-    private final AbstractSocketClient<T> client;
+  private final AbstractSocketClient<T> client;
 
-    public AbstractBidirectionalSocket(final int serverPort, final String hostname, final int port, final int timeout, final Executor executor) {
-        super(serverPort, executor);
+  public AbstractBidirectionalSocket(final int serverPort, final String hostname, final int port, final int timeout, final Executor executor) {
+    super(serverPort, executor);
 
-        client = new AbstractSocketClient<T>(hostname, port, timeout) {
-        };
+    client = new AbstractSocketClient<T>(hostname, port, timeout) {
+    };
+  }
+
+  @Override
+  public boolean isOpen() {
+    return super.isOpen() && client.isOpen();
+  }
+
+  public boolean tryConnect() {
+    try {
+      client.openSocket();
+      return true;
+    } catch (IOException e) {
+      client.end(true);
+      return false;
     }
+  }
 
-    @Override
-    public boolean isOpen() {
-        return super.isOpen() && client.isOpen();
-    }
+  @Override
+  public void end() {
+    client.end();
+    super.end();
+  }
 
-    public boolean tryConnect() {
-        try {
-            client.openSocket();
-            return true;
-        } catch (IOException e) {
-            client.end(true);
-            return false;
-        }
-    }
-
-    @Override
-    public void end() {
-        client.end();
-        super.end();
-    }
-
-    protected <Q extends AbstractQuery<T>, R extends AbstractResponse<T>> R sendToSocketAndGet(Q query, Class<R> responseClazz) throws IOException {
-        client.openIfNecessary();
-        return client.sendToSocketAndGet(query, responseClazz);
-    }
+  protected <Q extends AbstractQuery<T>, R extends AbstractResponse<T>> R sendToSocketAndGet(Q query, Class<R> responseClazz) throws IOException {
+    client.openIfNecessary();
+    return client.sendToSocketAndGet(query, responseClazz);
+  }
 
 }

@@ -23,26 +23,37 @@ public abstract class AbstractNerellFaceService {
   }
 
   protected abstract boolean iosPinces();
+
   protected abstract boolean iosTiroir();
+
   protected abstract boolean iosColonnesSol();
 
   protected abstract void updatePincesState(boolean gauche, boolean droite);
+
   protected abstract void updateColonnesSolState(boolean gauche, boolean droite);
+
   protected abstract void updateTiroirState(boolean bas, boolean haut);
 
   protected abstract void aligneFace(Point gradin) throws AvoidingException;
+
   protected abstract void ouvreFacePourPrise();
 
   protected abstract void deplacementPriseColonnesPinces() throws AvoidingException;
+
   protected abstract void deplacementPriseColonnesSol() throws AvoidingException;
+
   protected abstract void echappementPriseGradinBrut(PriseGradinState state) throws AvoidingException;
 
   protected abstract void deplacementDeposeInit() throws AvoidingException;
+
   protected abstract void deplacementDeposeColonnesSol(boolean reverse) throws AvoidingException;
+
   protected abstract void deplacementDeposeEtage() throws AvoidingException;
+
   protected abstract void deplacementDeposeEtage2() throws AvoidingException;
 
   protected abstract boolean miseEnStockTiroir();
+
   protected abstract void verrouillageColonnesSol();
 
   protected abstract void deposeEtage(ConstructionArea.Etage etage) throws AvoidingException;

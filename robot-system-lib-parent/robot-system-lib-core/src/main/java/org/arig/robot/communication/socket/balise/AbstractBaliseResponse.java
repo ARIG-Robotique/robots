@@ -10,8 +10,8 @@ import java.io.Serializable;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public abstract class AbstractBaliseResponse
-    extends AbstractResponse<BaliseAction>
-    implements Serializable {
+  extends AbstractResponse<BaliseAction>
+  implements Serializable {
 
   private int index;
 

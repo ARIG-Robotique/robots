@@ -16,13 +16,13 @@ import java.util.concurrent.Executors;
 @ComponentScan({"org.arig.robot.scheduler"})
 public class PamiCommonSchedulerContext implements SchedulingConfigurer {
 
-    @Bean(destroyMethod="shutdown")
-    public ExecutorService taskExecutor() {
-        return Executors.newScheduledThreadPool(PamiConstantesConfig.nbThreadScheduledExecutor);
-    }
+  @Bean(destroyMethod = "shutdown")
+  public ExecutorService taskExecutor() {
+    return Executors.newScheduledThreadPool(PamiConstantesConfig.nbThreadScheduledExecutor);
+  }
 
-    @Override
-    public void configureTasks(ScheduledTaskRegistrar taskRegistrar) {
-        taskRegistrar.setScheduler(taskExecutor());
-    }
+  @Override
+  public void configureTasks(ScheduledTaskRegistrar taskRegistrar) {
+    taskRegistrar.setScheduler(taskExecutor());
+  }
 }

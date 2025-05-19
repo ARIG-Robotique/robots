@@ -16,46 +16,46 @@ import java.net.URL;
 @Configuration
 public class PathFindingTestContext {
 
-    @Bean
-    public MonitoringWrapper monitoringWrapper() {
-        return new MonitoringJsonWrapper();
-    }
+  @Bean
+  public MonitoringWrapper monitoringWrapper() {
+    return new MonitoringJsonWrapper();
+  }
 
-    @Bean
-    @SneakyThrows
-    public MultiPathFinderImpl multiPathLabyrinthe() {
-        final MultiPathFinderImpl pf = new MultiPathFinderImpl();
+  @Bean
+  @SneakyThrows
+  public MultiPathFinderImpl multiPathLabyrinthe() {
+    final MultiPathFinderImpl pf = new MultiPathFinderImpl();
 
-        URL url = getClass().getResource("/assets/labyrinthe.png");
-        pf.construitGraphDepuisImageNoirEtBlanc(url.openStream());
+    URL url = getClass().getResource("/assets/labyrinthe.png");
+    pf.construitGraphDepuisImageNoirEtBlanc(url.openStream());
 
-        return pf;
-    }
+    return pf;
+  }
 
-    @Bean
-    @SneakyThrows
-    public MultiPathFinderImpl multiPathTableEssai() {
-        final MultiPathFinderImpl pf = new MultiPathFinderImpl();
+  @Bean
+  @SneakyThrows
+  public MultiPathFinderImpl multiPathTableEssai() {
+    final MultiPathFinderImpl pf = new MultiPathFinderImpl();
 
-        final URL url = getClass().getResource("/assets/table-test-obstacle.png");
-        pf.construitGraphDepuisImageNoirEtBlanc(url.openStream());
+    final URL url = getClass().getResource("/assets/table-test-obstacle.png");
+    pf.construitGraphDepuisImageNoirEtBlanc(url.openStream());
 
-        return pf;
-    }
+    return pf;
+  }
 
-    @Bean
-    @SneakyThrows
-    public MultiPathFinderImpl multiPathTableJaune() {
-        final MultiPathFinderImpl pf = new MultiPathFinderImpl();
+  @Bean
+  @SneakyThrows
+  public MultiPathFinderImpl multiPathTableJaune() {
+    final MultiPathFinderImpl pf = new MultiPathFinderImpl();
 
-        URL url = getClass().getResource("/assets/jaune.png");
-        pf.construitGraphDepuisImageNoirEtBlanc(url.openStream());
+    URL url = getClass().getResource("/assets/jaune.png");
+    pf.construitGraphDepuisImageNoirEtBlanc(url.openStream());
 
-        return pf;
-    }
+    return pf;
+  }
 
-    @Bean
-    public AbstractRobotStatus robotStatus() {
-        return new TestRobotStatus();
-    }
+  @Bean
+  public AbstractRobotStatus robotStatus() {
+    return new TestRobotStatus();
+  }
 }

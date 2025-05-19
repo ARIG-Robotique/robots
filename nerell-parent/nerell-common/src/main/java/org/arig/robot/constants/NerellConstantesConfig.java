@@ -4,158 +4,158 @@ import org.arig.robot.system.pathfinding.PathFinderAlgorithm;
 
 public interface NerellConstantesConfig {
 
-    // Seuil de detection pour l'alimentation
-    double seuilAlimentationServosVolts = 3;
-    double seuilAlimentationMoteursVolts = 7;
+  // Seuil de detection pour l'alimentation
+  double seuilAlimentationServosVolts = 3;
+  double seuilAlimentationMoteursVolts = 7;
 
-    // Nb Thread Pool Scheduler
-    int nbThreadScheduledExecutor = 20;
+  // Nb Thread Pool Scheduler
+  int nbThreadScheduledExecutor = 20;
 
-    // Nb Thread Pool Async
-    int nbThreadAsyncExecutor = 10;
+  // Nb Thread Pool Async
+  int nbThreadAsyncExecutor = 10;
 
-    // Configuration asservissement //
-    double asservTimeMs = 20;
-    double asservTimeS = NerellConstantesConfig.asservTimeMs / 1000;
+  // Configuration asservissement //
+  double asservTimeMs = 20;
+  double asservTimeS = NerellConstantesConfig.asservTimeMs / 1000;
 
-    int i2cReadTimeMs = 20;
-    double calageGlobalTimeMs = 100;
-    double calageCourtTimeMs = 10;
+  int i2cReadTimeMs = 20;
+  double calageGlobalTimeMs = 100;
+  double calageCourtTimeMs = 10;
 
-    // -------------------------------- //
-    // Configuration moteurs propulsion //
-    // -------------------------------- //
-    int numeroMoteurGauche = 1;
-    boolean reverseMoteurGauche = true;
-    int numeroMoteurDroit = 2;
-    boolean reverseMoteurDroit = false;
+  // -------------------------------- //
+  // Configuration moteurs propulsion //
+  // -------------------------------- //
+  int numeroMoteurGauche = 1;
+  boolean reverseMoteurGauche = true;
+  int numeroMoteurDroit = 2;
+  boolean reverseMoteurDroit = false;
 
-    // ----------------------------- //
-    // Configuration des convertions //
-    // ----------------------------- //
+  // ----------------------------- //
+  // Configuration des convertions //
+  // ----------------------------- //
 
-    //double entraxe = 280;
-    double entraxe = 279.4632765693719;
+  //double entraxe = 280;
+  double entraxe = 279.4632765693719;
 
-    // Diam 47mm => périmètre 147.655 mm
-    // 4096 p => 147.65485471872 mm : 4096 / 147.65485471872000000 = 27.74036795337890000
-    //double countPerMm = 27.74036795337890000; // Théorique
-    //double countPerMm = 27.556656907330034; // Manuel 2700 -> mesure 2718 depuis le théorique
-    //double countPerMm = 27.456813947520867; // Manuel 2750 -> 2760 depuis 2718
-    double countPerMm = 27.44683328087328; // Manuel 2750 -> 2751 depuis 2760
+  // Diam 47mm => périmètre 147.655 mm
+  // 4096 p => 147.65485471872 mm : 4096 / 147.65485471872000000 = 27.74036795337890000
+  //double countPerMm = 27.74036795337890000; // Théorique
+  //double countPerMm = 27.556656907330034; // Manuel 2700 -> mesure 2718 depuis le théorique
+  //double countPerMm = 27.456813947520867; // Manuel 2750 -> 2760 depuis 2718
+  double countPerMm = 27.44683328087328; // Manuel 2750 -> 2751 depuis 2760
 
-    // Entraxe 280mm => périmètre 879.64594300514200000 mm (1 roue)
-    // 879.64594300514200000 mm => 180° : 879.64594300514200000 * 27.74036795337890000 / 180 =
-    //double countPerDeg = 135.56501182033100000; // Théorique
-    //double countPerDeg = 133.86663837508056; // 5 tours
-    //double countPerDeg = 133.86778649410599; // 10 tours
+  // Entraxe 280mm => périmètre 879.64594300514200000 mm (1 roue)
+  // 879.64594300514200000 mm => 180° : 879.64594300514200000 * 27.74036795337890000 / 180 =
+  //double countPerDeg = 135.56501182033100000; // Théorique
+  //double countPerDeg = 133.86663837508056; // 5 tours
+  //double countPerDeg = 133.86778649410599; // 10 tours
 
-    double coefCodeurGauche = 1.0;
+  double coefCodeurGauche = 1.0;
 
-    // 10 cycles : 0.9991086296802006
-    // 20 cycles : 0.9990845254418886
-    // 30 cycles : 0.9990466918451644
-    // 30 cycles : 0.9990741125307827
+  // 10 cycles : 0.9991086296802006
+  // 20 cycles : 0.9990845254418886
+  // 30 cycles : 0.9990466918451644
+  // 30 cycles : 0.9990741125307827
 
-    // 10 Cycle 2024 : 0.9976442656120189
-    double coefCodeurDroit = (0.9990466918451644 + 0.9990741125307827) / 2; // 0.9992895892534229 <- 5 cycles 3: 0.9992203095908642 old:(0.9989161414636104 + 0.998509395055139) / 2;
-
-
-    // ------------------------ //
-    // Configuration des rampes //
-    // ------------------------ //
-    double gainVitesseRampeDistance = 1.5;
-    double gainVitesseRampeOrientation = gainVitesseRampeDistance * 2;
-    double gainVitesseRampeDistanceSimulateur = 3;
-    double gainVitesseRampeOrientationSimulateur = gainVitesseRampeDistanceSimulateur * 2;
-
-    double rampAccDistance = 1000.0; // en mm/s2
-    double rampDecDistance = 750.0; // en mm/s2
-
-    double rampAccOrientation = 1000.0; // en mm/s2
-    double rampDecOrientation = 1000.0; // en mm/s2
-
-    // -------------------------- //
-    // Configuration des vitesses //
-    // -------------------------- //
-
-    long vitesseOrientationMax = 1000;
-    long vitesseOrientationMin = 150;
-
-    long vitesseMax = 1000;
-    long vitesseMin = 100;
+  // 10 Cycle 2024 : 0.9976442656120189
+  double coefCodeurDroit = (0.9990466918451644 + 0.9990741125307827) / 2; // 0.9992895892534229 <- 5 cycles 3: 0.9992203095908642 old:(0.9989161414636104 + 0.998509395055139) / 2;
 
 
-    // -------------- //
-    // Parametres PID //
-    // -------------- //
+  // ------------------------ //
+  // Configuration des rampes //
+  // ------------------------ //
+  double gainVitesseRampeDistance = 1.5;
+  double gainVitesseRampeOrientation = gainVitesseRampeDistance * 2;
+  double gainVitesseRampeDistanceSimulateur = 3;
+  double gainVitesseRampeOrientationSimulateur = gainVitesseRampeDistanceSimulateur * 2;
 
-    double kcrDistance = 21.5;
-    double tcrDistance = 0.04;
-    double kpDistance = 30;
-    double kiDistance = 0;
-    double kdDistance = 30;
-    double kpDistanceSimu = 12.9;
-    double kiDistanceSimu = 0.0;
-    double kdDistanceSimu = 0.008;
+  double rampAccDistance = 1000.0; // en mm/s2
+  double rampDecDistance = 750.0; // en mm/s2
 
-    double kcrOrientation = 10.0;
-    double tcrOrientation = 0.05;
-    double kpOrientation = 30;
-    double kiOrientation = 0;
-    double kdOrientation = 30;
-    double kpOrientationSimu = 6.0;
-    double kiOrientationSimu = 0.0;
-    double kdOrientationSimu = 0.01;
+  double rampAccOrientation = 1000.0; // en mm/s2
+  double rampDecOrientation = 1000.0; // en mm/s2
 
-    // --------------------------- //
-    // Paramètre mouvement manager //
-    // --------------------------- //
-    double arretDistanceMm = 1;
-    double arretOrientDeg = 0.5;
-    double approcheAvecFreinDistanceMm = 10;
-    double approcheAvecFreinOrientationDeg = 5;
-    double approcheSansFreinDistanceMm = 50;
-    double approcheSansFreinOrientationDeg = 5;
-    double startAngleDemiTourDeg = 75;
-    double startAngleLimitVitesseDistance = 15;
+  // -------------------------- //
+  // Configuration des vitesses //
+  // -------------------------- //
 
-    // -------------------------- //
-    // Paramètre Physiques        //
-    // -------------------------- //
+  long vitesseOrientationMax = 1000;
+  long vitesseOrientationMin = 150;
 
-    double dstCallage = 141.5; // dos du robot <=> milieu du robot
+  long vitesseMax = 1000;
+  long vitesseMin = 100;
 
-    // -------------------------- //
-    // Paramètre Avoiding service //
-    // -------------------------- //
 
-    int avoidanceWaitTimeMs = 500;
-    int avoidanceWaitTimeLongMs = 5000;
-    int avoidancePathRefreshTimeMs = 2000;
+  // -------------- //
+  // Parametres PID //
+  // -------------- //
 
-    // ---------------------- //
-    // Paramètre path finding //
-    // ---------------------- //
-    PathFinderAlgorithm pathFindingAlgo = PathFinderAlgorithm.ANYA16;
-    int pathFindingAngle = 45;
-    int pathFindingAngleSafe = 50;
-    int pathFindingSeuilProximite = 480;
-    int pathFindingSeuilProximiteSafe = 600;
-    int pathFindingSeuilProximiteArig = 440;
-    int pathFindingTailleObstacle = NerellConstantesConfig.pathFindingSeuilProximiteSafe * 2 + 50;
-    int pathFindingTailleObstacleArig = NerellConstantesConfig.pathFindingSeuilProximiteArig * 2 + 50;
-    int pathFindingTailleObstaclePami = 600;
+  double kcrDistance = 21.5;
+  double tcrDistance = 0.04;
+  double kpDistance = 30;
+  double kiDistance = 0;
+  double kdDistance = 30;
+  double kpDistanceSimu = 12.9;
+  double kiDistanceSimu = 0.0;
+  double kdDistanceSimu = 0.008;
 
-    int lidarClusterSizeMm = 50;
-    int lidarOffsetPointMm = 30; // "recule" les points détectés pour prendre en compte qu'on ne detecte que les faces avant
+  double kcrOrientation = 10.0;
+  double tcrOrientation = 0.05;
+  double kpOrientation = 30;
+  double kiOrientation = 0;
+  double kdOrientation = 30;
+  double kpOrientationSimu = 6.0;
+  double kiOrientationSimu = 0.0;
+  double kdOrientationSimu = 0.01;
 
-    // ----------------- //
-    // Paramètres métier //
-    // ----------------- //
+  // --------------------------- //
+  // Paramètre mouvement manager //
+  // --------------------------- //
+  double arretDistanceMm = 1;
+  double arretOrientDeg = 0.5;
+  double approcheAvecFreinDistanceMm = 10;
+  double approcheAvecFreinOrientationDeg = 5;
+  double approcheSansFreinDistanceMm = 50;
+  double approcheSansFreinOrientationDeg = 5;
+  double startAngleDemiTourDeg = 75;
+  double startAngleLimitVitesseDistance = 15;
 
-    int WAIT_LED = 200;
-    int TIMEOUT_POMPE = 1000;
-    int TIMEOUT_COLOR = 800;
-    int VITESSE_ROUE_PANNEAU = 2048;
+  // -------------------------- //
+  // Paramètre Physiques        //
+  // -------------------------- //
+
+  double dstCallage = 141.5; // dos du robot <=> milieu du robot
+
+  // -------------------------- //
+  // Paramètre Avoiding service //
+  // -------------------------- //
+
+  int avoidanceWaitTimeMs = 500;
+  int avoidanceWaitTimeLongMs = 5000;
+  int avoidancePathRefreshTimeMs = 2000;
+
+  // ---------------------- //
+  // Paramètre path finding //
+  // ---------------------- //
+  PathFinderAlgorithm pathFindingAlgo = PathFinderAlgorithm.ANYA16;
+  int pathFindingAngle = 45;
+  int pathFindingAngleSafe = 50;
+  int pathFindingSeuilProximite = 480;
+  int pathFindingSeuilProximiteSafe = 600;
+  int pathFindingSeuilProximiteArig = 440;
+  int pathFindingTailleObstacle = NerellConstantesConfig.pathFindingSeuilProximiteSafe * 2 + 50;
+  int pathFindingTailleObstacleArig = NerellConstantesConfig.pathFindingSeuilProximiteArig * 2 + 50;
+  int pathFindingTailleObstaclePami = 600;
+
+  int lidarClusterSizeMm = 50;
+  int lidarOffsetPointMm = 30; // "recule" les points détectés pour prendre en compte qu'on ne detecte que les faces avant
+
+  // ----------------- //
+  // Paramètres métier //
+  // ----------------- //
+
+  int WAIT_LED = 200;
+  int TIMEOUT_POMPE = 1000;
+  int TIMEOUT_COLOR = 800;
+  int VITESSE_ROUE_PANNEAU = 2048;
 }

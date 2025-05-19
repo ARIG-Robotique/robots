@@ -14,39 +14,39 @@ import org.springframework.shell.standard.ShellMethodAvailability;
 @AllArgsConstructor
 public class OdinAlimentationCommands {
 
-    private final OdinIOService ioService;
-    private final OdinRobotServosService servosService;
-    //private final IAlimentationSensor alimentationSensor;
+  private final OdinIOService ioService;
+  private final OdinRobotServosService servosService;
+  //private final IAlimentationSensor alimentationSensor;
 
-    public Availability auOK() {
-        return ioService.auOk() ? Availability.available() : Availability.unavailable("Arret d'urgence non OK");
-    }
+  public Availability auOK() {
+    return ioService.auOk() ? Availability.available() : Availability.unavailable("Arret d'urgence non OK");
+  }
 
-    @ShellMethodAvailability("auOK")
-    @ShellMethod("Activation alimentation moteurs")
-    public void enableAlimentationMoteurs() {
-        ioService.enableAlimMoteurs();
-    }
+  @ShellMethodAvailability("auOK")
+  @ShellMethod("Activation alimentation moteurs")
+  public void enableAlimentationMoteurs() {
+    ioService.enableAlimMoteurs();
+  }
 
-    @ShellMethodAvailability("auOK")
-    @ShellMethod("Activation alimentation servos")
-    public void enableAlimentationServos() {
-        servosService.cyclePreparation();
-        ioService.enableAlimServos();
-    }
+  @ShellMethodAvailability("auOK")
+  @ShellMethod("Activation alimentation servos")
+  public void enableAlimentationServos() {
+    servosService.cyclePreparation();
+    ioService.enableAlimServos();
+  }
 
-    @ShellMethodAvailability("auOK")
-    @ShellMethod("Activation alimentations")
-    public void enableAlimentation() {
-        enableAlimentationMoteurs();
-        enableAlimentationServos();
-    }
+  @ShellMethodAvailability("auOK")
+  @ShellMethod("Activation alimentations")
+  public void enableAlimentation() {
+    enableAlimentationMoteurs();
+    enableAlimentationServos();
+  }
 
-    @ShellMethod("Désactivation des alimentations")
-    public void disableAlimentation() {
-        ioService.disableAlimServos();
-        ioService.disableAlimMoteurs();
-    }
+  @ShellMethod("Désactivation des alimentations")
+  public void disableAlimentation() {
+    ioService.disableAlimServos();
+    ioService.disableAlimMoteurs();
+  }
 
     /*@SneakyThrows
     @ShellMethod("Lecture des alimentations")

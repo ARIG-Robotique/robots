@@ -16,21 +16,21 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ExtendWith(SpringExtension.class)
 public class NoPathFinderTest {
 
-    private NoPathFinderImpl pf = new NoPathFinderImpl();
+  private NoPathFinderImpl pf = new NoPathFinderImpl();
 
-    @Test
-    public void testFindPath() throws NoPathFoundException {
-        Point from = new Point(10, 10);
-        Point to = new Point(20, 20);
+  @Test
+  public void testFindPath() throws NoPathFoundException {
+    Point from = new Point(10, 10);
+    Point to = new Point(20, 20);
 
-        Chemin c = pf.findPath(from, to);
-        Assertions.assertNotNull(c);
-        Assertions.assertEquals(1, c.nbPoints());
-        Assertions.assertTrue(c.hasNext());
+    Chemin c = pf.findPath(from, to);
+    Assertions.assertNotNull(c);
+    Assertions.assertEquals(1, c.nbPoints());
+    Assertions.assertTrue(c.hasNext());
 
-        Point r = c.next();
-        Assertions.assertFalse(c.hasNext());
-        Assertions.assertTrue(to.getX() == r.getX());
-        Assertions.assertTrue(to.getY() == r.getY());
-    }
+    Point r = c.next();
+    Assertions.assertFalse(c.hasNext());
+    Assertions.assertTrue(to.getX() == r.getX());
+    Assertions.assertTrue(to.getY() == r.getY());
+  }
 }

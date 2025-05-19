@@ -41,236 +41,236 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PamiAsservissementCommands {
 
-    private final MonitoringWrapper monitoringWrapper;
-    private final PamiIOService ioService;
-    private final AbstractEnergyService energyService;
-    private final TrajectoryManager trajectoryManager;
-    private final PamiRobotStatus rs;
-    private final ConvertionRobotUnit convRobot;
-    private final CommandeRobot cmdRobot;
-    private final Position currentPosition;
-    private final PidFilter pidDistance;
-    private final PidFilter pidOrientation;
-    private final IAsservissementPolaire asservissement;
-    private final Abstract2WheelsEncoders wheelsEncoders;
+  private final MonitoringWrapper monitoringWrapper;
+  private final PamiIOService ioService;
+  private final AbstractEnergyService energyService;
+  private final TrajectoryManager trajectoryManager;
+  private final PamiRobotStatus rs;
+  private final ConvertionRobotUnit convRobot;
+  private final CommandeRobot cmdRobot;
+  private final Position currentPosition;
+  private final PidFilter pidDistance;
+  private final PidFilter pidOrientation;
+  private final IAsservissementPolaire asservissement;
+  private final Abstract2WheelsEncoders wheelsEncoders;
 
-    private enum PIDCoef {
-        KP, KI, KD
+  private enum PIDCoef {
+    KP, KI, KD
+  }
+
+  private boolean monitoringRun = false;
+
+  private void startMonitoring() {
+    if (monitoringRun) {
+      endMonitoring();
     }
 
-    private boolean monitoringRun = false;
+    monitoringRun = true;
+    final String execId = LocalDateTime.now().format(DateTimeFormatter.ofPattern(ConstantesConfig.executiondIdFormat));
+    System.setProperty(ConstantesConfig.keyExecutionId, execId);
+    rs.enableForceMonitoring();
+    monitoringWrapper.cleanAllPoints();
+  }
 
-    private void startMonitoring() {
-        if (monitoringRun) {
-            endMonitoring();
-        }
+  @SneakyThrows
+  private void endMonitoring() {
+    monitoringRun = false;
+    monitoringWrapper.save();
+    rs.disableForceMonitoring();
 
-        monitoringRun = true;
-        final String execId = LocalDateTime.now().format(DateTimeFormatter.ofPattern(ConstantesConfig.executiondIdFormat));
-        System.setProperty(ConstantesConfig.keyExecutionId, execId);
-        rs.enableForceMonitoring();
-        monitoringWrapper.cleanAllPoints();
-    }
+    final String execId = System.getProperty(ConstantesConfig.keyExecutionId);
 
-    @SneakyThrows
-    private void endMonitoring() {
-        monitoringRun = false;
-        monitoringWrapper.save();
-        rs.disableForceMonitoring();
+    final File execFile = new File("./logs/" + execId + ".exec");
+    DateTimeFormatter execIdPattern = DateTimeFormatter.ofPattern(ConstantesConfig.executiondIdFormat);
+    DateTimeFormatter savePattern = DateTimeFormatter.ofPattern(ConstantesConfig.executiondDateFormat);
+    List<String> lines = new ArrayList<>();
+    lines.add(LocalDateTime.parse(execId, execIdPattern).format(savePattern));
+    lines.add(LocalDateTime.now().format(savePattern));
+    FileUtils.writeLines(execFile, lines);
 
-        final String execId = System.getProperty(ConstantesConfig.keyExecutionId);
+    log.info("Création du fichier de fin d'exécution {}", execFile.getAbsolutePath());
+  }
 
-        final File execFile = new File("./logs/" + execId + ".exec");
-        DateTimeFormatter execIdPattern = DateTimeFormatter.ofPattern(ConstantesConfig.executiondIdFormat);
-        DateTimeFormatter savePattern = DateTimeFormatter.ofPattern(ConstantesConfig.executiondDateFormat);
-        List<String> lines = new ArrayList<>();
-        lines.add(LocalDateTime.parse(execId, execIdPattern).format(savePattern));
-        lines.add(LocalDateTime.now().format(savePattern));
-        FileUtils.writeLines(execFile, lines);
+  public Availability alimentationOk() {
+    return ioService.auOk() && energyService.checkServos() && energyService.checkMoteurs()
+      ? Availability.available() : Availability.unavailable("Les alimentations ne sont pas bonnes");
+  }
 
-        log.info("Création du fichier de fin d'exécution {}", execFile.getAbsolutePath());
-    }
+  @ShellMethod("Réglage PID Distance")
+  public void pidDistance(@NotNull @Min(0) double kp, @NotNull @Min(0) double ki, @NotNull @Min(0) double kd) {
+    pidDistance.setTunings(kp, ki, kd);
+    pidDistance.reset();
+  }
 
-    public Availability alimentationOk() {
-        return ioService.auOk() && energyService.checkServos() && energyService.checkMoteurs()
-                ? Availability.available() : Availability.unavailable("Les alimentations ne sont pas bonnes");
-    }
+  @ShellMethod("Réglage PID Orientation")
+  public void pidOrientation(@NotNull @Min(0) double kp, @NotNull @Min(0) double ki, @NotNull @Min(0) double kd) {
+    pidOrientation.setTunings(kp, ki, kd);
+    pidOrientation.reset();
+  }
 
-    @ShellMethod("Réglage PID Distance")
-    public void pidDistance(@NotNull @Min(0) double kp, @NotNull @Min(0) double ki, @NotNull @Min(0) double kd) {
-        pidDistance.setTunings(kp, ki, kd);
-        pidDistance.reset();
-    }
+  @ShellMethod("Réglage des vitesses")
+  public void vitesseRobotPercent(@NotNull int vitesseDistance, @NotNull int vitesseOrientation) {
+    trajectoryManager.setVitessePercent(vitesseDistance, vitesseOrientation);
+  }
 
-    @ShellMethod("Réglage PID Orientation")
-    public void pidOrientation(@NotNull @Min(0) double kp, @NotNull @Min(0) double ki, @NotNull @Min(0) double kd) {
-        pidOrientation.setTunings(kp, ki, kd);
-        pidOrientation.reset();
-    }
+  @ShellMethod("Réglage des rampes de distance")
+  public void rampDistanceRobotPercent(@NotNull int accel, @NotNull int decel) {
+    trajectoryManager.setRampesDistancePercent(accel, decel);
+  }
 
-    @ShellMethod("Réglage des vitesses")
-    public void vitesseRobotPercent(@NotNull int vitesseDistance, @NotNull int vitesseOrientation) {
-        trajectoryManager.setVitessePercent(vitesseDistance, vitesseOrientation);
-    }
+  @ShellMethodAvailability("alimentationOk")
+  @ShellMethod("Avance le robot")
+  public void avanceRobot(@NotNull long distance) throws AvoidingException {
+    startMonitoring();
 
-    @ShellMethod("Réglage des rampes de distance")
-    public void rampDistanceRobotPercent(@NotNull int accel, @NotNull int decel) {
-        trajectoryManager.setRampesDistancePercent(accel, decel);
-    }
+    wheelsEncoders.reset();
+    rs.enableAsserv();
+    rs.disableAvoidance();
 
-    @ShellMethodAvailability("alimentationOk")
-    @ShellMethod("Avance le robot")
-    public void avanceRobot(@NotNull long distance) throws AvoidingException {
-        startMonitoring();
+    rs.enableCalageTempo(10000);
 
-        wheelsEncoders.reset();
-        rs.enableAsserv();
-        rs.disableAvoidance();
+    trajectoryManager.avanceMM(distance);
 
-        rs.enableCalageTempo(10000);
+    endMonitoring();
+    rs.disableAsserv();
+  }
 
-        trajectoryManager.avanceMM(distance);
+  @ShellMethodAvailability("alimentationOk")
+  @ShellMethod("Tourne le robot")
+  public void tourneRobot(@NotNull long angle) throws AvoidingException {
+    startMonitoring();
 
-        endMonitoring();
-        rs.disableAsserv();
-    }
+    wheelsEncoders.reset();
+    rs.enableAsserv();
+    rs.disableAvoidance();
 
-    @ShellMethodAvailability("alimentationOk")
-    @ShellMethod("Tourne le robot")
-    public void tourneRobot(@NotNull long angle) throws AvoidingException {
-        startMonitoring();
+    rs.enableCalageTempo(10000);
 
-        wheelsEncoders.reset();
-        rs.enableAsserv();
-        rs.disableAvoidance();
+    trajectoryManager.tourneDeg(angle);
 
-        rs.enableCalageTempo(10000);
+    endMonitoring();
+    rs.disableAsserv();
+  }
 
-        trajectoryManager.tourneDeg(angle);
+  @ShellMethodAvailability("alimentationOk")
+  @ShellMethod("Asservissement du robot")
+  public void asservRobot(@NotNull long distance, @NotNull long orientation, @NotNull SensDeplacement sens, TypeConsigne[] typeConsignes) {
+    startMonitoring();
 
-        endMonitoring();
-        rs.disableAsserv();
-    }
+    trajectoryManager.stop();
 
-    @ShellMethodAvailability("alimentationOk")
-    @ShellMethod("Asservissement du robot")
-    public void asservRobot(@NotNull long distance, @NotNull long orientation, @NotNull SensDeplacement sens, TypeConsigne[] typeConsignes) {
-        startMonitoring();
+    cmdRobot.setTypes(ArrayUtils.getLength(typeConsignes) == 0 ? new TypeConsigne[]{TypeConsigne.DIST, TypeConsigne.ANGLE} : typeConsignes);
+    cmdRobot.setSensDeplacement(sens);
+    cmdRobot.getConsigne().setDistance((long) convRobot.mmToPulse(distance));
+    cmdRobot.getConsigne().setOrientation((long) convRobot.degToPulse(orientation));
+    cmdRobot.setFrein(true);
 
-        trajectoryManager.stop();
+    rs.enableAsserv();
+  }
 
-        cmdRobot.setTypes(ArrayUtils.getLength(typeConsignes) == 0 ? new TypeConsigne[]{TypeConsigne.DIST, TypeConsigne.ANGLE} : typeConsignes);
-        cmdRobot.setSensDeplacement(sens);
-        cmdRobot.getConsigne().setDistance((long) convRobot.mmToPulse(distance));
-        cmdRobot.getConsigne().setOrientation((long) convRobot.degToPulse(orientation));
-        cmdRobot.setFrein(true);
+  @ShellMethod("Désactivation asservissement du robot")
+  public void disableAsservRobot() {
+    rs.disableAsserv();
+    endMonitoring();
+  }
 
-        rs.enableAsserv();
-    }
+  @ShellMethodAvailability("alimentationOk")
+  @ShellMethod("Reglage asserv orientation")
+  public void reglageAsservOrientation(double dplct, double increment, double kp, double ki, double kd) {
+    startMonitoring();
 
-    @ShellMethod("Désactivation asservissement du robot")
-    public void disableAsservRobot() {
-        rs.disableAsserv();
-        endMonitoring();
-    }
+    Console console = System.console();
+    String tmpCoef = console.readLine("Quel coefficient ? (KP, KI, KD) : ");
+    PIDCoef coefToChange = tmpCoef.equals("KP") ? PIDCoef.KP : tmpCoef.equals("KI") ? PIDCoef.KI : PIDCoef.KD;
+    boolean continueInc;
+    boolean alt = false;
+    do {
+      alt = !alt;
+      pidOrientation.setTunings(kp, ki, kd);
+      asservissement.reset(true);
+      switch (coefToChange) {
+        case KP:
+          kp += increment;
+          break;
+        case KI:
+          ki += increment;
+          break;
+        case KD:
+          kd += increment;
+          break;
+      }
 
-    @ShellMethodAvailability("alimentationOk")
-    @ShellMethod("Reglage asserv orientation")
-    public void reglageAsservOrientation(double dplct, double increment, double kp, double ki, double kd) {
-        startMonitoring();
+      cmdRobot.setTypes(new TypeConsigne[]{TypeConsigne.ANGLE});
+      cmdRobot.setSensDeplacement(SensDeplacement.AUTO);
+      cmdRobot.getConsigne().setOrientation((long) convRobot.degToPulse(alt ? dplct : -dplct));
+      cmdRobot.setFrein(true);
 
-        Console console = System.console();
-        String tmpCoef = console.readLine("Quel coefficient ? (KP, KI, KD) : ");
-        PIDCoef coefToChange = tmpCoef.equals("KP") ? PIDCoef.KP : tmpCoef.equals("KI") ? PIDCoef.KI : PIDCoef.KD;
-        boolean continueInc;
-        boolean alt = false;
-        do {
-            alt = !alt;
-            pidOrientation.setTunings(kp, ki, kd);
-            asservissement.reset(true);
-            switch(coefToChange) {
-                case KP:
-                    kp += increment;
-                    break;
-                case KI:
-                    ki += increment;
-                    break;
-                case KD:
-                    kd += increment;
-                    break;
-            }
+      rs.enableAsserv();
 
-            cmdRobot.setTypes(new TypeConsigne[]{TypeConsigne.ANGLE});
-            cmdRobot.setSensDeplacement(SensDeplacement.AUTO);
-            cmdRobot.getConsigne().setOrientation((long) convRobot.degToPulse(alt ? dplct : -dplct));
-            cmdRobot.setFrein(true);
+      String checkContinue = console.readLine("Continuer ? (O/N) : ");
+      continueInc = !checkContinue.equals("N");
 
-            rs.enableAsserv();
+    } while (continueInc);
 
-            String checkContinue = console.readLine("Continuer ? (O/N) : ");
-            continueInc = !checkContinue.equals("N");
+    disableAsservRobot();
+  }
 
-        } while (continueInc);
+  @ShellMethodAvailability("alimentationOk")
+  @ShellMethod("Reglage asserv distance")
+  public void reglageAsservDistance(double dplct, double increment, double kp, double ki, double kd) {
+    startMonitoring();
 
-        disableAsservRobot();
-    }
+    trajectoryManager.setVitessePercent(100, 100);
 
-    @ShellMethodAvailability("alimentationOk")
-    @ShellMethod("Reglage asserv distance")
-    public void reglageAsservDistance(double dplct, double increment, double kp, double ki, double kd) {
-        startMonitoring();
+    Console console = System.console();
+    String tmpCoef = console.readLine("Quel coefficient ? (KP, KI, KD) : ");
+    PIDCoef coefToChange = tmpCoef.equals("KP") ? PIDCoef.KP : tmpCoef.equals("KI") ? PIDCoef.KI : PIDCoef.KD;
+    boolean continueInc;
+    boolean alt = false;
+    do {
+      alt = !alt;
+      pidDistance.setTunings(kp, ki, kd);
+      asservissement.reset(true);
+      switch (coefToChange) {
+        case KP:
+          kp += increment;
+          break;
+        case KI:
+          ki += increment;
+          break;
+        case KD:
+          kd += increment;
+          break;
+      }
 
-        trajectoryManager.setVitessePercent(100, 100);
+      cmdRobot.setTypes(new TypeConsigne[]{TypeConsigne.ANGLE, TypeConsigne.DIST});
+      cmdRobot.setSensDeplacement(SensDeplacement.AUTO);
+      cmdRobot.getConsigne().setOrientation(0);
+      cmdRobot.getConsigne().setDistance((long) convRobot.mmToPulse(alt ? dplct : -dplct));
+      cmdRobot.setFrein(true);
 
-        Console console = System.console();
-        String tmpCoef = console.readLine("Quel coefficient ? (KP, KI, KD) : ");
-        PIDCoef coefToChange = tmpCoef.equals("KP") ? PIDCoef.KP : tmpCoef.equals("KI") ? PIDCoef.KI : PIDCoef.KD;
-        boolean continueInc;
-        boolean alt = false;
-        do {
-            alt = !alt;
-            pidDistance.setTunings(kp, ki, kd);
-            asservissement.reset(true);
-            switch(coefToChange) {
-                case KP:
-                    kp += increment;
-                    break;
-                case KI:
-                    ki += increment;
-                    break;
-                case KD:
-                    kd += increment;
-                    break;
-            }
+      rs.enableAsserv();
 
-            cmdRobot.setTypes(new TypeConsigne[]{TypeConsigne.ANGLE, TypeConsigne.DIST});
-            cmdRobot.setSensDeplacement(SensDeplacement.AUTO);
-            cmdRobot.getConsigne().setOrientation(0);
-            cmdRobot.getConsigne().setDistance((long) convRobot.mmToPulse(alt ? dplct : -dplct));
-            cmdRobot.setFrein(true);
+      String checkContinue = console.readLine("Continuer ? (O/N) : ");
+      continueInc = !checkContinue.equals("N");
 
-            rs.enableAsserv();
+    } while (continueInc);
 
-            String checkContinue = console.readLine("Continuer ? (O/N) : ");
-            continueInc = !checkContinue.equals("N");
+    disableAsservRobot();
+  }
 
-        } while (continueInc);
+  @ShellMethod("Lecture de la position actuelle")
+  public void readPosition() {
+    log.info("X: {}", trajectoryManager.currentXMm());
+    log.info("Y: {}", trajectoryManager.currentYMm());
+    log.info("A: {}", trajectoryManager.currentAngleDeg());
+  }
 
-        disableAsservRobot();
-    }
-
-    @ShellMethod("Lecture de la position actuelle")
-    public void readPosition() {
-        log.info("X: {}", trajectoryManager.currentXMm());
-        log.info("Y: {}", trajectoryManager.currentYMm());
-        log.info("A: {}", trajectoryManager.currentAngleDeg());
-    }
-
-    @ShellMethod("Réinitialisation de la position")
-    public void resetPosition() {
-        currentPosition.getPt().setX(0);
-        currentPosition.getPt().setY(0);
-        currentPosition.setAngle(0);
-        readPosition();
-    }
+  @ShellMethod("Réinitialisation de la position")
+  public void resetPosition() {
+    currentPosition.getPt().setX(0);
+    currentPosition.getPt().setY(0);
+    currentPosition.setAngle(0);
+    readPosition();
+  }
 }

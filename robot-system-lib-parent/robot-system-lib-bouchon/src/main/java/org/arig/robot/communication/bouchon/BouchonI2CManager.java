@@ -11,19 +11,21 @@ import org.arig.robot.model.bouchon.BouchonI2CDevice;
 @Slf4j
 public class BouchonI2CManager extends AbstractI2CManager<BouchonI2CDevice> {
 
-    @Override
-    protected void scanDevice(final I2CManagerDevice<BouchonI2CDevice> device) { }
+  @Override
+  protected void scanDevice(final I2CManagerDevice<BouchonI2CDevice> device) {
+  }
 
-    @Override
-    public void sendData(String deviceName, byte... data) { }
+  @Override
+  public void sendData(String deviceName, byte... data) {
+  }
 
-    @Override
-    public byte getData(String deviceName) {
-        return 0;
-    }
+  @Override
+  public byte getData(String deviceName) {
+    return 0;
+  }
 
-    @Override
-    public byte[] getData(String deviceName, int size) {
-      return new byte[size];
-    }
+  @Override
+  public byte[] getData(String deviceName, int size) {
+    return new byte[size];
+  }
 }

@@ -9,8 +9,8 @@ import org.arig.robot.communication.socket.lidar.enums.LidarAction;
 @EqualsAndHashCode(callSuper = true)
 public class GrabDataQuery extends AbstractQuery<LidarAction> {
 
-    public GrabDataQuery() {
-        super(LidarAction.GRAB_DATA);
-    }
+  public GrabDataQuery() {
+    super(LidarAction.GRAB_DATA);
+  }
 
 }

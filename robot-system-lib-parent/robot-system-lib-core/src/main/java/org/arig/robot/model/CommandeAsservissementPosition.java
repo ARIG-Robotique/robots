@@ -10,36 +10,36 @@ import lombok.Data;
 @Data
 public class CommandeAsservissementPosition {
 
-    /**
-     * Position a atteindre pour cette commande
-     */
-    private long position;
+  /**
+   * Position a atteindre pour cette commande
+   */
+  private long position;
 
-    /**
-     * Commande moteur a appliquer
-     */
-    private CommandeMoteur moteur;
+  /**
+   * Commande moteur a appliquer
+   */
+  private CommandeMoteur moteur;
 
-    /**
-     * Vitesse a appliquer
-     */
-    private VitesseAsservissementPosition vitesse;
+  /**
+   * Vitesse a appliquer
+   */
+  private VitesseAsservissementPosition vitesse;
 
-    /**
-     * Consigne de déplacement pour l'asservissement
-     */
-    private ConsigneAsservissementPosition consigne;
+  /**
+   * Consigne de déplacement pour l'asservissement
+   */
+  private ConsigneAsservissementPosition consigne;
 
-    private boolean frein;
+  private boolean frein;
 
-    /**
-     * Instantiates a new robot consigne.
-     */
-    public CommandeAsservissementPosition() {
-        position = 0;
-        moteur = new CommandeMoteur();
-        vitesse = new VitesseAsservissementPosition(50);
-        consigne = new ConsigneAsservissementPosition();
-        frein = true;
-    }
+  /**
+   * Instantiates a new robot consigne.
+   */
+  public CommandeAsservissementPosition() {
+    position = 0;
+    moteur = new CommandeMoteur();
+    vitesse = new VitesseAsservissementPosition(50);
+    consigne = new ConsigneAsservissementPosition();
+    frein = true;
+  }
 }

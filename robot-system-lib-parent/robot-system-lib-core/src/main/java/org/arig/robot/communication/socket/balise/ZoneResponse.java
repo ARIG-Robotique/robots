@@ -4,5 +4,5 @@ import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
 public class ZoneResponse
-    extends AbstractBaliseResponseWithData<ZoneResponseData> {
+  extends AbstractBaliseResponseWithData<ZoneResponseData> {
 }

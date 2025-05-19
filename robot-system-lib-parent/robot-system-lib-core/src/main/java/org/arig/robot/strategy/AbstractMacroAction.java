@@ -13,46 +13,46 @@ import java.util.List;
 
 public abstract class AbstractMacroAction extends AbstractAction {
 
-    @Autowired
-    protected RobotConfig robotConfig;
+  @Autowired
+  protected RobotConfig robotConfig;
 
-    @Autowired
-    protected TrajectoryManager mv;
+  @Autowired
+  protected TrajectoryManager mv;
 
-    @Autowired
-    protected ConvertionRobotUnit conv;
+  @Autowired
+  protected ConvertionRobotUnit conv;
 
-    @Autowired
-    @Qualifier("currentPosition")
-    protected Position position;
+  @Autowired
+  @Qualifier("currentPosition")
+  protected Position position;
 
-    @Autowired
-    protected TableUtils tableUtils;
+  @Autowired
+  protected TableUtils tableUtils;
 
-    protected List<AbstractAction> actions;
+  protected List<AbstractAction> actions;
 
-    @Override
-    public Point entryPoint() {
-        return actions.get(0).entryPoint();
+  @Override
+  public Point entryPoint() {
+    return actions.get(0).entryPoint();
+  }
+
+  @Override
+  public boolean isValid() {
+    return actions.stream().allMatch(AbstractAction::isValid);
+  }
+
+  @Override
+  public void execute() {
+    for (AbstractAction action : actions) {
+      action.execute();
+
+      // FIXME détection d'action annullée
+      if (!action.isCompleted() && !action.isTimeValid()) {
+        break;
+      }
     }
 
-    @Override
-    public boolean isValid() {
-        return actions.stream().allMatch(AbstractAction::isValid);
-    }
-
-    @Override
-    public void execute() {
-        for (AbstractAction action : actions) {
-            action.execute();
-
-            // FIXME détection d'action annullée
-            if (!action.isCompleted() && !action.isTimeValid()) {
-                break;
-            }
-        }
-
-        complete();
-    }
+    complete();
+  }
 
 }

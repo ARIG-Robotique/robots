@@ -8,11 +8,11 @@ import java.io.Serializable;
 
 @EqualsAndHashCode(callSuper = true)
 public class ExitQuery
-    extends AbstractQuery<BaliseAction>
-    implements Serializable {
+  extends AbstractQuery<BaliseAction>
+  implements Serializable {
 
-    public ExitQuery() {
-        super(BaliseAction.EXIT);
-    }
+  public ExitQuery() {
+    super(BaliseAction.EXIT);
+  }
 
 }

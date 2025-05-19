@@ -6,26 +6,26 @@ import org.springframework.stereotype.Service;
 @Service
 public class NerellEnergyServiceSimulator extends AbstractEnergyService {
 
-    @Autowired
-    private NerellIOServiceSimulator ioService;
+  @Autowired
+  private NerellIOServiceSimulator ioService;
 
-    @Override
-    public double tensionServos() {
-        return ioService.alimServos() ? 6 : 0;
-    }
+  @Override
+  public double tensionServos() {
+    return ioService.alimServos() ? 6 : 0;
+  }
 
-    @Override
-    public double courantServos() {
-        return 0;
-    }
+  @Override
+  public double courantServos() {
+    return 0;
+  }
 
-    @Override
-    public double tensionMoteurs() {
-        return ioService.alimMoteurs() ? 13 : 0;
-    }
+  @Override
+  public double tensionMoteurs() {
+    return ioService.alimMoteurs() ? 13 : 0;
+  }
 
-    @Override
-    public double courantMoteurs() {
-        return 0;
-    }
+  @Override
+  public double courantMoteurs() {
+    return 0;
+  }
 }

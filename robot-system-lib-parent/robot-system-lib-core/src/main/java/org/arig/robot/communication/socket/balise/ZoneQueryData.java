@@ -10,16 +10,16 @@ import java.util.List;
 @AllArgsConstructor
 public class ZoneQueryData implements Serializable {
 
-    @Data
-    @AllArgsConstructor
-    public static class Zone implements Serializable {
-        private String name;
-        private Integer cx;
-        private Integer cy;
-        private Integer dx;
-        private Integer dy;
-    }
+  @Data
+  @AllArgsConstructor
+  public static class Zone implements Serializable {
+    private String name;
+    private Integer cx;
+    private Integer cy;
+    private Integer dx;
+    private Integer dy;
+  }
 
-    private List<ZoneQueryData.Zone> zones;
+  private List<ZoneQueryData.Zone> zones;
 
 }

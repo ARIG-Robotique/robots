@@ -24,7 +24,7 @@ public class NerellUtilsServicesContext {
 
   @Bean
   public NerellFaceArriereService nerellFaceArriereService(NerellRobotStatus rs, TrajectoryManager mv,
-                                                         NerellRobotServosService servos, NerellIOService ioService) {
+                                                           NerellRobotServosService servos, NerellIOService ioService) {
     return new NerellFaceArriereServiceUtils(rs, mv, servos, ioService);
   }
 }

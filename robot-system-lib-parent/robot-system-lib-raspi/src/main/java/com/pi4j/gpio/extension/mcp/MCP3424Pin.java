@@ -36,7 +36,6 @@ import java.util.EnumSet;
  */
 
 /**
- *
  * <p>
  * This GPIO provider implements the MCP3424 I2C GPIO expansion board as native Pi4J GPIO pins. It is a 18-bit
  * delta/sigma ADC providing 4 input channels. More information about the board can be found here:
@@ -51,17 +50,17 @@ import java.util.EnumSet;
  */
 public class MCP3424Pin {
 
-    public static final Pin GPIO_CH0 = createAnalogInputPin(0, "ANALOG INPUT 0");
-    public static final Pin GPIO_CH1 = createAnalogInputPin(1, "ANALOG INPUT 1");
-    public static final Pin GPIO_CH2 = createAnalogInputPin(2, "ANALOG INPUT 2");
-    public static final Pin GPIO_CH3 = createAnalogInputPin(3, "ANALOG INPUT 3");
+  public static final Pin GPIO_CH0 = createAnalogInputPin(0, "ANALOG INPUT 0");
+  public static final Pin GPIO_CH1 = createAnalogInputPin(1, "ANALOG INPUT 1");
+  public static final Pin GPIO_CH2 = createAnalogInputPin(2, "ANALOG INPUT 2");
+  public static final Pin GPIO_CH3 = createAnalogInputPin(3, "ANALOG INPUT 3");
 
-    public static Pin[] ALL_PINS = { MCP3424Pin.GPIO_CH0,
-                                     MCP3424Pin.GPIO_CH1,
-                                     MCP3424Pin.GPIO_CH2,
-                                     MCP3424Pin.GPIO_CH3 };
+  public static Pin[] ALL_PINS = {MCP3424Pin.GPIO_CH0,
+    MCP3424Pin.GPIO_CH1,
+    MCP3424Pin.GPIO_CH2,
+    MCP3424Pin.GPIO_CH3};
 
-    private static Pin createAnalogInputPin(int channel, String name) {
-        return new PinImpl(MCP3424GpioProvider.NAME, channel, name, EnumSet.of(PinMode.ANALOG_INPUT));
-    }
+  private static Pin createAnalogInputPin(int channel, String name) {
+    return new PinImpl(MCP3424GpioProvider.NAME, channel, name, EnumSet.of(PinMode.ANALOG_INPUT));
+  }
 }

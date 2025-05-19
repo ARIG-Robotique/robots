@@ -15,27 +15,27 @@ import java.util.Map;
 @EqualsAndHashCode(callSuper = true)
 public class MonitorTimeSerie extends AbstractMonitor {
 
-    public static final String TAG_NAME = "name";
-    public static final String TAG_IMPLEMENTATION = "implementation";
+  public static final String TAG_NAME = "name";
+  public static final String TAG_IMPLEMENTATION = "implementation";
 
-    @Setter(AccessLevel.PROTECTED)
-    private String measurementName;
+  @Setter(AccessLevel.PROTECTED)
+  private String measurementName;
 
-    private Map<String, Number> fields = new LinkedHashMap<>();
-    private Map<String, String> tags = new LinkedHashMap<>();
+  private Map<String, Number> fields = new LinkedHashMap<>();
+  private Map<String, String> tags = new LinkedHashMap<>();
 
-    public MonitorTimeSerie measurementName(String measurementName) {
-        setMeasurementName(measurementName);
-        return this;
-    }
+  public MonitorTimeSerie measurementName(String measurementName) {
+    setMeasurementName(measurementName);
+    return this;
+  }
 
-    public MonitorTimeSerie addField(String name, Number value) {
-        fields.put(name, value);
-        return this;
-    }
+  public MonitorTimeSerie addField(String name, Number value) {
+    fields.put(name, value);
+    return this;
+  }
 
-    public MonitorTimeSerie addTag(String name, String value) {
-        tags.put(name, value);
-        return this;
-    }
+  public MonitorTimeSerie addTag(String name, String value) {
+    tags.put(name, value);
+    return this;
+  }
 }

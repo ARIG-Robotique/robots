@@ -18,37 +18,37 @@ import java.util.UUID;
  * @author gdepuille on 19/03/15.
  */
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = { AsservissementPolaireTestContext.class })
+@ContextConfiguration(classes = {AsservissementPolaireTestContext.class})
 public class AsservissementPolaireTest {
 
-    @Autowired
-    private IAsservissementPolaire asserv;
+  @Autowired
+  private IAsservissementPolaire asserv;
 
-    @Autowired
-    private CommandeRobot cmdRobot;
+  @Autowired
+  private CommandeRobot cmdRobot;
 
-    @Autowired
-    private MonitoringWrapper monitoringWrapper;
+  @Autowired
+  private MonitoringWrapper monitoringWrapper;
 
-    @BeforeEach
-    public void before() {
-        System.setProperty(ConstantesConfig.keyExecutionId, UUID.randomUUID().toString());
-        monitoringWrapper.cleanAllPoints();
+  @BeforeEach
+  public void before() {
+    System.setProperty(ConstantesConfig.keyExecutionId, UUID.randomUUID().toString());
+    monitoringWrapper.cleanAllPoints();
+  }
+
+  @AfterEach
+  public void after() {
+    monitoringWrapper.save();
+  }
+
+  @Test
+  @SneakyThrows
+  public void testAsserv() {
+    cmdRobot.getConsigne().setDistance(1000);
+
+    for (int i = 2000; i >= 0; i--) {
+      asserv.process(1, false);
+      Thread.sleep(1);
     }
-
-    @AfterEach
-    public void after() {
-        monitoringWrapper.save();
-    }
-
-    @Test
-    @SneakyThrows
-    public void testAsserv() {
-        cmdRobot.getConsigne().setDistance(1000);
-
-        for (int i = 2000 ; i >= 0 ; i--) {
-            asserv.process(1, false);
-            Thread.sleep(1);
-        }
-    }
+  }
 }

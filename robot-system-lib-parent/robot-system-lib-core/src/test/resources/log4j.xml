@@ -1,26 +1,27 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE log4j:configuration SYSTEM "http://logging.apache.org/log4j/1.2/apidocs/org/apache/log4j/xml/doc-files/log4j.dtd">
+<!DOCTYPE log4j:configuration SYSTEM
+        "http://logging.apache.org/log4j/1.2/apidocs/org/apache/log4j/xml/doc-files/log4j.dtd">
 <log4j:configuration>
 
-	<!-- Appender général sur la console -->
-	<appender name="Console" class="org.apache.log4j.ConsoleAppender">
-		<layout class="org.apache.log4j.PatternLayout">
-			<param name="ConversionPattern" value="%d{ISO8601} %-5p [%t] [%x %c] - %m%n"/>
-		</layout>
-	</appender>
+    <!-- Appender général sur la console -->
+    <appender name="Console" class="org.apache.log4j.ConsoleAppender">
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{ISO8601} %-5p [%t] [%x %c] - %m%n"/>
+        </layout>
+    </appender>
 
-	<!-- ******************************** -->
-	<!-- Configuration pour l'application -->
-	<!-- ******************************** -->
-	<logger name="org.arig">
-		<level value="DEBUG" />
-	</logger>
+    <!-- ******************************** -->
+    <!-- Configuration pour l'application -->
+    <!-- ******************************** -->
+    <logger name="org.arig">
+        <level value="DEBUG"/>
+    </logger>
 
-	<!-- *********** -->
-	<!-- Root Logger -->
-	<!-- *********** -->
-	<root>
-		<level value="INFO" />
-		<appender-ref ref="Console" />
-	</root>
+    <!-- *********** -->
+    <!-- Root Logger -->
+    <!-- *********** -->
+    <root>
+        <level value="INFO"/>
+        <appender-ref ref="Console"/>
+    </root>
 </log4j:configuration>

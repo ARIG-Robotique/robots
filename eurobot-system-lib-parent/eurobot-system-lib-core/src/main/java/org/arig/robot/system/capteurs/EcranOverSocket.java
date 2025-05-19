@@ -14,16 +14,17 @@ import java.io.File;
 @Slf4j
 public class EcranOverSocket extends AbstractEcranOverSocket<EcranConfig, EcranState> {
 
-    @Data
-    @EqualsAndHashCode(callSuper = true)
-    private static class EcranConfigInfoResponse extends AbstractResponseWithData<EcranAction, EcranConfig> { }
+  @Data
+  @EqualsAndHashCode(callSuper = true)
+  private static class EcranConfigInfoResponse extends AbstractResponseWithData<EcranAction, EcranConfig> {
+  }
 
-    public EcranOverSocket(String hostname, Integer port) {
-        super(hostname, port, EcranConfigInfoResponse.class);
-    }
+  public EcranOverSocket(String hostname, Integer port) {
+    super(hostname, port, EcranConfigInfoResponse.class);
+  }
 
-    public EcranOverSocket(File socketFile) {
-        super(socketFile, EcranConfigInfoResponse.class);
-    }
+  public EcranOverSocket(File socketFile) {
+    super(socketFile, EcranConfigInfoResponse.class);
+  }
 
 }

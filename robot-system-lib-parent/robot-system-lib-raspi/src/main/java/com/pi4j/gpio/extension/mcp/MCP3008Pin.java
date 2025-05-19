@@ -36,7 +36,6 @@ import java.util.EnumSet;
  */
 
 /**
- *
  * <p>
  * This GPIO provider implements the MCP3008 SPI GPIO expansion board as native Pi4J GPIO pins. It is a 10-bit ADC providing 8 input
  * channels. More information about the board can be found here: * http://ww1.microchip.com/downloads/en/DeviceDoc/21295d.pdf
@@ -50,25 +49,25 @@ import java.util.EnumSet;
  */
 public class MCP3008Pin {
 
-    public static final Pin CH0 = createAnalogInputPin(0, "ANALOG INPUT 0");
-    public static final Pin CH1 = createAnalogInputPin(1, "ANALOG INPUT 1");
-    public static final Pin CH2 = createAnalogInputPin(2, "ANALOG INPUT 2");
-    public static final Pin CH3 = createAnalogInputPin(3, "ANALOG INPUT 3");
-    public static final Pin CH4 = createAnalogInputPin(4, "ANALOG INPUT 4");
-    public static final Pin CH5 = createAnalogInputPin(5, "ANALOG INPUT 5");
-    public static final Pin CH6 = createAnalogInputPin(6, "ANALOG INPUT 6");
-    public static final Pin CH7 = createAnalogInputPin(7, "ANALOG INPUT 7");
+  public static final Pin CH0 = createAnalogInputPin(0, "ANALOG INPUT 0");
+  public static final Pin CH1 = createAnalogInputPin(1, "ANALOG INPUT 1");
+  public static final Pin CH2 = createAnalogInputPin(2, "ANALOG INPUT 2");
+  public static final Pin CH3 = createAnalogInputPin(3, "ANALOG INPUT 3");
+  public static final Pin CH4 = createAnalogInputPin(4, "ANALOG INPUT 4");
+  public static final Pin CH5 = createAnalogInputPin(5, "ANALOG INPUT 5");
+  public static final Pin CH6 = createAnalogInputPin(6, "ANALOG INPUT 6");
+  public static final Pin CH7 = createAnalogInputPin(7, "ANALOG INPUT 7");
 
-    public static Pin[] ALL = { MCP3008Pin.CH0,
-                                MCP3008Pin.CH1,
-                                MCP3008Pin.CH2,
-                                MCP3008Pin.CH3,
-                                MCP3008Pin.CH4,
-                                MCP3008Pin.CH5,
-                                MCP3008Pin.CH6,
-                                MCP3008Pin.CH7 };
+  public static Pin[] ALL = {MCP3008Pin.CH0,
+    MCP3008Pin.CH1,
+    MCP3008Pin.CH2,
+    MCP3008Pin.CH3,
+    MCP3008Pin.CH4,
+    MCP3008Pin.CH5,
+    MCP3008Pin.CH6,
+    MCP3008Pin.CH7};
 
-    private static Pin createAnalogInputPin(int channel, String name) {
-        return new PinImpl(MCP3008GpioProvider.NAME, channel, name, EnumSet.of(PinMode.ANALOG_INPUT));
-    }
+  private static Pin createAnalogInputPin(int channel, String name) {
+    return new PinImpl(MCP3008GpioProvider.NAME, channel, name, EnumSet.of(PinMode.ANALOG_INPUT));
+  }
 }

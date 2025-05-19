@@ -8,15 +8,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 public abstract class AbstractNerellAction extends AbstractEurobotAction {
 
-    @Autowired
-    protected NerellRobotStatus rsNerell;
+  @Autowired
+  protected NerellRobotStatus rsNerell;
 
-    @Autowired
-    protected NerellRobotServosService servosNerell;
+  @Autowired
+  protected NerellRobotServosService servosNerell;
 
-    @Autowired
-    protected NerellIOService ioNerell;
+  @Autowired
+  protected NerellIOService ioNerell;
 
-    @Autowired
-    protected NerellFaceWrapper faceWrapper;
+  @Autowired
+  protected NerellFaceWrapper faceWrapper;
 }

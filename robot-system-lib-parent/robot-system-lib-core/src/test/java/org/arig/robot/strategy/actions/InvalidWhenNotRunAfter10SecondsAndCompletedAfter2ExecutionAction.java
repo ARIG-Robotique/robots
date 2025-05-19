@@ -13,42 +13,42 @@ import java.time.format.DateTimeFormatter;
 @Slf4j
 public class InvalidWhenNotRunAfter10SecondsAndCompletedAfter2ExecutionAction extends AbstractAction {
 
-    private final LocalDateTime ldt;
+  private final LocalDateTime ldt;
 
-    private int executionCount = 0;
+  private int executionCount = 0;
 
-    public InvalidWhenNotRunAfter10SecondsAndCompletedAfter2ExecutionAction() {
-        ldt = LocalDateTime.now().plusSeconds(10);
-    }
+  public InvalidWhenNotRunAfter10SecondsAndCompletedAfter2ExecutionAction() {
+    ldt = LocalDateTime.now().plusSeconds(10);
+  }
 
-    @Override
-    public String name() {
-        return "Invalid but valid after " + ldt.format(DateTimeFormatter.ISO_DATE_TIME) + " for 2 times";
-    }
+  @Override
+  public String name() {
+    return "Invalid but valid after " + ldt.format(DateTimeFormatter.ISO_DATE_TIME) + " for 2 times";
+  }
 
-    @Override
-    public Point entryPoint() {
-        return null;
-    }
+  @Override
+  public Point entryPoint() {
+    return null;
+  }
 
-    @Override
-    public int order() {
-        return 50;
-    }
+  @Override
+  public int order() {
+    return 50;
+  }
 
-    @Override
-    public boolean isValid() {
-        return ldt.isBefore(LocalDateTime.now());
-    }
+  @Override
+  public boolean isValid() {
+    return ldt.isBefore(LocalDateTime.now());
+  }
 
-    @Override
-    public boolean isCompleted() {
-        return executionCount > 1;
-    }
+  @Override
+  public boolean isCompleted() {
+    return executionCount > 1;
+  }
 
-    @Override
-    public void execute() {
-        executionCount++;
-        log.info("Est devenu valid après un certain temps. Execution n°{}", executionCount);
-    }
+  @Override
+  public void execute() {
+    executionCount++;
+    log.info("Est devenu valid après un certain temps. Execution n°{}", executionCount);
+  }
 }

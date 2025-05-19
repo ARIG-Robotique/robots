@@ -10,42 +10,42 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Slf4j
 public class TCA9548MultiplexerI2C implements I2CMultiplexerDevice {
 
-    private static byte DISABLED_MUX = -1;
+  private static byte DISABLED_MUX = -1;
 
-    @Autowired
-    private I2CManager i2cManager;
+  @Autowired
+  private I2CManager i2cManager;
 
-    private final String deviceName;
+  private final String deviceName;
 
-    private byte lastSelectedChannel = DISABLED_MUX;
+  private byte lastSelectedChannel = DISABLED_MUX;
 
-    public TCA9548MultiplexerI2C(final String deviceName) {
-        this.deviceName = deviceName;
+  public TCA9548MultiplexerI2C(final String deviceName) {
+    this.deviceName = deviceName;
+  }
+
+  @Override
+  public boolean selectChannel(byte channel) {
+    if (channel != lastSelectedChannel) {
+      try {
+        i2cManager.sendData(deviceName, (byte) (1 << channel));
+        lastSelectedChannel = channel;
+        ThreadUtils.sleep(1);
+      } catch (I2CException e) {
+        log.error("Impossible de selectionner le port {} du multiplexeur {}", channel, deviceName);
+        return false;
+      }
     }
 
-    @Override
-    public boolean selectChannel(byte channel) {
-        if (channel != lastSelectedChannel) {
-            try {
-                i2cManager.sendData(deviceName, (byte) (1 << channel));
-                lastSelectedChannel = channel;
-                ThreadUtils.sleep(1);
-            } catch (I2CException e) {
-                log.error("Impossible de selectionner le port {} du multiplexeur {}", channel, deviceName);
-                return false;
-            }
-        }
+    return true;
+  }
 
-        return true;
+  @Override
+  public void disable() {
+    try {
+      i2cManager.sendData(deviceName, (byte) 0x00);
+      lastSelectedChannel = DISABLED_MUX;
+    } catch (I2CException e) {
+      log.error("Impossible de désactiver le multiplexeur {}", deviceName);
     }
-
-    @Override
-    public void disable() {
-        try {
-            i2cManager.sendData(deviceName, (byte) 0x00);
-            lastSelectedChannel = DISABLED_MUX;
-        } catch (I2CException e) {
-            log.error("Impossible de désactiver le multiplexeur {}", deviceName);
-        }
-    }
+  }
 }

@@ -25,7 +25,7 @@ public class CANRefreshThread extends Thread {
   @Override
   public void run() {
     log.info("Start CAN refresh thread for channel {}", name);
-    while(running) {
+    while (running) {
       CanFrame frame;
       try {
         frame = channel.read();

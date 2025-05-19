@@ -9,10 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class RaspiRs232Manager {
 
-    @Autowired
-    private Serial port;
+  @Autowired
+  private Serial port;
 
-    public RaspiRs232Manager() {
-        throw new NotYetImplementedException();
-    }
+  public RaspiRs232Manager() {
+    throw new NotYetImplementedException();
+  }
 }

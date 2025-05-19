@@ -21,134 +21,134 @@ import org.springframework.boot.logging.LogLevel;
 @Slf4j
 public abstract class AbstractEcranService<CONFIG extends AbstractEcranConfig, STATE extends AbstractEcranState> {
 
-    @Autowired
-    private IOService ioService;
+  @Autowired
+  private IOService ioService;
 
-    @Autowired
-    private I2CManager i2CManager;
+  @Autowired
+  private I2CManager i2CManager;
 
-    @Autowired
-    private StrategyManager strategyManager;
+  @Autowired
+  private StrategyManager strategyManager;
 
-    @Autowired
-    private LidarService lidarService;
+  @Autowired
+  private LidarService lidarService;
 
-    @Autowired
-    private AbstractRobotStatus rs;
+  @Autowired
+  private AbstractRobotStatus rs;
 
-    @Autowired
-    private AbstractEnergyService energyService;
+  @Autowired
+  private AbstractEnergyService energyService;
 
-    @Autowired(required = false)
-    private IVisionBalise<?> balise;
+  @Autowired(required = false)
+  private IVisionBalise<?> balise;
 
-    @Autowired
-    private IEcran<CONFIG, STATE> ecran;
+  @Autowired
+  private IEcran<CONFIG, STATE> ecran;
 
-    // indique qu'on n'arrive pas à communiquer avec l'écran
-    @Getter
-    private boolean isOK = true;
+  // indique qu'on n'arrive pas à communiquer avec l'écran
+  @Getter
+  private boolean isOK = true;
 
-    @Getter
-    @Accessors(fluent = true)
-    private CONFIG config;
+  @Getter
+  @Accessors(fluent = true)
+  private CONFIG config;
 
-    private boolean matchHasRunned = false;
-    private boolean paramsSend = false;
+  private boolean matchHasRunned = false;
+  private boolean paramsSend = false;
 
-    private final STATE stateInfos;
-    private final EcranMatchInfo matchInfos = new EcranMatchInfo();
+  private final STATE stateInfos;
+  private final EcranMatchInfo matchInfos = new EcranMatchInfo();
 
-    public AbstractEcranService(STATE stateInfos) {
-        this.stateInfos = stateInfos;
+  public AbstractEcranService(STATE stateInfos) {
+    this.stateInfos = stateInfos;
+  }
+
+  protected abstract EcranParams getParams();
+
+  public void process() {
+    if (!paramsSend) {
+      paramsSend = ecran.setParams(getParams());
+    }
+    if (!paramsSend) {
+      isOK = false;
+      return;
     }
 
-    protected abstract EcranParams getParams();
+    isOK = true;
 
-    public void process() {
-        if (!paramsSend) {
-            paramsSend = ecran.setParams(getParams());
-        }
-        if (!paramsSend) {
-            isOK = false;
-            return;
-        }
-
-        isOK = true;
-
-        if (rs.matchEnabled() && !matchHasRunned) {
-            matchHasRunned = true;
-        }
-
-        if (matchHasRunned) {
-            updateMatch();
-
-        } else {
-            updateStateInfo(stateInfos);
-
-            if (!ecran.updateState(stateInfos)) {
-                isOK = false;
-            } else {
-                config = ecran.configInfos();
-            }
-        }
+    if (rs.matchEnabled() && !matchHasRunned) {
+      matchHasRunned = true;
     }
 
-    public void displayMessage(String message) {
-        displayMessage(message, LogLevel.INFO);
+    if (matchHasRunned) {
+      updateMatch();
+
+    } else {
+      updateStateInfo(stateInfos);
+
+      if (!ecran.updateState(stateInfos)) {
+        isOK = false;
+      } else {
+        config = ecran.configInfos();
+      }
+    }
+  }
+
+  public void displayMessage(String message) {
+    displayMessage(message, LogLevel.INFO);
+  }
+
+  public void displayMessage(String message, LogLevel logLevel) {
+    if (!StringUtils.equals(stateInfos.getMessage(), message)) {
+      if (logLevel == LogLevel.INFO) log.info(message);
+      else if (logLevel == LogLevel.WARN) log.warn(message);
+      else if (logLevel == LogLevel.ERROR) log.error(message);
+
+      stateInfos.setMessage(message);
+      matchInfos.setMessage(message);
+    }
+  }
+
+  public void updateStateInfo(STATE stateInfos) {
+    stateInfos.setI2c(i2CManager.scanStatus());
+    stateInfos.setLidar(lidarService.isConnected());
+    stateInfos.setAu(ioService.auOk());
+    stateInfos.setAlimMoteurs(energyService.checkMoteurs(false));
+    stateInfos.setAlimServos(energyService.checkServos(false));
+    stateInfos.setTirette(ioService.tirette());
+    stateInfos.setBalise(balise != null && balise.isOpen());
+    stateInfos.setOtherRobot(rs.robotGroupOk());
+    stateInfos.setPamiTriangle(rs.pamiTriangleGroupOk());
+    stateInfos.setPamiCarre(rs.pamiCarreGroupOk());
+    stateInfos.setPamiRond(rs.pamiRondGroupOk());
+    stateInfos.setPamiStar(rs.pamiStarGroupOk());
+  }
+
+  public void updatePhoto(EcranPhoto query) {
+    ecran.updatePhoto(query);
+  }
+
+  private void updateMatch() {
+    matchInfos.setScore(rs.calculerPoints());
+    if (rs.matchEnabled()) {
+      if (rs.robotGroupOk()) {
+        matchInfos.setMessage(String.format("%s / %s (%s restantes) - %ss",
+          ObjectUtils.firstNonNull(rs.currentAction(), "AUCUNE"),
+          ObjectUtils.firstNonNull(rs.otherCurrentAction(), "AUCUNE"),
+          strategyManager.actionsCount(),
+          rs.getRemainingTime() / 1000)
+        );
+      } else {
+        matchInfos.setMessage(String.format("%s (%s restantes) - %ss",
+          ObjectUtils.firstNonNull(rs.currentAction(), "AUCUNE"),
+          strategyManager.actionsCount(),
+          rs.getRemainingTime() / 1000)
+        );
+      }
     }
 
-    public void displayMessage(String message, LogLevel logLevel) {
-        if (!StringUtils.equals(stateInfos.getMessage(), message)) {
-            if (logLevel == LogLevel.INFO) log.info(message);
-            else if (logLevel == LogLevel.WARN) log.warn(message);
-            else if (logLevel == LogLevel.ERROR) log.error(message);
-
-            stateInfos.setMessage(message);
-            matchInfos.setMessage(message);
-        }
+    if (!ecran.updateMatch(matchInfos)) {
+      isOK = false;
     }
-
-    public void updateStateInfo(STATE stateInfos) {
-        stateInfos.setI2c(i2CManager.scanStatus());
-        stateInfos.setLidar(lidarService.isConnected());
-        stateInfos.setAu(ioService.auOk());
-        stateInfos.setAlimMoteurs(energyService.checkMoteurs(false));
-        stateInfos.setAlimServos(energyService.checkServos(false));
-        stateInfos.setTirette(ioService.tirette());
-        stateInfos.setBalise(balise != null && balise.isOpen());
-        stateInfos.setOtherRobot(rs.robotGroupOk());
-        stateInfos.setPamiTriangle(rs.pamiTriangleGroupOk());
-        stateInfos.setPamiCarre(rs.pamiCarreGroupOk());
-        stateInfos.setPamiRond(rs.pamiRondGroupOk());
-        stateInfos.setPamiStar(rs.pamiStarGroupOk());
-    }
-
-    public void updatePhoto(EcranPhoto query) {
-        ecran.updatePhoto(query);
-    }
-
-    private void updateMatch() {
-        matchInfos.setScore(rs.calculerPoints());
-        if (rs.matchEnabled()) {
-            if (rs.robotGroupOk()) {
-                matchInfos.setMessage(String.format("%s / %s (%s restantes) - %ss",
-                        ObjectUtils.firstNonNull(rs.currentAction(), "AUCUNE"),
-                        ObjectUtils.firstNonNull(rs.otherCurrentAction(), "AUCUNE"),
-                        strategyManager.actionsCount(),
-                        rs.getRemainingTime() / 1000)
-                );
-            } else {
-                matchInfos.setMessage(String.format("%s (%s restantes) - %ss",
-                        ObjectUtils.firstNonNull(rs.currentAction(), "AUCUNE"),
-                        strategyManager.actionsCount(),
-                        rs.getRemainingTime() / 1000)
-                );
-            }
-        }
-
-        if (!ecran.updateMatch(matchInfos)) {
-            isOK = false;
-        }
-    }
+  }
 }

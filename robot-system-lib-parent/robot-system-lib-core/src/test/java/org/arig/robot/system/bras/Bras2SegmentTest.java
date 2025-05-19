@@ -14,15 +14,15 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ExtendWith(SpringExtension.class)
 public class Bras2SegmentTest {
 
-    private static Bras2SegmentImpl impl;
+  private static Bras2SegmentImpl impl;
 
-    @BeforeAll
-    public static void initClass() {
-        impl = new Bras2SegmentImpl(new Point3D(0, 0, 1.5), 7, 3);
-    }
+  @BeforeAll
+  public static void initClass() {
+    impl = new Bras2SegmentImpl(new Point3D(0, 0, 1.5), 7, 3);
+  }
 
-    @Test
-    public void testToP() {
-        impl.toP(new Point3D(8, 0, 0));
-    }
+  @Test
+  public void testToP() {
+    impl.toP(new Point3D(8, 0, 0));
+  }
 }

@@ -8,11 +8,11 @@ import java.io.Serializable;
 
 @EqualsAndHashCode(callSuper = true)
 public class StatusQuery
-    extends AbstractQuery<BaliseAction>
-    implements Serializable {
+  extends AbstractQuery<BaliseAction>
+  implements Serializable {
 
   public StatusQuery() {
-        super(BaliseAction.STATUS);
-    }
+    super(BaliseAction.STATUS);
+  }
 
 }

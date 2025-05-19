@@ -8,15 +8,15 @@ import java.io.Serializable;
 
 @EqualsAndHashCode(callSuper = true)
 public class TeamQuery
-    extends AbstractQueryWithData<BaliseAction, TeamQueryData>
-    implements Serializable {
+  extends AbstractQueryWithData<BaliseAction, TeamQueryData>
+  implements Serializable {
 
-    public TeamQuery() {
-        super(BaliseAction.TEAM);
-    }
+  public TeamQuery() {
+    super(BaliseAction.TEAM);
+  }
 
-    public TeamQuery(TeamQueryData data) {
-        super(BaliseAction.TEAM, data);
-    }
+  public TeamQuery(TeamQueryData data) {
+    super(BaliseAction.TEAM, data);
+  }
 
 }

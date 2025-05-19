@@ -11,14 +11,14 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
  */
 @Slf4j
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = { PidTestContext.class })
+@ContextConfiguration(classes = {PidTestContext.class})
 public class SimplePidTest extends AbstractPidTest {
 
-    @Autowired
-    private SimplePidFilter pid;
+  @Autowired
+  private SimplePidFilter pid;
 
-    @Override
-    protected PidFilter pid() {
-        return pid;
-    }
+  @Override
+  protected PidFilter pid() {
+    return pid;
+  }
 }

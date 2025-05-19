@@ -11,6 +11,6 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class ImageQueryData implements Serializable {
 
-    private float reduction;
+  private float reduction;
 
 }

@@ -6,8 +6,8 @@ import org.arig.robot.system.gamepad.nintendoswitch.Controller;
 @Slf4j
 public abstract class JoyCon extends Controller {
 
-    public JoyCon(final short controllerId, final String name) {
-        super(controllerId, name);
-    }
+  public JoyCon(final short controllerId, final String name) {
+    super(controllerId, name);
+  }
 
 }

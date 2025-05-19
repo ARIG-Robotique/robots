@@ -9,35 +9,35 @@ import org.springframework.stereotype.Service;
 @Service
 public class NerellEnergyServiceRobot extends AbstractEnergyService {
 
-    @Autowired
-    private SD21Servos sd21Servos;
+  @Autowired
+  private SD21Servos sd21Servos;
 
-    @Autowired
-    private NerellIOServiceRobot iioService;
+  @Autowired
+  private NerellIOServiceRobot iioService;
 
-    @Override
-    public double tensionServos() {
-        if (iioService.auOk() && iioService.puissanceServosOk()) {
-            return 5; //sd21Servos.getTension();
-        } else {
-            return 0;
-        }
+  @Override
+  public double tensionServos() {
+    if (iioService.auOk() && iioService.puissanceServosOk()) {
+      return 5; //sd21Servos.getTension();
+    } else {
+      return 0;
     }
+  }
 
-    @Override
-    public double courantServos() {
-        return 0;
-    }
+  @Override
+  public double courantServos() {
+    return 0;
+  }
 
-    @Override
-    public double tensionMoteurs() {
-        return iioService.auOk() && iioService.puissanceMoteursOk() ? 12 : 0;
-    }
+  @Override
+  public double tensionMoteurs() {
+    return iioService.auOk() && iioService.puissanceMoteursOk() ? 12 : 0;
+  }
 
-    @Override
-    public double courantMoteurs() {
-        return 0;
-    }
+  @Override
+  public double courantMoteurs() {
+    return 0;
+  }
 
     /*
     private static final byte CHANNEL_SERVOS = 1;

@@ -12,7 +12,6 @@ import org.arig.robot.communication.socket.lidar.GrabDataResponse;
 import org.arig.robot.communication.socket.lidar.HealthInfosQuery;
 import org.arig.robot.communication.socket.lidar.HealthInfosResponse;
 import org.arig.robot.communication.socket.lidar.SetConfigurationQuery;
-import org.arig.robot.communication.socket.lidar.SetConfigurationResponse;
 import org.arig.robot.communication.socket.lidar.SetSpeedQuery;
 import org.arig.robot.communication.socket.lidar.SetSpeedResponse;
 import org.arig.robot.communication.socket.lidar.StartScanQuery;

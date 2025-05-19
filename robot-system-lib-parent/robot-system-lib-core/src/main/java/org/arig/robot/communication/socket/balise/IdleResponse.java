@@ -8,6 +8,6 @@ import java.io.Serializable;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class IdleResponse
-    extends AbstractBaliseResponse
-    implements Serializable {
+  extends AbstractBaliseResponse
+  implements Serializable {
 }

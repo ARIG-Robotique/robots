@@ -41,6 +41,7 @@ public class ARIG2024Can2WheelsEncoders extends Abstract2WheelsEncoders implemen
     GET_VERSION(16);
 
     private final int id;
+
     private static CanFilter[] filters() {
       CanFilter[] filters = new CanFilter[ARIG2024Can2WheelsEncodersManual.values().length];
       for (ARIG2024Can2WheelsEncodersManual message : ARIG2024Can2WheelsEncodersManual.values()) {
@@ -90,7 +91,7 @@ public class ARIG2024Can2WheelsEncoders extends Abstract2WheelsEncoders implemen
     }
 
     final CanFrame encoderConfigurationFrame = CanFrame.create(ARIG2024Can2WheelsEncodersManual.SET_ENCODER_CONFIGURATION.id,
-        CanFrame.FD_NO_FLAGS, new byte[]{config});
+      CanFrame.FD_NO_FLAGS, new byte[]{config});
     try {
       manualChannel.write(encoderConfigurationFrame);
     } catch (IOException e) {
@@ -109,7 +110,8 @@ public class ARIG2024Can2WheelsEncoders extends Abstract2WheelsEncoders implemen
 
         byte[] data = new byte[response.getDataLength()];
         response.getData(data, 0, data.length);
-        version = new String(data, StandardCharsets.UTF_8);;
+        version = new String(data, StandardCharsets.UTF_8);
+        ;
       } catch (IOException e) {
         log.error("Error while sending version request", e);
         version = StringUtils.EMPTY;

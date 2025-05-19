@@ -8,8 +8,8 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ComponentScan({"org.arig.robot.strategy.actions.active.common", "org.arig.robot.strategy.actions.active.robot"})
 public class OdinCommonStrategyContext {
-    @Bean
-    public StrategyManager strategyManager() {
-        return new StrategyManager();
-    }
+  @Bean
+  public StrategyManager strategyManager() {
+    return new StrategyManager();
+  }
 }

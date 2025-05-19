@@ -15,67 +15,67 @@ import java.util.Map;
 @Slf4j
 public class DerivateInputPidFilter extends AbstractPidFilter {
 
-    private final IntegralFilter integral;
-    private final DerivateFilter derivate;
-    private final SerialChainFilter<Double> integralChain;
-    private final SerialChainFilter<Double> derivateChain;
-    private final ParallelChainFilter pi;
+  private final IntegralFilter integral;
+  private final DerivateFilter derivate;
+  private final SerialChainFilter<Double> integralChain;
+  private final SerialChainFilter<Double> derivateChain;
+  private final ParallelChainFilter pi;
 
-    public DerivateInputPidFilter(String name) {
-        this(name, null);
+  public DerivateInputPidFilter(String name) {
+    this(name, null);
+  }
+
+  public DerivateInputPidFilter(String name, Double integralLimit) {
+    super(name);
+
+    if (integralLimit != null) {
+      integral = new IntegralLimitedFilter(0d, new LimiterFilter(0d, integralLimit, LimiterFilter.LimiterType.MIRROR));
+    } else {
+      integral = new IntegralFilter(0d);
     }
+    derivate = new DerivateFilter(0d);
 
-    public DerivateInputPidFilter(String name, Double integralLimit) {
-        super(name);
+    integralChain = new SerialChainFilter<>();
+    integralChain.addFilter(integral);
+    integralChain.addFilter(ki());
 
-        if (integralLimit != null) {
-            integral = new IntegralLimitedFilter(0d, new LimiterFilter(0d, integralLimit, LimiterFilter.LimiterType.MIRROR));
-        } else {
-            integral = new IntegralFilter(0d);
-        }
-        derivate = new DerivateFilter(0d);
+    pi = new ParallelChainFilter();
+    pi.addFilter(kp());
+    pi.addFilter(integralChain);
 
-        integralChain = new SerialChainFilter<>();
-        integralChain.addFilter(integral);
-        integralChain.addFilter(ki());
+    derivateChain = new SerialChainFilter<>();
+    derivateChain.addFilter(derivate);
+    derivateChain.addFilter(kd());
+    derivateChain.addFilter(new ProportionalFilter(-1d));
+  }
 
-        pi = new ParallelChainFilter();
-        pi.addFilter(kp());
-        pi.addFilter(integralChain);
+  @Override
+  protected String pidImpl() {
+    return "derivate-input";
+  }
 
-        derivateChain = new SerialChainFilter<>();
-        derivateChain.addFilter(derivate);
-        derivateChain.addFilter(kd());
-        derivateChain.addFilter(new ProportionalFilter(-1d));
-    }
+  @Override
+  protected Double filterImpl(final Double input) {
+    return pi.filter(error()) + derivateChain.filter(input);
+  }
 
-    @Override
-    protected String pidImpl() {
-        return "derivate-input";
-    }
+  public final Double getErrorSum() {
+    return this.integral.getSum();
+  }
 
-    @Override
-    protected Double filterImpl(final Double input) {
-        return pi.filter(error()) + derivateChain.filter(input);
-    }
+  @Override
+  protected Map<String, Number> customMonitoringFields() {
+    Map<String, Number> fields = new HashMap<>();
+    fields.put("p", kp().lastResult());
+    fields.put("i", integralChain.lastResult());
+    fields.put("d", derivateChain.lastResult());
+    return fields;
+  }
 
-    public final Double getErrorSum() {
-        return this.integral.getSum();
-    }
-
-    @Override
-    protected Map<String, Number> customMonitoringFields() {
-        Map<String, Number> fields = new HashMap<>();
-        fields.put("p", kp().lastResult());
-        fields.put("i", integralChain.lastResult());
-        fields.put("d", derivateChain.lastResult());
-        return fields;
-    }
-
-    @Override
-    public void reset() {
-        super.reset();
-        integral.reset();
-        derivate.reset();
-    }
+  @Override
+  public void reset() {
+    super.reset();
+    integral.reset();
+    derivate.reset();
+  }
 }

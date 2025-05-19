@@ -11,7 +11,7 @@ public class NerellFaceWrapperTest {
 
   private static final NerellRobotStatus rs = new NerellRobotStatus();
   private static final NerellFaceAvantService faceAvantService = new NerellFaceAvantService(rs, null, null, null);
-  private static final NerellFaceArriereService faceArriereService = new NerellFaceArriereService(rs,null, null, null);
+  private static final NerellFaceArriereService faceArriereService = new NerellFaceArriereService(rs, null, null, null);
   private static final NerellFaceWrapper nerellFaceWrapper = new NerellFaceWrapper(rs, faceAvantService, faceArriereService);
 
   @BeforeEach

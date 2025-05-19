@@ -11,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 @EqualsAndHashCode(callSuper = true)
 public class OdinRobotStatus extends EurobotStatus {
 
-    public OdinRobotStatus() {
-        super(false);
-    }
+  public OdinRobotStatus() {
+    super(false);
+  }
 }

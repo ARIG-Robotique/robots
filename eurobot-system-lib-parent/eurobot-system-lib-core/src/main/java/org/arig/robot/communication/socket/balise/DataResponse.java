@@ -7,6 +7,6 @@ import java.io.Serializable;
 
 @EqualsAndHashCode(callSuper = true)
 public class DataResponse
-    extends AbstractBaliseResponseWithData<BaliseData>
-    implements Serializable {
+  extends AbstractBaliseResponseWithData<BaliseData>
+  implements Serializable {
 }

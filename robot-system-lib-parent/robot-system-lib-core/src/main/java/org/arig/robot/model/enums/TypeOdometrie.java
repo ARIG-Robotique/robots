@@ -6,5 +6,5 @@ package org.arig.robot.model.enums;
  * @author gdepuille
  */
 public enum TypeOdometrie {
-    LINEAIRE, CIRCULAIRE
+  LINEAIRE, CIRCULAIRE
 }

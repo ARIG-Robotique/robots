@@ -10,20 +10,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Slf4j
 public class AvoidingServiceBouchon implements AvoidingService {
 
-    @Autowired
-    private LidarService lidarService;
+  @Autowired
+  private LidarService lidarService;
 
-    @Override
-    public void process() {
-        lidarService.refreshDetectedPoints();
+  @Override
+  public void process() {
+    lidarService.refreshDetectedPoints();
 
-        if (lidarService.mustCleanup()) {
-            lidarService.refreshObstacles();
-        }
+    if (lidarService.mustCleanup()) {
+      lidarService.refreshObstacles();
     }
+  }
 
-    @Override
-    public void setSafeAvoidance(boolean enabled) {
+  @Override
+  public void setSafeAvoidance(boolean enabled) {
 
-    }
+  }
 }

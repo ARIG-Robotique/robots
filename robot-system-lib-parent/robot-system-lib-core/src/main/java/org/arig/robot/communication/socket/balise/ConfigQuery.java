@@ -13,6 +13,6 @@ public class ConfigQuery extends AbstractQueryWithData<BaliseAction, ConfigQuery
 
   public ConfigQuery(ConfigQueryData data) {
     super(BaliseAction.CONFIG, data);
-    }
+  }
 
 }

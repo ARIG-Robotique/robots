@@ -7,4 +7,5 @@ import org.arig.robot.communication.socket.lidar.enums.LidarAction;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class StopScanResponse extends AbstractResponse<LidarAction> { }
+public class StopScanResponse extends AbstractResponse<LidarAction> {
+}

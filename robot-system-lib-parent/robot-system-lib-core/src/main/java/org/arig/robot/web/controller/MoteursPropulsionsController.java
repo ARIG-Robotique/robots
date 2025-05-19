@@ -23,27 +23,27 @@ import java.util.Map;
 @Profile(ConstantesConfig.profileMonitoring)
 public class MoteursPropulsionsController {
 
-    @Autowired
-    private AbstractPropulsionsMotors motors;
+  @Autowired
+  private AbstractPropulsionsMotors motors;
 
-    @GetMapping
-    public Map<String, Integer> getMoteurs() {
-        Map<String, Integer> res = new HashMap<>();
-        res.put("droit", motors.currentSpeedDroit());
-        res.put("gauche", motors.currentSpeedGauche());
+  @GetMapping
+  public Map<String, Integer> getMoteurs() {
+    Map<String, Integer> res = new HashMap<>();
+    res.put("droit", motors.currentSpeedDroit());
+    res.put("gauche", motors.currentSpeedGauche());
 
-        return res;
-    }
+    return res;
+  }
 
-    @PostMapping(value = "/droit/{speed}")
-    public void setMoteurDroit(@PathVariable final Integer speed) {
-        log.info("Modification de la vitesse du moteur droit : " + speed);
-        motors.moteurDroit(speed);
-    }
+  @PostMapping(value = "/droit/{speed}")
+  public void setMoteurDroit(@PathVariable final Integer speed) {
+    log.info("Modification de la vitesse du moteur droit : " + speed);
+    motors.moteurDroit(speed);
+  }
 
-    @PostMapping(value = "/gauche/{speed}")
-    public void setMoteurGauche(@PathVariable final Integer speed) {
-        log.info("Modification de la vitesse du moteur gauche : " + speed);
-        motors.moteurGauche(speed);
-    }
+  @PostMapping(value = "/gauche/{speed}")
+  public void setMoteurGauche(@PathVariable final Integer speed) {
+    log.info("Modification de la vitesse du moteur gauche : " + speed);
+    motors.moteurGauche(speed);
+  }
 }

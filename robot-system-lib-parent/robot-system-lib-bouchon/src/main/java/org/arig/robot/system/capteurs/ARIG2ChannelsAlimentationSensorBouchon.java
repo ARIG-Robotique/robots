@@ -5,16 +5,16 @@ import org.arig.robot.system.capteurs.i2c.AbstractAlimentationSensor;
 
 public class ARIG2ChannelsAlimentationSensorBouchon extends AbstractAlimentationSensor {
 
-    public ARIG2ChannelsAlimentationSensorBouchon(final String deviceName) {
-        super(deviceName, 2);
-    }
+  public ARIG2ChannelsAlimentationSensorBouchon(final String deviceName) {
+    super(deviceName, 2);
+  }
 
-    public void mock(int channel, AlimentationSensorValue mock) {
-        alimentations[channel] = mock;
-    }
+  public void mock(int channel, AlimentationSensorValue mock) {
+    alimentations[channel] = mock;
+  }
 
-    @Override
-    protected void getData() {
-        // NOP
-    }
+  @Override
+  protected void getData() {
+    // NOP
+  }
 }

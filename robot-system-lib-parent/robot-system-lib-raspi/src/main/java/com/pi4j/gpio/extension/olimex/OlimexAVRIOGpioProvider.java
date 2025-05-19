@@ -56,206 +56,204 @@ import java.io.IOException;
  * 4 electromechanical RELAYs and 4 opto-isolated INPUT pins.
  * </p>
  *
- * @link http://www.olimex.com/Products/AVR/Development/AVR-IO-M16/
  * @author Robert Savage
- *
+ * @link http://www.olimex.com/Products/AVR/Development/AVR-IO-M16/
  */
 public class OlimexAVRIOGpioProvider extends GpioProviderBase implements GpioProvider {
 
-    public static final String NAME = "com.pi4j.gpio.extension.olimex.OlimexAVRIOGpioProvider";
-    public static final String DESCRIPTION = "Olimex AVR-IO GPIO Provider";
-    private Serial com;
-    private int currentStates = 0;
-    private SerialCommandQueueProcessingThread queue;
+  public static final String NAME = "com.pi4j.gpio.extension.olimex.OlimexAVRIOGpioProvider";
+  public static final String DESCRIPTION = "Olimex AVR-IO GPIO Provider";
+  private Serial com;
+  private int currentStates = 0;
+  private SerialCommandQueueProcessingThread queue;
 
-    public OlimexAVRIOGpioProvider(String serialDevice) throws IOException {
-        // create serial communications instance
-        com = SerialFactory.createInstance();
+  public OlimexAVRIOGpioProvider(String serialDevice) throws IOException {
+    // create serial communications instance
+    com = SerialFactory.createInstance();
 
-        // create serial data listener
-        SerialExampleListener listener = new SerialExampleListener();
+    // create serial data listener
+    SerialExampleListener listener = new SerialExampleListener();
 
-        // add/register the serial data listener
-        com.addListener(listener);
+    // add/register the serial data listener
+    com.addListener(listener);
 
-        // open serial port for communication
-        com.open(serialDevice, 19200);
+    // open serial port for communication
+    com.open(serialDevice, 19200);
 
-        // create and start the serial command processing queue thread
-        // set the delay time to 100 ms; this works well for the AVR-IO
-        queue = new SerialCommandQueueProcessingThread(com, 50);
-        queue.start();
-        queue.put("?"); // query for current status
+    // create and start the serial command processing queue thread
+    // set the delay time to 100 ms; this works well for the AVR-IO
+    queue = new SerialCommandQueueProcessingThread(com, 50);
+    queue.start();
+    queue.put("?"); // query for current status
+  }
+
+  @Override
+  public String getName() {
+    return NAME;
+  }
+
+  @Override
+  public void setMode(Pin pin, PinMode mode) {
+    // ALL PIN MODES ARE PREDEFINED
+    //
+    // an exception will be throw by the base impl
+    // if an alternate mode is selected for a pin
+    // instance
+    super.setMode(pin, mode);
+  }
+
+  @Override
+  public PinMode getMode(Pin pin) {
+    super.getMode(pin);
+
+    // return first mode found; this device has singular fixed pin modes
+    for (PinMode mode : pin.getSupportedPinModes())
+      return mode;
+
+    return null;
+  }
+
+  @Override
+  public void setState(Pin pin, PinState state) {
+    super.setState(pin, state);
+
+    // turn ON/OFF relay pins
+    if (state == PinState.HIGH) {
+      queue.put("+" + pin.getAddress());
+    } else {
+      queue.put("-" + pin.getAddress());
+    }
+  }
+
+  @Override
+  public PinState getState(Pin pin) {
+    super.getState(pin);
+
+    // calculate current state from the bitmask value
+    int bit = (int) Math.pow(2, (pin.getAddress() - 1));
+    int state = (currentStates & bit);
+    return (state == bit) ? PinState.HIGH : PinState.LOW;
+  }
+
+
+  @Override
+  public void shutdown() {
+
+    // prevent reentrant invocation
+    if (isShutdown())
+      return;
+
+    // perform shutdown login in base
+    super.shutdown();
+
+    // if a serial processing queue is running, then shut it down now
+    if (queue != null) {
+      // shutdown serial data processing thread
+      queue.shutdown();
+      //queue.interrupt();
+      queue = null;
     }
 
-    @Override
-    public String getName() {
-        return NAME;
+    // close the serial port communication
+    try {
+      com.close();
+    } catch (IOException e) {
+      e.printStackTrace();
     }
 
-    @Override
-    public void setMode(Pin pin, PinMode mode) {
-        // ALL PIN MODES ARE PREDEFINED
-        //
-        // an exception will be throw by the base impl
-        // if an alternate mode is selected for a pin
-        // instance
-        super.setMode(pin, mode);
-    }
+    // shutdown any serial data monitoring threads
+    SerialFactory.shutdown();
+  }
 
-    @Override
-    public PinMode getMode(Pin pin) {
-        super.getMode(pin);
+  /**
+   * This class implements the serial data listener interface with the callback method for event
+   * notifications when data is received on the serial port.
+   *
+   * @author Robert Savage
+   * @see com.pi4j.io.serial.SerialDataEventListener
+   */
+  class SerialExampleListener implements SerialDataEventListener {
+    private StringBuilder buffer = new StringBuilder();
 
-        // return first mode found; this device has singular fixed pin modes
-        for(PinMode mode : pin.getSupportedPinModes())
-            return mode;
+    public void dataReceived(SerialDataEvent event) {
 
-        return null;
-    }
+      try {
+        String data = event.getAsciiString();
 
-    @Override
-    public void setState(Pin pin, PinState state) {
-        super.setState(pin, state);
-
-        // turn ON/OFF relay pins
-        if (state == PinState.HIGH) {
-            queue.put("+" + pin.getAddress());
-        } else {
-            queue.put("-" + pin.getAddress());
+        // append received data into buffer
+        if (data != null && !data.isEmpty()) {
+          buffer.append(data);
         }
-    }
 
-    @Override
-    public PinState getState(Pin pin) {
-        super.getState(pin);
+        int start = buffer.indexOf("$");
+        int stop = buffer.indexOf("\n");
 
-        // calculate current state from the bitmask value
-        int bit = (int)Math.pow(2, (pin.getAddress()-1));
-        int state = (currentStates & bit);
-        return (state == bit) ? PinState.HIGH : PinState.LOW;
-    }
+        while (stop >= 0) {
+          // process data buffer
+          if (start >= 0 && stop > start) {
+            // get command
+            String command = buffer.substring(start, stop + 1);
+            buffer.delete(start, stop + 1).toString();
 
+            // remove terminating characters
+            command = command.replace("$", "");
+            command = command.replace("\n", "");
+            command = command.replace("\r", "");
 
-    @Override
-    public void shutdown() {
+            // print out the data received to the console
+            //System.out.println("<<< COM RX >>> " + command);
 
-        // prevent reentrant invocation
-        if(isShutdown())
-            return;
+            int value = Integer.parseInt(command, 16);
 
-        // perform shutdown login in base
-        super.shutdown();
-
-        // if a serial processing queue is running, then shut it down now
-        if (queue != null) {
-            // shutdown serial data processing thread
-            queue.shutdown();
-            //queue.interrupt();
-            queue = null;
-        }
-
-        // close the serial port communication
-        try {
-            com.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        // shutdown any serial data monitoring threads
-        SerialFactory.shutdown();
-    }
-
-    /**
-     * This class implements the serial data listener interface with the callback method for event
-     * notifications when data is received on the serial port.
-     *
-     * @see com.pi4j.io.serial.SerialDataEventListener
-     * @author Robert Savage
-     */
-    class SerialExampleListener implements SerialDataEventListener {
-        private StringBuilder buffer = new StringBuilder();
-
-        public void dataReceived(SerialDataEvent event) {
-
-            try {
-                String data = event.getAsciiString();
-
-                // append received data into buffer
-                if (data != null && !data.isEmpty()) {
-                    buffer.append(data);
-                }
-
-                int start = buffer.indexOf("$");
-                int stop = buffer.indexOf("\n");
-
-                while (stop >= 0) {
-                    // process data buffer
-                    if (start >= 0 && stop > start) {
-                        // get command
-                        String command = buffer.substring(start, stop + 1);
-                        buffer.delete(start, stop + 1).toString();
-
-                        // remove terminating characters
-                        command = command.replace("$", "");
-                        command = command.replace("\n", "");
-                        command = command.replace("\r", "");
-
-                        // print out the data received to the console
-                        //System.out.println("<<< COM RX >>> " + command);
-
-                        int value = Integer.parseInt(command, 16);
-
-                        // process each INPUT pin for changes;
-                        // dispatch change events if needed
-                        for (Pin pin : OlimexAVRIOPin.INPUTS) {
-                            evaluatePinForChange(pin, value);
-                        }
-
-                        // update the current value tracking variable
-                        currentStates = value;
-                    } else if (stop >= 0) {
-                        // invalid data command; purge
-                        buffer.delete(0, stop + 1);
-
-                        //System.out.println("PURGE >>> " + removed);
-                    }
-
-                    // seek to next command in buffer
-                    start = buffer.indexOf("$");
-                    stop = buffer.indexOf("\n");
-                }
+            // process each INPUT pin for changes;
+            // dispatch change events if needed
+            for (Pin pin : OlimexAVRIOPin.INPUTS) {
+              evaluatePinForChange(pin, value);
             }
-            catch (IOException e) {
-                e.printStackTrace();
-            }
+
+            // update the current value tracking variable
+            currentStates = value;
+          } else if (stop >= 0) {
+            // invalid data command; purge
+            buffer.delete(0, stop + 1);
+
+            //System.out.println("PURGE >>> " + removed);
+          }
+
+          // seek to next command in buffer
+          start = buffer.indexOf("$");
+          stop = buffer.indexOf("\n");
         }
-
-
-        private void evaluatePinForChange(Pin pin, int value) {
-            int bit = (int)Math.pow(2, (pin.getAddress()-1));
-            if ((value & bit) != (currentStates & bit)) {
-                // change detected for INPUT PIN
-                //System.out.println("<<< CHANGE >>> " + pin.getName());
-                dispatchPinChangeEvent(pin.getAddress(), ((value & bit) == bit) ? PinState.HIGH : PinState.LOW);
-            }
-        }
-
-
-        private void dispatchPinChangeEvent(int pinAddress, PinState state) {
-            // iterate over the pin listeners map
-            for (Pin pin : listeners.keySet()) {
-                //System.out.println("<<< DISPATCH >>> " + pin.getName() + " : " + state.getName());
-
-                // dispatch this event to the listener
-                // if a matching pin address is found
-                if (pin.getAddress() == pinAddress) {
-                    // dispatch this event to all listener handlers
-                    for (PinListener listener : listeners.get(pin)) {
-                        listener.handlePinEvent(new PinDigitalStateChangeEvent(this, pin, state));
-                    }
-                }
-            }
-        }
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
     }
+
+
+    private void evaluatePinForChange(Pin pin, int value) {
+      int bit = (int) Math.pow(2, (pin.getAddress() - 1));
+      if ((value & bit) != (currentStates & bit)) {
+        // change detected for INPUT PIN
+        //System.out.println("<<< CHANGE >>> " + pin.getName());
+        dispatchPinChangeEvent(pin.getAddress(), ((value & bit) == bit) ? PinState.HIGH : PinState.LOW);
+      }
+    }
+
+
+    private void dispatchPinChangeEvent(int pinAddress, PinState state) {
+      // iterate over the pin listeners map
+      for (Pin pin : listeners.keySet()) {
+        //System.out.println("<<< DISPATCH >>> " + pin.getName() + " : " + state.getName());
+
+        // dispatch this event to the listener
+        // if a matching pin address is found
+        if (pin.getAddress() == pinAddress) {
+          // dispatch this event to all listener handlers
+          for (PinListener listener : listeners.get(pin)) {
+            listener.handlePinEvent(new PinDigitalStateChangeEvent(this, pin, state));
+          }
+        }
+      }
+    }
+  }
 }

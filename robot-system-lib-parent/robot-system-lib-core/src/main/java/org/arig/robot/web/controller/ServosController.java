@@ -21,33 +21,33 @@ import java.util.List;
 @Profile(ConstantesConfig.profileMonitoring)
 public class ServosController {
 
-    @Autowired
-    protected AbstractServosService servos;
+  @Autowired
+  protected AbstractServosService servos;
 
-    @GetMapping
-    public final List<ServoGroup> config() {
-        return servos.getGroups();
+  @GetMapping
+  public final List<ServoGroup> config() {
+    return servos.getGroups();
+  }
+
+  @PostMapping(value = "/{idServo}")
+  public final void servoPositionAndSpeed(
+    @PathVariable("idServo") final Byte idServo,
+    @RequestParam("position") final Integer position,
+    @RequestParam(value = "speed", required = false) final Byte speed) {
+
+    org.arig.robot.services.AbstractServosService.OffsetedDevice device = servos.getDevice(idServo);
+    if (speed != null) {
+      log.info("Modification du servo moteur {} : Pos -> {} ; Speed -> {}", idServo, position, speed);
+      device.servo().setPositionAndSpeed((byte) (idServo - device.offset()), position, speed);
+    } else {
+      log.info("Modification du servo moteur {} : Pos -> {}", idServo, position);
+      device.servo().setPosition((byte) (idServo - device.offset()), position);
     }
+  }
 
-    @PostMapping(value = "/{idServo}")
-    public final void servoPositionAndSpeed(
-            @PathVariable("idServo") final Byte idServo,
-            @RequestParam("position") final Integer position,
-            @RequestParam(value = "speed", required = false) final Byte speed) {
-
-        org.arig.robot.services.AbstractServosService.OffsetedDevice device = servos.getDevice(idServo);
-        if (speed != null) {
-            log.info("Modification du servo moteur {} : Pos -> {} ; Speed -> {}", idServo, position, speed);
-            device.servo().setPositionAndSpeed((byte) (idServo - device.offset()), position, speed);
-        } else {
-            log.info("Modification du servo moteur {} : Pos -> {}", idServo, position);
-            device.servo().setPosition((byte) (idServo - device.offset()), position);
-        }
-    }
-
-    @PostMapping({"/batch"})
-    public final void batchPosition(@RequestParam("group") final String group,
-                                    @RequestParam("position") final String position) {
-        servos.setPositionBatch(group, position, false);
-    }
+  @PostMapping({"/batch"})
+  public final void batchPosition(@RequestParam("group") final String group,
+                                  @RequestParam("position") final String position) {
+    servos.setPositionBatch(group, position, false);
+  }
 }

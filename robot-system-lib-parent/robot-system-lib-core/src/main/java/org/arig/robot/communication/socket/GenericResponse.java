@@ -10,10 +10,10 @@ import org.arig.robot.communication.socket.enums.StatusResponse;
 @Data
 public class GenericResponse {
 
-    private String action;
-    private StatusResponse status;
-    private String errorMessage;
-    @JsonInclude(content = JsonInclude.Include.NON_NULL)
-    private Object data;
+  private String action;
+  private StatusResponse status;
+  private String errorMessage;
+  @JsonInclude(content = JsonInclude.Include.NON_NULL)
+  private Object data;
 
 }

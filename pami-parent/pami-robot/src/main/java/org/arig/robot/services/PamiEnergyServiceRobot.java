@@ -9,31 +9,31 @@ import org.springframework.stereotype.Service;
 @Service
 public class PamiEnergyServiceRobot extends AbstractEnergyService {
 
-    private static final byte CHANNEL_MOTEURS = 1;
+  private static final byte CHANNEL_MOTEURS = 1;
 
-    @Autowired
-    private IAlimentationSensor alimentationController;
+  @Autowired
+  private IAlimentationSensor alimentationController;
 
-    @Autowired
-    private PamiIOServiceRobot ioService;
+  @Autowired
+  private PamiIOServiceRobot ioService;
 
-    @Override
-    public double tensionServos() {
-        return ioService.auOk() ? 6 : 0;
-    }
+  @Override
+  public double tensionServos() {
+    return ioService.auOk() ? 6 : 0;
+  }
 
-    @Override
-    public double courantServos() {
-        return 0;
-    }
+  @Override
+  public double courantServos() {
+    return 0;
+  }
 
-    @Override
-    public double tensionMoteurs() {
-        return alimentationController.get(CHANNEL_MOTEURS).tension();
-    }
+  @Override
+  public double tensionMoteurs() {
+    return alimentationController.get(CHANNEL_MOTEURS).tension();
+  }
 
-    @Override
-    public double courantMoteurs() {
-        return alimentationController.get(CHANNEL_MOTEURS).current();
-    }
+  @Override
+  public double courantMoteurs() {
+    return alimentationController.get(CHANNEL_MOTEURS).current();
+  }
 }

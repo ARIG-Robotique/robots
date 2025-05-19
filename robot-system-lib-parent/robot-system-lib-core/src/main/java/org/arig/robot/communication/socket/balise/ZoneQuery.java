@@ -8,15 +8,15 @@ import java.io.Serializable;
 
 @EqualsAndHashCode(callSuper = true)
 public class ZoneQuery
-    extends AbstractQueryWithData<BaliseAction, ZoneQueryData>
-    implements Serializable {
+  extends AbstractQueryWithData<BaliseAction, ZoneQueryData>
+  implements Serializable {
 
-    public ZoneQuery() {
-        super(BaliseAction.ZONE);
-    }
+  public ZoneQuery() {
+    super(BaliseAction.ZONE);
+  }
 
-    public ZoneQuery(ZoneQueryData data) {
-        super(BaliseAction.ZONE, data);
-    }
+  public ZoneQuery(ZoneQueryData data) {
+    super(BaliseAction.ZONE, data);
+  }
 
 }

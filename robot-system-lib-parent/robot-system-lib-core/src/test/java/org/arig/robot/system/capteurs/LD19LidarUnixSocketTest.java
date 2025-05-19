@@ -9,13 +9,13 @@ import java.io.File;
 
 public class LD19LidarUnixSocketTest extends LD19LidarTelemeterOverSocketTest {
 
-    @BeforeAll
-    @SneakyThrows
-    static void initTest() {
-        File socketFile = new File("/tmp/ldlidar.sock");
-        Assumptions.assumeTrue(socketFile.exists());
+  @BeforeAll
+  @SneakyThrows
+  static void initTest() {
+    File socketFile = new File("/tmp/ldlidar.sock");
+    Assumptions.assumeTrue(socketFile.exists());
 
-        ldLidar = new LD19LidarTelemeterOverSocket(socketFile);
-        ldLidar.printDeviceInfo();
-    }
+    ldLidar = new LD19LidarTelemeterOverSocket(socketFile);
+    ldLidar.printDeviceInfo();
+  }
 }

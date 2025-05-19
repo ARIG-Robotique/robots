@@ -5,42 +5,42 @@ import java.util.Map;
 
 public class TestRobotStatus extends AbstractRobotStatus {
 
-    public TestRobotStatus() {
-        super(0, true);
-    }
+  public TestRobotStatus() {
+    super(0, true);
+  }
 
-    @Override
-    public String strategyDescription() {
-        return "Test strat";
-    }
+  @Override
+  public String strategyDescription() {
+    return "Test strat";
+  }
 
-    @Override
-    public int calculerPoints() {
-        return 2;
-    }
+  @Override
+  public int calculerPoints() {
+    return 2;
+  }
 
-    @Override
-    public Map<String, ?> gameStatus() {
-        return Collections.emptyMap();
-    }
+  @Override
+  public Map<String, ?> gameStatus() {
+    return Collections.emptyMap();
+  }
 
-    @Override
-    public Map<String, Boolean> gameFlags() {
-        return Collections.emptyMap();
-    }
+  @Override
+  public Map<String, Boolean> gameFlags() {
+    return Collections.emptyMap();
+  }
 
-    @Override
-    public Map<String, Boolean> gameConfigs() {
-        return Collections.emptyMap();
-    }
+  @Override
+  public Map<String, Boolean> gameConfigs() {
+    return Collections.emptyMap();
+  }
 
-    @Override
-    public Map<String, Integer> scoreStatus() {
-        return Collections.emptyMap();
-    }
+  @Override
+  public Map<String, Integer> scoreStatus() {
+    return Collections.emptyMap();
+  }
 
-    @Override
-    public Map<String, String> deposesStatus() {
-        return Collections.emptyMap();
-    }
+  @Override
+  public Map<String, String> deposesStatus() {
+    return Collections.emptyMap();
+  }
 }

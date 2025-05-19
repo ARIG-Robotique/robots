@@ -18,56 +18,56 @@ import org.springframework.beans.factory.annotation.Qualifier;
  */
 public abstract class AbstractOdometrie implements IOdometrie, InitializingBean {
 
-    @Autowired
-    private MonitoringWrapper monitoringWrapper;
+  @Autowired
+  private MonitoringWrapper monitoringWrapper;
 
-    @Autowired
-    @Qualifier("currentPosition")
-    @Getter(AccessLevel.PROTECTED)
-    private Position position;
+  @Autowired
+  @Qualifier("currentPosition")
+  @Getter(AccessLevel.PROTECTED)
+  private Position position;
 
-    @Autowired
-    private ConvertionRobotUnit conv;
+  @Autowired
+  private ConvertionRobotUnit conv;
 
-    @Getter
-    private final TypeOdometrie type;
+  @Getter
+  private final TypeOdometrie type;
 
-    protected AbstractOdometrie(final TypeOdometrie type) {
-        this.type = type;
-    }
+  protected AbstractOdometrie(final TypeOdometrie type) {
+    this.type = type;
+  }
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        initOdometrie(0, 0, 0);
-    }
+  @Override
+  public void afterPropertiesSet() throws Exception {
+    initOdometrie(0, 0, 0);
+  }
 
-    @Override
-    public void initOdometrie(final double x, final double y, final int angle) {
-        position.updatePosition(x, y, angle);
-    }
+  @Override
+  public void initOdometrie(final double x, final double y, final int angle) {
+    position.updatePosition(x, y, angle);
+  }
 
-    protected abstract void process();
+  protected abstract void process();
 
-    /**
-     * Calcul de la position en fonction de la valeurs des codeurs.
-     * <p>
-     * /!\ Cette méthode doit être appelé après la lecture des valeurs codeurs toutes les x ms.
-     */
-    @Override
-    public void calculPosition() {
-        process();
-        sendMonitoring();
-    }
+  /**
+   * Calcul de la position en fonction de la valeurs des codeurs.
+   * <p>
+   * /!\ Cette méthode doit être appelé après la lecture des valeurs codeurs toutes les x ms.
+   */
+  @Override
+  public void calculPosition() {
+    process();
+    sendMonitoring();
+  }
 
-    private void sendMonitoring() {
-        // Construction du monitoring
-        MonitorTimeSerie serie = new MonitorTimeSerie()
-                .measurementName("odometrie")
-                .addField("X", conv.pulseToMm(getPosition().getPt().getX()))
-                .addField("Y", conv.pulseToMm(getPosition().getPt().getY()))
-                .addField("angle", conv.pulseToDeg(getPosition().getAngle()))
-                .addField("type", type.ordinal());
+  private void sendMonitoring() {
+    // Construction du monitoring
+    MonitorTimeSerie serie = new MonitorTimeSerie()
+      .measurementName("odometrie")
+      .addField("X", conv.pulseToMm(getPosition().getPt().getX()))
+      .addField("Y", conv.pulseToMm(getPosition().getPt().getY()))
+      .addField("angle", conv.pulseToDeg(getPosition().getAngle()))
+      .addField("type", type.ordinal());
 
-        monitoringWrapper.addTimeSeriePoint(serie);
-    }
+    monitoringWrapper.addTimeSeriePoint(serie);
+  }
 }

@@ -18,27 +18,27 @@ import java.util.Random;
 @Slf4j
 public class VisionBaliseBouchon extends AbstractVisionBaliseBouchon<BaliseData> {
 
-    @Autowired
-    private EurobotStatus rs;
+  @Autowired
+  private EurobotStatus rs;
 
-    private final Random random = new Random();
+  private final Random random = new Random();
 
-    @Override
-    public AbstractBaliseResponseWithData<BaliseData> getData(DataQueryData<?> queryData) {
-        DataResponse response = new DataResponse();
+  @Override
+  public AbstractBaliseResponseWithData<BaliseData> getData(DataQueryData<?> queryData) {
+    DataResponse response = new DataResponse();
 
-        response.setIndex(0);
-        response.setAction(BaliseAction.IMAGE);
-        response.setStatus(org.arig.robot.communication.socket.enums.StatusResponse.OK);
+    response.setIndex(0);
+    response.setAction(BaliseAction.IMAGE);
+    response.setStatus(org.arig.robot.communication.socket.enums.StatusResponse.OK);
 
-        List<Data2D> data2D = List.of(new Data2D());
-        List<Data3D> data3D = new ArrayList<>();
+    List<Data2D> data2D = List.of(new Data2D());
+    List<Data3D> data3D = new ArrayList<>();
 
-        BaliseData data = new BaliseData(data2D, data3D);
+    BaliseData data = new BaliseData(data2D, data3D);
 
-        response.setData(data);
+    response.setData(data);
 
-        return response;
-    }
+    return response;
+  }
 
 }

@@ -10,12 +10,12 @@ import java.io.File;
 @Slf4j
 public class VisionBaliseOverSocket extends AbstractVisionBaliseOverSocket<BaliseData> {
 
-    public VisionBaliseOverSocket(String hostname, Integer port) {
-      super(hostname, port, DataResponse.class);
-    }
+  public VisionBaliseOverSocket(String hostname, Integer port) {
+    super(hostname, port, DataResponse.class);
+  }
 
-    public VisionBaliseOverSocket(File socketFile) {
-      super(socketFile, DataResponse.class);
-    }
+  public VisionBaliseOverSocket(File socketFile) {
+    super(socketFile, DataResponse.class);
+  }
 
 }

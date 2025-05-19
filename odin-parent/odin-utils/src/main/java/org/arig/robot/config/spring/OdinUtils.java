@@ -10,14 +10,14 @@ import java.time.format.DateTimeFormatter;
 @SpringBootApplication
 public class OdinUtils {
 
-    public static void main(String ... args) {
-        // Définition d'un ID unique pour le nommage des fichiers
-        final String execId = LocalDateTime.now().format(DateTimeFormatter.ofPattern(ConstantesConfig.executiondIdFormat));
-        System.setProperty(ConstantesConfig.keyExecutionId, execId);
+  public static void main(String... args) {
+    // Définition d'un ID unique pour le nommage des fichiers
+    final String execId = LocalDateTime.now().format(DateTimeFormatter.ofPattern(ConstantesConfig.executiondIdFormat));
+    System.setProperty(ConstantesConfig.keyExecutionId, execId);
 
-        // FIXME : Workaround
-        System.setProperty("spring.main.allow-circular-references", "true");
+    // FIXME : Workaround
+    System.setProperty("spring.main.allow-circular-references", "true");
 
-        SpringApplication.run(OdinUtils.class, args);
-    }
+    SpringApplication.run(OdinUtils.class, args);
+  }
 }

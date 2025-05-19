@@ -11,8 +11,8 @@ import java.io.Serializable;
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ConfigurationInfos implements Serializable {
-    private Boolean reversed = false;
-    private Integer angleOffset = 0;
-    private Integer excludeLowerThanMm = 150;
-    private Integer excludeGreaterThanMm = 3600;
+  private Boolean reversed = false;
+  private Integer angleOffset = 0;
+  private Integer excludeLowerThanMm = 150;
+  private Integer excludeGreaterThanMm = 3600;
 }

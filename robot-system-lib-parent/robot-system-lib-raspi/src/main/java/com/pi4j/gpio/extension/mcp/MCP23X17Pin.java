@@ -30,9 +30,8 @@ package com.pi4j.gpio.extension.mcp;
  */
 
 /**
- *
  * @author Stefan
  */
 public class MCP23X17Pin {
-    // marker interface
+  // marker interface
 }

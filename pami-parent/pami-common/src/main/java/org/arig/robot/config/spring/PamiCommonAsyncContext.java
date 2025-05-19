@@ -12,8 +12,8 @@ import java.util.concurrent.ThreadPoolExecutor;
 @Configuration
 public class PamiCommonAsyncContext {
 
-    @Bean(destroyMethod = "shutdown")
-    public ThreadPoolExecutor threadPoolTaskExecutor() {
-        return (ThreadPoolExecutor) Executors.newFixedThreadPool(PamiConstantesConfig.nbThreadAsyncExecutor);
-    }
+  @Bean(destroyMethod = "shutdown")
+  public ThreadPoolExecutor threadPoolTaskExecutor() {
+    return (ThreadPoolExecutor) Executors.newFixedThreadPool(PamiConstantesConfig.nbThreadAsyncExecutor);
+  }
 }

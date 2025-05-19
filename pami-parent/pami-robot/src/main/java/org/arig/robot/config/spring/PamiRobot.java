@@ -14,21 +14,21 @@ import java.time.format.DateTimeFormatter;
 @SpringBootApplication
 public class PamiRobot {
 
-    public static void main(final String[] args) throws IOException {
-        // Définition d'un ID unique pour le nommage des fichiers
-        final String execId = LocalDateTime.now().format(DateTimeFormatter.ofPattern(ConstantesConfig.executiondIdFormat));
-        System.setProperty(ConstantesConfig.keyExecutionId, execId);
+  public static void main(final String[] args) throws IOException {
+    // Définition d'un ID unique pour le nommage des fichiers
+    final String execId = LocalDateTime.now().format(DateTimeFormatter.ofPattern(ConstantesConfig.executiondIdFormat));
+    System.setProperty(ConstantesConfig.keyExecutionId, execId);
 
-        String pamiId = InetAddress.getLocalHost().getHostName().replace("pami-", "");
-        System.setProperty(ConstantesConfig.keyPamiId, pamiId);
+    String pamiId = InetAddress.getLocalHost().getHostName().replace("pami-", "");
+    System.setProperty(ConstantesConfig.keyPamiId, pamiId);
 
-        String springProfiles = System.getProperty(ConstantesConfig.keySpringProfiles);
-        System.setProperty(ConstantesConfig.keySpringProfiles, springProfiles + "," + pamiId);
+    String springProfiles = System.getProperty(ConstantesConfig.keySpringProfiles);
+    System.setProperty(ConstantesConfig.keySpringProfiles, springProfiles + "," + pamiId);
 
-        ConfigurableApplicationContext context = SpringApplication.run(PamiRobot.class, args);
-        context.getBean(PamiOrdonanceur.class).run();
-        SpringApplication.exit(context);
-        context.close();
-        System.exit(0);
-    }
+    ConfigurableApplicationContext context = SpringApplication.run(PamiRobot.class, args);
+    context.getBean(PamiOrdonanceur.class).run();
+    SpringApplication.exit(context);
+    context.close();
+    System.exit(0);
+  }
 }

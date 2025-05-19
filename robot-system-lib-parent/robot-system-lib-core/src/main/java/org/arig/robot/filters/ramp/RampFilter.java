@@ -11,10 +11,10 @@ import java.util.Map;
  */
 public interface RampFilter extends Filter<Long, Long> {
 
-    void setConsigneVitesse(double vitesse);
+  void setConsigneVitesse(double vitesse);
 
-    void setRamps(double rampAcc, double rampDec);
+  void setRamps(double rampAcc, double rampDec);
 
-    Map<String, Double> getRamps();
+  Map<String, Double> getRamps();
 
 }

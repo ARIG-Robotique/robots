@@ -11,5 +11,5 @@ import java.io.Serializable;
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SpeedInfos implements Serializable {
-    private Short speed;
+  private Short speed;
 }

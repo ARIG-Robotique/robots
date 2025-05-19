@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CommandeMoteurPropulsion2Roue {
-    private int droit;
-    private int gauche;
+  private int droit;
+  private int gauche;
 }

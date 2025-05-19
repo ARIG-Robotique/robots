@@ -7,13 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 public abstract class AbstractPamiAction extends AbstractEurobotAction {
 
-    @Autowired
-    protected PamiRobotStatus rsOdin;
+  @Autowired
+  protected PamiRobotStatus rsOdin;
 
-    @Autowired
-    protected PamiRobotServosService servosOdin;
+  @Autowired
+  protected PamiRobotServosService servosOdin;
 
-    @Autowired
-    protected PamiIOService ioService;
+  @Autowired
+  protected PamiIOService ioService;
 
 }

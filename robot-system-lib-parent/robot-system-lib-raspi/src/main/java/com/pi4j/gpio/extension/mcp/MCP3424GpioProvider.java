@@ -41,7 +41,6 @@ import com.pi4j.io.i2c.I2CFactory.UnsupportedBusNumberException;
 import java.io.IOException;
 
 /**
- *
  * <p>
  * This GPIO provider implements the MCP3424 I2C GPIO expansion board as native Pi4J GPIO pins. It is a 18-bit
  * ADC providing 4 sigma/delta input channels. More information about the board can be found here:
@@ -90,11 +89,11 @@ public class MCP3424GpioProvider extends AdcGpioProviderBase implements AdcGpioP
   public MCP3424GpioProvider(I2CBus bus, int address, int resolution, int gain) throws UnsupportedBusNumberException, IOException {
     super(MCP3424Pin.ALL_PINS);
 
-    if((resolution != 12) && (resolution != 14) && (resolution != 16) && (resolution != 18)) {
+    if ((resolution != 12) && (resolution != 14) && (resolution != 16) && (resolution != 18)) {
       throw new IllegalArgumentException("Invalid resolution: " + resolution);
     }
 
-    if((gain != 1) && (gain != 2) && (gain != 4) && (gain != 8)) {
+    if ((gain != 1) && (gain != 2) && (gain != 4) && (gain != 8)) {
       throw new IllegalArgumentException("Invalid gain: " + gain);
     }
 
@@ -113,7 +112,7 @@ public class MCP3424GpioProvider extends AdcGpioProviderBase implements AdcGpioP
   }
 
   public void setGain(int gain) throws IllegalArgumentException {
-    if((gain != 1) && (gain != 2) && (gain != 4) && (gain != 8)) {
+    if ((gain != 1) && (gain != 2) && (gain != 4) && (gain != 8)) {
       throw new IllegalArgumentException("Invalid gain: " + gain);
     }
 
@@ -123,7 +122,7 @@ public class MCP3424GpioProvider extends AdcGpioProviderBase implements AdcGpioP
   }
 
   public void setResolution(int resolution) throws IllegalArgumentException {
-    if((resolution != 12) && (resolution != 14) && (resolution != 16) && (resolution != 18)) {
+    if ((resolution != 12) && (resolution != 14) && (resolution != 16) && (resolution != 18)) {
       throw new IllegalArgumentException("Invalid resolution: " + resolution);
     }
 
@@ -135,14 +134,14 @@ public class MCP3424GpioProvider extends AdcGpioProviderBase implements AdcGpioP
   @Override
   public void shutdown() {
     // prevent reentrant invocation
-    if(isShutdown())
+    if (isShutdown())
       return;
 
     // perform shutdown login in base
     super.shutdown();
 
     // if we are the owner of the I2C bus, then close it
-    if(i2cBusOwner) {
+    if (i2cBusOwner) {
       try {
         bus.close();
       } catch (IOException e) {
@@ -156,11 +155,12 @@ public class MCP3424GpioProvider extends AdcGpioProviderBase implements AdcGpioP
     return NAME;
   }
 
- /**
-  * Get the requested analog input pin's conversion value.
-  * @param pin to get conversion values for
-  * @return analog input pin value in Volt
-  */
+  /**
+   * Get the requested analog input pin's conversion value.
+   *
+   * @param pin to get conversion values for
+   * @return analog input pin value in Volt
+   */
   public double getAnalogValue(Pin pin) {
     double value = getValue(pin);
     switch (configuration & 0x0C) {
@@ -179,16 +179,18 @@ public class MCP3424GpioProvider extends AdcGpioProviderBase implements AdcGpioP
         value = value * 0.015625;
         break;
       }
-      default: throw new IllegalArgumentException();
+      default:
+        throw new IllegalArgumentException();
     }
     return 0.001 * value;
   }
 
- /**
-  * Get the requested analog input pin's conversion value.
-  * @param pin to get conversion values for
-  * @return analog input pin value in Volt
-  */
+  /**
+   * Get the requested analog input pin's conversion value.
+   *
+   * @param pin to get conversion values for
+   * @return analog input pin value in Volt
+   */
   public double getAnalogValue(GpioPinAnalogInput pin) {
     return getAnalogValue(pin.getPin());
   }
@@ -205,14 +207,14 @@ public class MCP3424GpioProvider extends AdcGpioProviderBase implements AdcGpioP
   public double getImmediateValue(final Pin pin) throws IOException {
     // Pin address to read from to device
     int command = (configuration & 0x9F) | (pin.getAddress() << 5);
-    device.write((byte)command); // Write configuration to device
+    device.write((byte) command); // Write configuration to device
 
     double rate = 0.0;
     byte data[] = null;
     switch (configuration & 0x0C) {
       case 0x00: {
         data = new byte[3];
-    	rate = 176.0 /*240.0*/;
+        rate = 176.0 /*240.0*/;
         break;
       }
       case 0x04: {
@@ -230,15 +232,16 @@ public class MCP3424GpioProvider extends AdcGpioProviderBase implements AdcGpioP
         rate = 2.75  /*3.75 */;
         break;
       }
-      default: throw new IllegalArgumentException();
+      default:
+        throw new IllegalArgumentException();
     }
 
     // Sleep current thread during conversion
     try {
-      Thread.sleep((long)Math.ceil(1000.0 / rate));
-	} catch (InterruptedException ex) {
+      Thread.sleep((long) Math.ceil(1000.0 / rate));
+    } catch (InterruptedException ex) {
       ex.printStackTrace();
-	}
+    }
 
     // Get answer from device
     device.read(data, 0, data.length);
@@ -246,32 +249,33 @@ public class MCP3424GpioProvider extends AdcGpioProviderBase implements AdcGpioP
     int answer = data[data.length - 1] & 0xFF;
     double weight = (data[0] & 0x80) == 0 ? 1 : -1;
 //    weight = weight / (1 << (answer & 0x03));
-    if(((answer & 0x60) == (command & 0x60)) && ((answer & 0x80) == 0)) {
-      if(weight < 0) {
+    if (((answer & 0x60) == (command & 0x60)) && ((answer & 0x80) == 0)) {
+      if (weight < 0) {
         for (int i = 0; i < data.length - 1; i++) {
-          data[i] = (byte)(~data[i] & 0xFF);
+          data[i] = (byte) (~data[i] & 0xFF);
         }
-        data[data.length - 2] = (byte)(data[data.length - 2] + 1);
+        data[data.length - 2] = (byte) (data[data.length - 2] + 1);
       }
 
       switch (configuration & 0x0C) {
         case 0x00: {
-          data[0] = (byte)(data[0] & 0x07);
+          data[0] = (byte) (data[0] & 0x07);
           break;
         }
         case 0x04: {
-          data[0] = (byte)(data[0] & 0x1F);
+          data[0] = (byte) (data[0] & 0x1F);
           break;
         }
         case 0x08: {
-          data[0] = (byte)(data[0] & 0x7F);
+          data[0] = (byte) (data[0] & 0x7F);
           break;
         }
         case 0x0C: {
-          data[0] = (byte)(data[0] & 0x01);
+          data[0] = (byte) (data[0] & 0x01);
           break;
         }
-        default: throw new IllegalArgumentException();
+        default:
+          throw new IllegalArgumentException();
       }
 
       int buffer = data[0] & 0xFF;
@@ -281,10 +285,10 @@ public class MCP3424GpioProvider extends AdcGpioProviderBase implements AdcGpioP
 
       // validate value within acceptable range
       double value = buffer * weight;
-	  if (value >= getMinSupportedValue() && value <= getMaxSupportedValue()) {
-		getPinCache(pin).setAnalogValue(value);
-		return value;
-	  }
+      if (value >= getMinSupportedValue() && value <= getMaxSupportedValue()) {
+        getPinCache(pin).setAnalogValue(value);
+        return value;
+      }
     }
     return INVALID_VALUE;
   }
@@ -296,30 +300,40 @@ public class MCP3424GpioProvider extends AdcGpioProviderBase implements AdcGpioP
    */
   @Override
   public double getMinSupportedValue() {
-      switch (configuration & 0x0C) {
-      case 0x00:  return -2048.0;
-      case 0x04:  return -8192.0;
-      case 0x08:  return -32768.0;
-      case 0x0C:  return -131072.0;
-      default: throw new IllegalArgumentException();
+    switch (configuration & 0x0C) {
+      case 0x00:
+        return -2048.0;
+      case 0x04:
+        return -8192.0;
+      case 0x08:
+        return -32768.0;
+      case 0x0C:
+        return -131072.0;
+      default:
+        throw new IllegalArgumentException();
     }
   }
 
   /**
    * Get the maximum supported analog value for the ADC implementation.
-   *
+   * <p>
    * (For example, a 10 bit ADC's maximum value is 1023 and a 12-bit ADC's maximum value is 4095.
    *
    * @return Returns the maximum supported analog value.
    */
   @Override
   public double getMaxSupportedValue() {
-      switch (configuration & 0x0C) {
-      case 0x00:  return 2047.0;
-      case 0x04:  return 8191.0;
-      case 0x08:  return 32767.0;
-      case 0x0C:  return 131071.0;
-      default: throw new IllegalArgumentException();
+    switch (configuration & 0x0C) {
+      case 0x00:
+        return 2047.0;
+      case 0x04:
+        return 8191.0;
+      case 0x08:
+        return 32767.0;
+      case 0x0C:
+        return 131071.0;
+      default:
+        throw new IllegalArgumentException();
     }
   }
 }

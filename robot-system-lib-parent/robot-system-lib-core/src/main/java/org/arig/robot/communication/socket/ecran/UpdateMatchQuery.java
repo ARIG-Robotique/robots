@@ -10,7 +10,7 @@ import org.arig.robot.model.ecran.EcranMatchInfo;
 @EqualsAndHashCode(callSuper = true)
 public class UpdateMatchQuery extends AbstractQueryWithData<EcranAction, EcranMatchInfo> {
 
-    public UpdateMatchQuery() {
-        super(EcranAction.UPDATE_MATCH);
-    }
+  public UpdateMatchQuery() {
+    super(EcranAction.UPDATE_MATCH);
+  }
 }

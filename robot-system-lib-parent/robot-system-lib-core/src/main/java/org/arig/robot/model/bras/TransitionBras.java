@@ -11,8 +11,8 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class TransitionBras implements Serializable {
 
-    private int speed;
+  private int speed;
 
-    private PointBras[] points;
+  private PointBras[] points;
 
 }

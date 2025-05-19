@@ -23,50 +23,50 @@ import java.util.function.Consumer;
 @RequiredArgsConstructor
 public class CANManager {
 
-    @Getter
-    private boolean scanStatus = false;
+  @Getter
+  private boolean scanStatus = false;
 
-    private final ArrayList<CANDevice> deviceMap;
+  private final ArrayList<CANDevice> deviceMap;
 
-    /**
-     * Nb device registered.
-     *
-     * @return the int
-     */
-    public int nbDeviceRegistered() {
-        return deviceMap.size();
+  /**
+   * Nb device registered.
+   *
+   * @return the int
+   */
+  public int nbDeviceRegistered() {
+    return deviceMap.size();
+  }
+
+  /**
+   * Execute scan.
+   *
+   * @throws CANException the i2 c exception
+   */
+  public final void executeScan() throws CANException {
+    Assert.notEmpty(deviceMap, "Le mapping des cartes CAN est obligatoire");
+
+    final List<String> deviceNotFound = new ArrayList<>();
+    final Consumer<CANDevice> processScan = d -> {
+      try {
+        d.scan();
+        log.info("Scan du device {} [OK]", d.signature());
+      } catch (IOException e) {
+        log.warn("Scan du device {} [KO]", d.deviceName());
+        deviceNotFound.add(d.deviceName());
+      }
+    };
+
+    // Contrôle que les devices enregistré sont bien présent.
+    log.info("Verification des devices enregistrés");
+    deviceMap.forEach(processScan);
+
+    if (!deviceNotFound.isEmpty()) {
+      scanStatus = false;
+      String errorMessage = "Tout les devices enregistrés ne sont pas disponible : " + StringUtils.join(deviceNotFound, ", ");
+      log.error(errorMessage);
+      throw new CANException(errorMessage);
     }
 
-    /**
-     * Execute scan.
-     *
-     * @throws CANException the i2 c exception
-     */
-    public final void executeScan() throws CANException {
-        Assert.notEmpty(deviceMap, "Le mapping des cartes CAN est obligatoire");
-
-        final List<String> deviceNotFound = new ArrayList<>();
-        final Consumer<CANDevice> processScan = d -> {
-            try {
-                d.scan();
-                log.info("Scan du device {} [OK]", d.signature());
-            } catch (IOException e) {
-                log.warn("Scan du device {} [KO]", d.deviceName());
-                deviceNotFound.add(d.deviceName());
-            }
-        };
-
-        // Contrôle que les devices enregistré sont bien présent.
-        log.info("Verification des devices enregistrés");
-        deviceMap.forEach(processScan);
-
-        if (!deviceNotFound.isEmpty()) {
-            scanStatus = false;
-            String errorMessage = "Tout les devices enregistrés ne sont pas disponible : " + StringUtils.join(deviceNotFound, ", ");
-            log.error(errorMessage);
-            throw new CANException(errorMessage);
-        }
-
-        scanStatus = true;
-    }
+    scanStatus = true;
+  }
 }

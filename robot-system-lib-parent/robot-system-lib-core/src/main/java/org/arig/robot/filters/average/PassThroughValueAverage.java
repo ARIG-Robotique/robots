@@ -10,20 +10,21 @@ import lombok.experimental.Accessors;
  */
 public class PassThroughValueAverage<T> implements Average<T> {
 
-    @Getter
-    @Accessors(fluent = true)
-    private final int size = 0;
+  @Getter
+  @Accessors(fluent = true)
+  private final int size = 0;
 
-    @Getter
-    @Accessors(fluent = true)
-    private T lastResult;
+  @Getter
+  @Accessors(fluent = true)
+  private T lastResult;
 
-    @Override
-    public void setNbValues(int nbValues) { }
+  @Override
+  public void setNbValues(int nbValues) {
+  }
 
-    @Override
-    public T filter(T newValue) {
-        lastResult = newValue;
-        return lastResult;
-    }
+  @Override
+  public T filter(T newValue) {
+    lastResult = newValue;
+    return lastResult;
+  }
 }

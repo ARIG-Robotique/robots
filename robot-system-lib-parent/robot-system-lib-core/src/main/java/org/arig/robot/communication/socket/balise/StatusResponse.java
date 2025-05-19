@@ -4,5 +4,5 @@ import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
 public class StatusResponse
-    extends AbstractBaliseResponseWithData<StatusResponseData> {
+  extends AbstractBaliseResponseWithData<StatusResponseData> {
 }

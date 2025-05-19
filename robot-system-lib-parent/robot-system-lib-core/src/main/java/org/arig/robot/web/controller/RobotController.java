@@ -19,15 +19,15 @@ import java.util.Map;
 @Profile(ConstantesConfig.profileMonitoring)
 public class RobotController {
 
-    @Autowired
-    private RobotName robotName;
+  @Autowired
+  private RobotName robotName;
 
-    @GetMapping("/robot")
-    public Map<String, String> name() {
-        Map<String, String> v = new LinkedHashMap<>();
-        v.put("nom", robotName.name());
-        v.put("version", robotName.version());
+  @GetMapping("/robot")
+  public Map<String, String> name() {
+    Map<String, String> v = new LinkedHashMap<>();
+    v.put("nom", robotName.name());
+    v.put("version", robotName.version());
 
-        return v;
-    }
+    return v;
+  }
 }

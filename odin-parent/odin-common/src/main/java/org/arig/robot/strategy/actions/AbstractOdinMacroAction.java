@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 public abstract class AbstractOdinMacroAction extends AbstractMacroAction {
 
-    @Autowired
-    protected OdinRobotStatus rs;
+  @Autowired
+  protected OdinRobotStatus rs;
 
 }

@@ -10,16 +10,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class OdinCapteursController extends AbstractCapteursController {
 
-    @Autowired
-    private OdinRobotStatus robotStatus;
+  @Autowired
+  private OdinRobotStatus robotStatus;
 
-    @Autowired
-    private OdinIOService ioService;
+  @Autowired
+  private OdinIOService ioService;
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        super.afterPropertiesSet();
+  @Override
+  public void afterPropertiesSet() throws Exception {
+    super.afterPropertiesSet();
 
-        textInfos.put("Equipe", () -> (robotStatus.team() != null) ? robotStatus.team().name() : "???");
-    }
+    textInfos.put("Equipe", () -> (robotStatus.team() != null) ? robotStatus.team().name() : "???");
+  }
 }

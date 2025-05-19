@@ -11,25 +11,25 @@ import org.springframework.shell.standard.commands.Quit;
 @ShellComponent
 public class NerellQuitCommand implements Quit.Command {
 
-    private final ILidarTelemeter lidar;
-    private final NerellIOService ioService;
+  private final ILidarTelemeter lidar;
+  private final NerellIOService ioService;
 
-    public NerellQuitCommand(@Qualifier("rplidar") ILidarTelemeter lidar, NerellIOService ioService) {
-        this.lidar = lidar;
-        this.ioService = ioService;
-    }
+  public NerellQuitCommand(@Qualifier("rplidar") ILidarTelemeter lidar, NerellIOService ioService) {
+    this.lidar = lidar;
+    this.ioService = ioService;
+  }
 
-    @ShellMethod(value = "Exit the shell.", key = {"quit", "exit"})
-    public void quit() {
+  @ShellMethod(value = "Exit the shell.", key = {"quit", "exit"})
+  public void quit() {
 
-        // Stop le lidar en quittant
-        lidar.stopScan();
-        lidar.end();
+    // Stop le lidar en quittant
+    lidar.stopScan();
+    lidar.end();
 
-        // Stop les alimentations de puissance
-        ioService.disableAlimMoteurs();
-        ioService.disableAlimServos();
+    // Stop les alimentations de puissance
+    ioService.disableAlimMoteurs();
+    ioService.disableAlimServos();
 
-        throw new ExitRequest();
-    }
+    throw new ExitRequest();
+  }
 }

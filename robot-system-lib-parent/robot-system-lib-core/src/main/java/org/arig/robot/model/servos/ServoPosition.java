@@ -8,11 +8,11 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true, fluent = true)
 public class ServoPosition {
 
-    @JsonProperty("name")
-    private String name;
-    @JsonProperty("value")
-    private int value;
-    @JsonProperty("speed")
-    private byte speed;
+  @JsonProperty("name")
+  private String name;
+  @JsonProperty("value")
+  private int value;
+  @JsonProperty("speed")
+  private byte speed;
 
 }

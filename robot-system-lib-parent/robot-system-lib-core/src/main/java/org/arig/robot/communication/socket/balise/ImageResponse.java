@@ -6,6 +6,6 @@ import java.io.Serializable;
 
 @EqualsAndHashCode(callSuper = true)
 public class ImageResponse
-    extends AbstractBaliseResponseWithData<ImageResponseData>
-    implements Serializable {
+  extends AbstractBaliseResponseWithData<ImageResponseData>
+  implements Serializable {
 }

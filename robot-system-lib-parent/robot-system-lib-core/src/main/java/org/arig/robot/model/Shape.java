@@ -5,9 +5,9 @@ package org.arig.robot.model;
  */
 public abstract class Shape {
 
-    public abstract ShapeType getType();
+  public abstract ShapeType getType();
 
-    protected enum ShapeType {
-        RECTANGLE, CIRCLE
-    }
+  protected enum ShapeType {
+    RECTANGLE, CIRCLE
+  }
 }

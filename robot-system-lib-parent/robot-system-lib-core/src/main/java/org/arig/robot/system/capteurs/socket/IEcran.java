@@ -8,12 +8,16 @@ import org.arig.robot.model.ecran.EcranPhoto;
 
 public interface IEcran<CONFIG extends AbstractEcranConfig, STATE extends AbstractEcranState> {
 
-    void end();
+  void end();
 
-    boolean setParams(EcranParams params);
-    CONFIG configInfos();
-    boolean updateState(STATE data);
-    boolean updateMatch(EcranMatchInfo data);
-    void updatePhoto(EcranPhoto photo);
+  boolean setParams(EcranParams params);
+
+  CONFIG configInfos();
+
+  boolean updateState(STATE data);
+
+  boolean updateMatch(EcranMatchInfo data);
+
+  void updatePhoto(EcranPhoto photo);
 
 }

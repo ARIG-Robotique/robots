@@ -22,90 +22,90 @@ import java.util.Random;
 @NoArgsConstructor
 public class LidarTelemeterBouchon implements ILidarTelemeter {
 
-    private final Random random = new Random();
+  private final Random random = new Random();
 
-    @Getter
-    @Setter
-    private boolean enabled = true;
+  @Getter
+  @Setter
+  private boolean enabled = true;
 
-    @Getter
-    private final boolean clusterable = true;
+  @Getter
+  private final boolean clusterable = true;
 
-    @Override
-    public void printDeviceInfo() {
-        DeviceInfos d = deviceInfo();
-        log.info("Lidar Bouchon version [Firmware : {} ; Hardware {} ; Serial number : {}",
-                d.getFirmwareVersion(), d.getHardwareVersion(), d.getSerialNumber());
-    }
+  @Override
+  public void printDeviceInfo() {
+    DeviceInfos d = deviceInfo();
+    log.info("Lidar Bouchon version [Firmware : {} ; Hardware {} ; Serial number : {}",
+      d.getFirmwareVersion(), d.getHardwareVersion(), d.getSerialNumber());
+  }
 
-    @Override
-    public boolean isOpen() {
-        return true;
-    }
+  @Override
+  public boolean isOpen() {
+    return true;
+  }
 
-    @Override
-    public void end() {
-        // NOOP
-    }
+  @Override
+  public void end() {
+    // NOOP
+  }
 
-    @Override
-    public DeviceInfos deviceInfo() {
-        DeviceInfos r = new DeviceInfos();
-        r.setHardwareVersion((short) -1);
-        r.setSerialNumber("1234567890");
-        r.setFirmwareVersion("BOUCHON");
+  @Override
+  public DeviceInfos deviceInfo() {
+    DeviceInfos r = new DeviceInfos();
+    r.setHardwareVersion((short) -1);
+    r.setSerialNumber("1234567890");
+    r.setFirmwareVersion("BOUCHON");
 
-        return r;
-    }
+    return r;
+  }
 
-    @Override
-    public HealthInfos healthInfo() {
-        HealthInfos r = new HealthInfos();
-        r.setState(HealthState.OK);
+  @Override
+  public HealthInfos healthInfo() {
+    HealthInfos r = new HealthInfos();
+    r.setState(HealthState.OK);
 
-        return r;
-    }
+    return r;
+  }
 
-    @Override
-    public void startScan() {
-        startScan((short) -1);
-    }
+  @Override
+  public void startScan() {
+    startScan((short) -1);
+  }
 
-    @Override
-    public void startScan(Short speed) {
-        // NOOP
-    }
+  @Override
+  public void startScan(Short speed) {
+    // NOOP
+  }
 
-    @Override
-    public void stopScan() {
-        // NOOP
-    }
+  @Override
+  public void stopScan() {
+    // NOOP
+  }
 
-    @Override
-    public void setSpeed(Short speed) {
-        // NOOP
-    }
+  @Override
+  public void setSpeed(Short speed) {
+    // NOOP
+  }
 
-    @Override
-    public void setConfiguration(boolean reverse, int offsetAngle, int excludeLowerThan, int excludeGreaterThan) {
-        // NOOP
-    }
+  @Override
+  public void setConfiguration(boolean reverse, int offsetAngle, int excludeLowerThan, int excludeGreaterThan) {
+    // NOOP
+  }
 
-    @Override
-    public ScanInfos grabData() {
-        ScanInfos r = new ScanInfos();
-        r.setIgnored((short) 359);
+  @Override
+  public ScanInfos grabData() {
+    ScanInfos r = new ScanInfos();
+    r.setIgnored((short) 359);
 
-        List<Scan> scans = new ArrayList<>();
-        r.setScan(scans);
+    List<Scan> scans = new ArrayList<>();
+    r.setScan(scans);
 
-        Scan s = new Scan();
-        scans.add(s);
+    Scan s = new Scan();
+    scans.add(s);
 
-        s.setQuality((short) 47);
-        s.setDistanceMm(random.nextInt(3000) + 500);
-        s.setAngleDeg(random.nextInt(360));
+    s.setQuality((short) 47);
+    s.setDistanceMm(random.nextInt(3000) + 500);
+    s.setAngleDeg(random.nextInt(360));
 
-        return r;
-    }
+    return r;
+  }
 }
