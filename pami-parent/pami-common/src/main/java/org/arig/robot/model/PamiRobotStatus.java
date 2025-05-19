@@ -21,12 +21,16 @@ public class PamiRobotStatus extends EurobotStatus {
     private boolean showTime = false;
 
     public void enableShowTime() {
-        log.info("[RS] Enabling show time");
-        showTime = true;
+        if (!showTime) {
+            log.info("[RS] Enabling show time");
+            showTime = true;
+        }
     }
 
     public void disableShowTime() {
-        log.info("[RS] Disabling show time");
-        showTime = false;
+        if (showTime) {
+            log.info("[RS] Disabling show time");
+            showTime = false;
+        }
     }
 }
