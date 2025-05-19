@@ -4,6 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.EurobotConfig;
 import org.arig.robot.model.EurobotStatus;
 import org.arig.robot.model.GradinBrut;
+import org.arig.robot.model.Point;
+import org.arig.robot.model.RobotName;
 import org.arig.robot.model.Team;
 import org.arig.robot.utils.TableUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,9 @@ public class GameMultiPathFinderImpl extends MultiPathFinderImpl {
     private EurobotStatus rs;
 
     @Autowired
+    private RobotName robotName;
+
+    @Autowired
     private TableUtils tableUtils;
 
     @Override
@@ -35,22 +40,35 @@ public class GameMultiPathFinderImpl extends MultiPathFinderImpl {
     }
 
     private void obstaclesPami(List<Shape> obstacles) {
-        // Scene
+        // Scene adverse
         if (rs.team() == Team.JAUNE) {
             obstacles.add(new Rectangle(150 - rayonPamiCm, 155 - rayonPamiCm, 150 + (2 * rayonPamiCm), 45 + rayonPamiCm));
         } else {
             obstacles.add(new Rectangle(0, 155 - rayonPamiCm, 150 + (2 * rayonPamiCm), 45 + rayonPamiCm));
         }
 
-        // Zone retour de Nerell
-        if (rs.team() == Team.JAUNE) {
-            obstacles.add(new Rectangle(0, 110, 60, 45));
+        // Scene equipe
+        if (robotName.id() == RobotName.RobotIdentification.PAMI_TRIANGLE) {
+            // Super star, pas de "table", que de la scene
+            if (rs.team() == Team.JAUNE) {
+                obstacles.add(new Rectangle(0, 155, 105 + rayonPamiCm, 25 + rayonPamiCm));
+            } else {
+                obstacles.add(new Rectangle(150 - rayonPamiCm, 155, 105 + rayonPamiCm, 25 + rayonPamiCm));
+            }
         } else {
-            obstacles.add(new Rectangle(240, 110, 60, 45));
-        }
+            // PAMI, pas de "scene", que de la table
+            ajoutScene(obstacles);
 
-        // Zone table sans interret
-        obstacles.add(new Rectangle(0, 0, 300, 110));
+            // Zone retour de Nerell
+            if (rs.team() == Team.JAUNE) {
+                obstacles.add(new Rectangle(0, 110, 60, 45));
+            } else {
+                obstacles.add(new Rectangle(240, 110, 60, 45));
+            }
+
+            // Zone table sans interret
+            obstacles.add(new Rectangle(0, 0, 300, 110));
+        }
     }
 
     private void obstaclesRobot(List<Shape> obstacles) {
@@ -61,15 +79,15 @@ public class GameMultiPathFinderImpl extends MultiPathFinderImpl {
             obstacles.add(new Rectangle(285 - rayonRobotCm, 155 - rayonRobotCm, 15 + rayonRobotCm, 45 + (2 * rayonRobotCm)));
         }
 
+        // Pas de scene pour les robots
+        ajoutScene(obstacles);
+
         // Zone de déplacement des pamis
         if (rs.getRemainingTime() <= EurobotConfig.validRetourBackstageRemainingTime) {
-            if (rs.team() == Team.JAUNE) {
-                obstacles.add(new Rectangle(60 - rayonRobotCm, 148 - rayonRobotCm, 45 + (2 * rayonRobotCm), 80 + (2 * rayonRobotCm)));
-            } else {
-                obstacles.add(new Rectangle(195 - rayonRobotCm, 148 - rayonRobotCm, 45 + (2 * rayonRobotCm), 80 + (2 * rayonRobotCm)));
-            }
 
-            obstacles.add(new Rectangle(105 - rayonRobotCm, 110 - rayonRobotCm, 90 + (2 * rayonRobotCm), 90 + (2 * rayonRobotCm)));
+            // /!\ Create polygon obstacle travaille en MM, et retourne en CM
+            Polygon pol = tableUtils.createPolygonObstacle(new Point(1500, 2000), (85 + rayonRobotCm) * 20);
+            obstacles.add(pol);
         }
 
         // Zones adverses
@@ -158,6 +176,11 @@ public class GameMultiPathFinderImpl extends MultiPathFinderImpl {
                 }
             }
         }
+    }
+
+    private void ajoutScene(List<Shape> obstacles) {
+        obstacles.add(new Rectangle(65 - rayonPamiCm, 180 - rayonPamiCm, 235 + (2 * rayonPamiCm), 20 + rayonPamiCm));
+        obstacles.add(new Rectangle(105 - rayonPamiCm, 155 - rayonPamiCm, 90 + (2 * rayonPamiCm), 45 + rayonPamiCm));
     }
 
     private Rectangle getObstacleGradin(int x, int y, GradinBrut.Orientation orientation) {
