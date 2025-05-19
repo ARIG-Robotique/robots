@@ -139,6 +139,7 @@ public class PamiOrdonanceur extends AbstractOrdonanceur {
     public void beforePowerOff() {
         pamiServosService.handFerme(true);
         leds.setAllLeds(ARIG2025IoPamiLeds.LedColor.Red);
+        ThreadUtils.sleep(2000);
     }
 
     /**
