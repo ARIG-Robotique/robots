@@ -62,7 +62,7 @@ public class GameMultiPathFinderImpl extends MultiPathFinderImpl {
         }
 
         // Zone de déplacement des pamis
-        if (rs.getRemainingTime() <= EurobotConfig.validRetourBackstageRemainingTimeNerell) {
+        if (rs.getRemainingTime() <= EurobotConfig.validRetourBackstageRemainingTime) {
             if (rs.team() == Team.JAUNE) {
                 obstacles.add(new Rectangle(60 - rayonRobotCm, 148 - rayonRobotCm, 45 + (2 * rayonRobotCm), 80 + (2 * rayonRobotCm)));
             } else {
@@ -149,7 +149,7 @@ public class GameMultiPathFinderImpl extends MultiPathFinderImpl {
         }
 
         // Ajout des gradins bruts (en stocks)
-        if (rs.getRemainingTime() > EurobotConfig.validRetourBackstageRemainingTimeNerell) {
+        if (rs.getRemainingTime() > EurobotConfig.validRetourBackstageRemainingTime) {
             for (GradinBrut gradin : rs.gradinBrutStocks()) {
                 if (gradin.present()) {
                     double x = gradin.getX() / 10;

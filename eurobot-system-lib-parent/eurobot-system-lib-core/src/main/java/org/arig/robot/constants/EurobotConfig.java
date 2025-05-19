@@ -9,13 +9,13 @@ public interface EurobotConfig {
     int pamiStartRemainingTimeMs = 15300;
 
     // Temps restants
-    int validRetourBackstageRemainingTimeNerell = 10000;
-    int validPriseAdverseRemainingTimeNerell = 30000;
-    int validDeposeDeuxFacesNonPleineRemainingTimeNerell = 30000;
+    int validRetourBackstageRemainingTime = 10000;
+    int validPriseRemainingTime = 20000;
+    int validPriseAdverseRemainingTime = 30000;
     int validPriseDeuxFacesPleineRemainingTime = 30000;
-    int validTimeConstructionRemainingTime = 15000;
-    int validTimePriseRemainingTime = 20000;
-    int validTimeEchappementRemainingTime = 10000;
+    int validDeposeDeuxFacesNonPleineRemainingTime = 30000;
+    int validDeposeRemainingTime = 15000;
+    int validEchappementRemainingTime = 10000;
 
     // Valeurs min / max en mm des axes du repères
     int tableWidth = 3000;

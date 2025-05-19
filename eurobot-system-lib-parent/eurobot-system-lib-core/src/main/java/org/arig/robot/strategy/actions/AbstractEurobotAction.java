@@ -78,7 +78,7 @@ public abstract class AbstractEurobotAction extends AbstractAction {
 
     protected boolean ilEstTempsDeRentrer() {
         if (robotName.id() == RobotIdentification.NERELL) {
-            return rs.getRemainingTime() < EurobotConfig.validRetourBackstageRemainingTimeNerell;
+            return rs.getRemainingTime() < EurobotConfig.validRetourBackstageRemainingTime;
         }
 
         return false;

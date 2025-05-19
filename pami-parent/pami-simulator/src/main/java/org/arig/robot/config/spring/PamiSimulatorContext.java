@@ -19,6 +19,7 @@ import org.arig.robot.system.capteurs.VisionBaliseBouchon;
 import org.arig.robot.system.capteurs.i2c.IAlimentationSensor;
 import org.arig.robot.system.capteurs.socket.ILidarTelemeter;
 import org.arig.robot.system.capteurs.socket.IVisionBalise;
+import org.arig.robot.system.capteurs.socket.LD19LidarTelemeterOverSocket;
 import org.arig.robot.system.encoders.BouchonARIG2WheelsEncoders;
 import org.arig.robot.system.encoders.i2c.ARIGI2C2WheelsEncoders;
 import org.arig.robot.system.leds.ARIG2025IoPamiLeds;
