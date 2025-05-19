@@ -42,6 +42,12 @@ public abstract class AbstractDeposeGradin extends AbstractNerellAction {
       order += nbEtageArriere == 2 ? 12 : 4;
     }
 
+    if (constructionArea().nbRang() == 1) {
+      if (rs.limiter2Etages() && order > 12) {
+        order = 12;
+      }
+    }
+
     return order + tableUtils.alterOrder(entryPoint()); // Deux niveaux
   }
 
