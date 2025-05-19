@@ -93,7 +93,6 @@ public class PamiTasksScheduler {
                   ARIG2025IoPamiLeds.LedColor.Yellow : ARIG2025IoPamiLeds.LedColor.Blue;
             switch(ledsCounter) {
                 case 0:
-                case 9:
                     leds.setAllLeds(ARIG2025IoPamiLeds.LedColor.Black);
                     break;
                 case 1:
@@ -126,9 +125,12 @@ public class PamiTasksScheduler {
                 case 8:
                   leds.setLedColor(ARIG2025IoPamiLeds.LedId.LED7, ledColor);
                   break;
+                case 9:
+                    leds.setAllLeds(ARIG2025IoPamiLeds.LedColor.Black);
+                    break;
             }
             ledsCounter++;
-            if (ledsCounter > 15) {
+            if (ledsCounter > 9) {
                 ledsCounter = 0;
             }
         }
