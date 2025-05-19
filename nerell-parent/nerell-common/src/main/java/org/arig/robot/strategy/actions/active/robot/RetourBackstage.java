@@ -17,8 +17,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class RetourBackstage extends AbstractNerellAction {
 
-    private static final int FINAL_X_GRADIN = 350;
-    private static final int FINAL_X_FREE = 190;
+    private static final int FINAL_X= 350;
     private static final int ENTRY_Y = 1400;
     private final Position position;
 
@@ -39,9 +38,7 @@ public class RetourBackstage extends AbstractNerellAction {
 
     @Override
     public Point entryPoint() {
-        //GradinBrut.ID gradinId = rs.team() == Team.JAUNE ? GradinBrut.ID.JAUNE_HAUT_GAUCHE : GradinBrut.ID.BLEU_HAUT_DROITE;
-        //final int entryX = rs.gradinBrutStocks().get(gradinId).present() ? FINAL_X_GRADIN : FINAL_X_FREE;
-        return new Point(getX(FINAL_X_GRADIN), ENTRY_Y);
+        return new Point(getX(FINAL_X), ENTRY_Y);
     }
 
     @Override
