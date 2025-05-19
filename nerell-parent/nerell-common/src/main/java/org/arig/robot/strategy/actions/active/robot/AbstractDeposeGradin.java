@@ -66,7 +66,7 @@ public abstract class AbstractDeposeGradin extends AbstractNerellAction {
     }
 
     // Plus le temps de construire, on ne peut pas déposer
-    if (rs.getRemainingTime() < EurobotConfig.validTimeConstruction) {
+    if (rs.getRemainingTime() < EurobotConfig.validTimeConstructionRemainingTime) {
       return false;
     }
 

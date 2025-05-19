@@ -12,11 +12,9 @@ public interface EurobotConfig {
     int validRetourBackstageRemainingTimeNerell = 10000;
     int validPriseAdverseRemainingTimeNerell = 30000;
     int validDeposeDeuxFacesNonPleineRemainingTimeNerell = 30000;
-
-    // Durée de validités
-    int validTimeEchappement = 20000;
-    int validTimeConstruction = 20000;
-    int validTimePrise = 25000;
+    int validTimeConstructionRemainingTime = 15000;
+    int validTimePriseRemainingTime = 20000;
+    int validTimeEchappementRemainingTime = validRetourBackstageRemainingTimeNerell;
 
     // Valeurs min / max en mm des axes du repères
     int tableWidth = 3000;
