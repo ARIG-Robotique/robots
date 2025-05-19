@@ -86,32 +86,35 @@ public abstract class AbstractDeposeGradin extends AbstractNerellAction {
     mv.setVitessePercent(100, 100);
 
     try {
-      mv.pathTo(entryPoint());
+      int nbDeposeCombine = !rs.faceAvant().isEmpty() ? 1 : 0;
+      nbDeposeCombine += !rs.faceArriere().isEmpty() ? 1 : 0;
+      for (int i = 0; i < nbDeposeCombine; i++) {
+        mv.pathTo(entryPoint());
 
-      ConstructionArea.Rang rang = constructionArea().getFirstConstructibleRang(rs.limiter2Etages());
-      ConstructionArea.Etage etage = constructionArea().getFirstConstructibleEtage(rang, rs.limiter2Etages());
+        ConstructionArea.Rang rang = constructionArea().getFirstConstructibleRang(rs.limiter2Etages());
+        ConstructionArea.Etage etage = constructionArea().getFirstConstructibleEtage(rang, rs.limiter2Etages());
 
-      log.info("Dépose dans le {} sur {}", rang.name(), etage.name());
+        log.info("Dépose dans le {} sur {}", rang.name(), etage.name());
 
-      final int nbEtageRequis;
-      if (rs.limiter2Etages()) {
-        // Si on limite a 2 étage soit 1 ou 2 étage
-        nbEtageRequis = etage == ConstructionArea.Etage.ETAGE_1 ? 2 : 1;
-      } else {
-        throw new RuntimeException("Impossible de déposer sur un rang sans limite a 2 étages. Pour le moment 😅");
+        final int nbEtageRequis;
+        if (rs.limiter2Etages()) {
+          // Si on limite a 2 étage soit 1 ou 2 étage
+          nbEtageRequis = etage == ConstructionArea.Etage.ETAGE_1 ? 2 : 1;
+        } else {
+          throw new RuntimeException("Impossible de déposer sur un rang sans limite a 2 étages. Pour le moment 😅");
+        }
+        log.info("Demande de construction de {} etage(s).", nbEtageRequis);
+
+        NerellFaceWrapper.Face face = faceWrapper.getConstructionFace(nbEtageRequis);
+        if (face == null) {
+          log.warn("Pas de face pour la dépose de {} étage(s)", nbEtageRequis);
+          return;
+        }
+        AbstractNerellFaceService faceService = faceWrapper.getFaceService(face);
+
+        Point rangPosition = rangPosition(rang);
+        faceService.deposeGradin(constructionArea(), rangPosition, rang, etage, nbEtageRequis);
       }
-      log.info("Demande de construction de {} etage(s).", nbEtageRequis);
-
-      NerellFaceWrapper.Face face = faceWrapper.getConstructionFace(nbEtageRequis);
-      if (face == null) {
-        log.warn("Pas de face pour la dépose de {} étage(s)", nbEtageRequis);
-        return;
-      }
-      AbstractNerellFaceService faceService = faceWrapper.getFaceService(face);
-
-      Point rangPosition = rangPosition(rang);
-      faceService.deposeGradin(constructionArea(), rangPosition, rang, etage, nbEtageRequis);
-
     } catch (NoPathFoundException | AvoidingException e) {
       log.warn("Erreur prise {} : {}", name(), e.toString());
       updateValidTime();
