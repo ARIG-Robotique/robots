@@ -153,7 +153,7 @@ public class PamiRobotContext {
 
   @Bean
   public LidarBridgeProcess lidarBridgeProcess() {
-    return new LidarBridgeProcess("/home/pi/lidar_bridge", "ldlidar");
+    return new LidarBridgeProcess("/home/pi/lidar_bridge", LD19LidarTelemeterOverSocket.DRIVER_NAME);
   }
 
   @Bean("lidar")

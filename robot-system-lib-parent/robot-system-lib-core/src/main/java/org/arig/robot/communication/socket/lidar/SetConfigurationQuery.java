@@ -25,7 +25,7 @@ public class SetConfigurationQuery extends AbstractQueryWithData<LidarAction, Co
     getData().setReversed(reversed);
   }
 
-  public void setAngleOffset(Integer angleOffset) {
+  public void setAngleOffset(Double angleOffset) {
     if (angleOffset == null) {
       return;
     }

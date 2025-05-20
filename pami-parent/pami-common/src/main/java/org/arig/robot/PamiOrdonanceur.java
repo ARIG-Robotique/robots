@@ -73,7 +73,7 @@ public class PamiOrdonanceur extends AbstractOrdonanceur {
   @Override
   protected void initLidar() {
     super.initLidar();
-    lidar.setConfiguration(true, 33, 50, 1500);
+    lidar.setConfiguration(true, 20.23, 50, 1500);
   }
 
   @Override

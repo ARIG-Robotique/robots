@@ -18,22 +18,18 @@ import org.arig.robot.system.capteurs.VisionBaliseBouchon;
 import org.arig.robot.system.capteurs.i2c.IAlimentationSensor;
 import org.arig.robot.system.capteurs.socket.ILidarTelemeter;
 import org.arig.robot.system.capteurs.socket.IVisionBalise;
-import org.arig.robot.system.capteurs.socket.LD19LidarTelemeterOverSocket;
 import org.arig.robot.system.encoders.BouchonARIG2WheelsEncoders;
 import org.arig.robot.system.encoders.i2c.ARIGI2C2WheelsEncoders;
 import org.arig.robot.system.leds.ARIG2025IoPamiLeds;
 import org.arig.robot.system.motors.AbstractPropulsionsMotors;
 import org.arig.robot.system.motors.BouchonPropulsionsMotors;
 import org.arig.robot.system.process.EcranProcess;
-import org.arig.robot.system.process.LidarBridgeProcess;
 import org.arig.robot.system.servos.AbstractServos;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.support.ResourcePatternResolver;
 
-import java.io.File;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.List;
@@ -130,7 +126,7 @@ public class PamiSimulatorContext {
   }
 
   @Bean("lidar")
-  public ILidarTelemeter rplidar() {
+  public ILidarTelemeter lidar() {
     return new LidarTelemeterBouchon();
   }
 

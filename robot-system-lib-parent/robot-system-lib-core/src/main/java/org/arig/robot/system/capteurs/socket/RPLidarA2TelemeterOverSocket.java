@@ -11,6 +11,8 @@ import java.io.File;
 @Slf4j
 public class RPLidarA2TelemeterOverSocket extends AbstractTelemeterOverSocket {
 
+  public static final String DRIVER_NAME = "rplidar";
+
   public static short LOW_MORTOR_PWM = 250;
   public static short MAX_MOTOR_PWM = 1023;
   public static short DEFAULT_MOTOR_PWM = 660;

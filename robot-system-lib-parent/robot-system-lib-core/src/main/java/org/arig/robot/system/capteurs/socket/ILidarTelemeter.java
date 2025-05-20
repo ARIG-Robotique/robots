@@ -34,7 +34,7 @@ public interface ILidarTelemeter {
 
   void setSpeed(Short speed);
 
-  void setConfiguration(boolean reverse, int offsetAngle, int excludeLowerThan, int excludeGreaterThan);
+  void setConfiguration(boolean reverse, double offsetAngle, int excludeLowerThan, int excludeGreaterThan);
 
   Point getSensorOrigin();
 

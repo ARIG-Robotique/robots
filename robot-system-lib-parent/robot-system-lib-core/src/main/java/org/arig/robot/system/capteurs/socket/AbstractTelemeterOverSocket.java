@@ -159,7 +159,7 @@ public abstract class AbstractTelemeterOverSocket extends AbstractSocketClient<L
   }
 
   @Override
-  public void setConfiguration(boolean reverse, int offsetAngle, int excludeLowerThan, int excludeGreaterThan) {
+  public void setConfiguration(boolean reverse, double offsetAngle, int excludeLowerThan, int excludeGreaterThan) {
     try {
       openIfNecessary();
       SetConfigurationQuery q = new SetConfigurationQuery();

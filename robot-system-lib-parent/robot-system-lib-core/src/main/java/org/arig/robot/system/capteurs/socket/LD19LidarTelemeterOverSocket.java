@@ -8,6 +8,8 @@ import java.io.File;
 @Slf4j
 public class LD19LidarTelemeterOverSocket extends AbstractTelemeterOverSocket {
 
+  public static final String DRIVER_NAME = "ldlidar";
+
   public LD19LidarTelemeterOverSocket(String hostname, Integer port) throws Exception {
     this(hostname, port, 1000);
   }
