@@ -14,7 +14,7 @@ public class NerellQuitCommand implements Quit.Command {
   private final ILidarTelemeter lidar;
   private final NerellIOService ioService;
 
-  public NerellQuitCommand(@Qualifier("rplidar") ILidarTelemeter lidar, NerellIOService ioService) {
+  public NerellQuitCommand(@Qualifier("lidar") ILidarTelemeter lidar, NerellIOService ioService) {
     this.lidar = lidar;
     this.ioService = ioService;
   }

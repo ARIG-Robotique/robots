@@ -54,7 +54,7 @@ public class StrategyManagerTestContext {
     return new Position();
   }
 
-  @Bean("rplidar")
+  @Bean("lidar")
   public ILidarTelemeter lidarTelemeter() {
     return new LidarTelemeterMock();
   }

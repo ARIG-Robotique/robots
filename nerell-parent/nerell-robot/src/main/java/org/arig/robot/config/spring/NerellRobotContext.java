@@ -160,9 +160,9 @@ public class NerellRobotContext {
     return new LidarBridgeProcess("/home/pi/rplidar_bridge");
   }
 
-  @Bean("rplidar")
-  @DependsOn("rplidarBridgeProcess")
-  public ILidarTelemeter rplidar() throws Exception {
+  @Bean("lidar")
+  @DependsOn("lidarBridgeProcess")
+  public ILidarTelemeter lidar() throws Exception {
     final File socketFile = new File(LidarBridgeProcess.socketPath);
     return new RPLidarA2TelemeterOverSocket(socketFile);
   }

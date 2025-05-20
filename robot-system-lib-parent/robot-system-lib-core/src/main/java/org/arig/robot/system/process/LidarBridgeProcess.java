@@ -22,14 +22,20 @@ public class LidarBridgeProcess implements InitializingBean, DisposableBean {
   private Process p;
   private final String executablePath;
   private final String driver;
-
-  public LidarBridgeProcess(String executablePath) {
-    this(executablePath, null);
-  }
+  private final String comFile;
 
   public LidarBridgeProcess(String executablePath, String driver) {
+    this(executablePath, driver, null);
+  }
+
+  public LidarBridgeProcess(String executablePath, String driver, String comFile) {
     this.executablePath = executablePath;
     this.driver = driver;
+    if (StringUtils.isBlank(comFile)) {
+      this.comFile = "/dev/" + driver;
+    } else {
+      this.comFile = comFile;
+    }
   }
 
   @Override
@@ -43,26 +49,8 @@ public class LidarBridgeProcess implements InitializingBean, DisposableBean {
     args.add(executablePath);
     args.add("unix");
     args.add(socketPath);
-    if (StringUtils.isNotBlank(driver)) {
-      args.add(driver); // Driver
-
-      File devDir = new File("/dev");
-      File[] ttyUSBFiles = devDir.listFiles((dir, name) -> name.startsWith("ttyUSB"));
-      if (ttyUSBFiles != null && ttyUSBFiles.length > 0) {
-        log.info("Liste des descripteurs de périphérique USB :");
-        for (File file : ttyUSBFiles) {
-          log.info(" - {}", file.getAbsolutePath());
-        }
-        args.add(ttyUSBFiles[0].getAbsolutePath());
-      } else {
-        throw new IllegalStateException("Aucun périphérique USB trouvé dans /dev");
-      }
-    } else {
-      File ttyLidar = new File("/dev/ttyUSB0");
-      if (!ttyLidar.exists()) {
-        throw new IllegalStateException("Le périphérique " + ttyLidar.getAbsolutePath() + " n'existe pas");
-      }
-    }
+    args.add(driver); // Driver
+    args.add(comFile); // Port
 
     log.info("Lancement du process Lidar Bridge avec les paramètres : {}", StringUtils.join(args, " "));
     ProcessBuilder pb = new ProcessBuilder(args.toArray(new String[args.size()]));

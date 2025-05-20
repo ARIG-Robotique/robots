@@ -193,12 +193,12 @@ public class OdinRobotContext {
   }
 
   @Bean
-  public RPLidarBridgeProcess rplidarBridgeProcess() {
-    return new RPLidarBridgeProcess("/home/pi/rplidar_bridge");
+  public LidarBridgeProcess lidarBridgeProcess() {
+    return new RPLidarBridgeProcess("/home/pi/lidar_bridge");
   }
 
   @Bean
-  @DependsOn("rplidarBridgeProcess")
+  @DependsOn("lidarBridgeProcess")
   public ILidarTelemeter rplidar() throws Exception {
     final File socketFile = new File(RPLidarBridgeProcess.socketPath);
     return new RPLidarA2TelemeterOverSocket(socketFile);

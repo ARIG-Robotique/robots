@@ -82,7 +82,7 @@ public abstract class AbstractOrdonanceur {
   protected MonitoringWrapper monitoringWrapper;
 
   @Autowired
-  @Qualifier("rplidar")
+  @Qualifier("lidar")
   protected ILidarTelemeter lidar;
 
   @Autowired

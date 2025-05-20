@@ -261,7 +261,7 @@ public class NerellCommonContext {
   }
 
   @Bean
-  @DependsOn({"ecran", "rplidar"})
+  @DependsOn({"ecran", "lidar"})
   public NerellOrdonanceur ordonanceur() {
     return new NerellOrdonanceur();
   }

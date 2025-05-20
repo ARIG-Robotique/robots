@@ -152,13 +152,13 @@ public class PamiRobotContext {
   }
 
   @Bean
-  public LidarBridgeProcess rplidarBridgeProcess() {
+  public LidarBridgeProcess lidarBridgeProcess() {
     return new LidarBridgeProcess("/home/pi/lidar_bridge", "ldlidar");
   }
 
-  @Bean("rplidar")
-  @DependsOn("rplidarBridgeProcess")
-  public ILidarTelemeter rplidar() throws Exception {
+  @Bean("lidar")
+  @DependsOn("lidarBridgeProcess")
+  public ILidarTelemeter lidar() throws Exception {
     final File socketFile = new File(LidarBridgeProcess.socketPath);
     return new LD19LidarTelemeterOverSocket(socketFile);
   }

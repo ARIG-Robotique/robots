@@ -26,7 +26,7 @@ public class NerellLidarCommands {
   private boolean startScanRunned;
 
   @Autowired
-  public NerellLidarCommands(@Qualifier("rplidar") ILidarTelemeter lidar) {
+  public NerellLidarCommands(@Qualifier("lidar") ILidarTelemeter lidar) {
     this.lidar = lidar;
   }
 

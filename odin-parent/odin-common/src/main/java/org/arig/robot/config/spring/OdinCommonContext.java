@@ -197,7 +197,7 @@ public class OdinCommonContext {
   }
 
   @Bean
-  @DependsOn({"ecran", "rplidar"})
+  @DependsOn({"ecran", "lidar"})
   public OdinOrdonanceur ordonanceur() {
     return new OdinOrdonanceur();
   }
