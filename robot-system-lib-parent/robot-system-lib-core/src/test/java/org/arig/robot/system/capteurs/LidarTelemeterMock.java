@@ -2,6 +2,7 @@ package org.arig.robot.system.capteurs;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.arig.robot.model.Point;
 import org.arig.robot.model.lidar.DeviceInfos;
 import org.arig.robot.model.lidar.HealthInfos;
 import org.arig.robot.model.lidar.ScanInfos;
@@ -15,6 +16,10 @@ public class LidarTelemeterMock implements ILidarTelemeter {
   @Setter
   @Getter
   private boolean enabled = true;
+
+  @Getter
+  @Setter
+  private Point sensorOrigin = new Point(0, 0);
 
   @Override
   public boolean isClusterable() {

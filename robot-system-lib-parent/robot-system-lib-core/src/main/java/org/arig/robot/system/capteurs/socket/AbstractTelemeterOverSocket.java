@@ -19,6 +19,7 @@ import org.arig.robot.communication.socket.lidar.StartScanResponse;
 import org.arig.robot.communication.socket.lidar.StopScanQuery;
 import org.arig.robot.communication.socket.lidar.StopScanResponse;
 import org.arig.robot.communication.socket.lidar.enums.LidarAction;
+import org.arig.robot.model.Point;
 import org.arig.robot.model.lidar.DeviceInfos;
 import org.arig.robot.model.lidar.HealthInfos;
 import org.arig.robot.model.lidar.ScanInfos;
@@ -37,6 +38,9 @@ public abstract class AbstractTelemeterOverSocket extends AbstractSocketClient<L
   @Getter
   @Setter
   private boolean enabled = true;
+
+  @Getter
+  private final Point sensorOrigin = new Point(0, 0);
 
   protected AbstractTelemeterOverSocket(String hostname, Integer port) throws Exception {
     this(hostname, port, true);
@@ -58,6 +62,13 @@ public abstract class AbstractTelemeterOverSocket extends AbstractSocketClient<L
   protected AbstractTelemeterOverSocket(File socketFile, boolean clusterable) throws Exception {
     super(socketFile);
     this.clusterable = clusterable;
+  }
+
+  @Override
+  public void setSensorOrigin(Point origin) {
+    log.info("Set sensor origin to {}", origin);
+    this.sensorOrigin.setX(origin.getX());
+    this.sensorOrigin.setY(origin.getY());
   }
 
   @Override

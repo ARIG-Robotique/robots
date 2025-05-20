@@ -1,5 +1,6 @@
 package org.arig.robot.system.capteurs.socket;
 
+import org.arig.robot.model.Point;
 import org.arig.robot.model.lidar.DeviceInfos;
 import org.arig.robot.model.lidar.HealthInfos;
 import org.arig.robot.model.lidar.ScanInfos;
@@ -35,5 +36,10 @@ public interface ILidarTelemeter {
 
   void setConfiguration(boolean reverse, int offsetAngle, int excludeLowerThan, int excludeGreaterThan);
 
+  Point getSensorOrigin();
+
+  void setSensorOrigin(Point origin);
+
   ScanInfos grabData();
+
 }

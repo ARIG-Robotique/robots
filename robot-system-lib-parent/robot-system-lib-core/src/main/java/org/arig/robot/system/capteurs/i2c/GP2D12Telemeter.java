@@ -30,7 +30,8 @@ public class GP2D12Telemeter implements ILidarTelemeter {
   @Getter
   private final boolean clusterable = false;
 
-  private final static Point ORIG = new Point(0, 0);
+  @Getter
+  private final Point sensorOrigin = new Point(0, 0);
 
   public static class Device extends Point {
     private final byte adcId;
@@ -130,6 +131,13 @@ public class GP2D12Telemeter implements ILidarTelemeter {
   }
 
   @Override
+  public void setSensorOrigin(Point origin) {
+    log.info("Set sensor origin to {}", origin);
+    this.sensorOrigin.setX(origin.getX());
+    this.sensorOrigin.setY(origin.getY());
+  }
+
+  @Override
   public ScanInfos grabData() {
     if (!enabled) {
       return null;
@@ -164,8 +172,8 @@ public class GP2D12Telemeter implements ILidarTelemeter {
           dstValue * Math.sin(device.angleRad) + device.getY()
         );
 
-        float angleDeg = (float) pt.angle(ORIG);
-        float distance = (float) pt.distance(ORIG);
+        float angleDeg = (float) pt.angle(sensorOrigin);
+        float distance = (float) pt.distance(sensorOrigin);
 
         scans.add(new Scan(angleDeg, distance, false, (short) 0));
       } catch (Exception e) {

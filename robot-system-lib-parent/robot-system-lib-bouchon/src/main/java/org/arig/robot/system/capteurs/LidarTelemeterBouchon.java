@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.arig.robot.model.Point;
 import org.arig.robot.model.lidar.DeviceInfos;
 import org.arig.robot.model.lidar.HealthInfos;
 import org.arig.robot.model.lidar.Scan;
@@ -31,11 +32,21 @@ public class LidarTelemeterBouchon implements ILidarTelemeter {
   @Getter
   private final boolean clusterable = true;
 
+  @Getter
+  private final Point sensorOrigin = new Point(0, 0);
+
   @Override
   public void printDeviceInfo() {
     DeviceInfos d = deviceInfo();
     log.info("Lidar Bouchon version [Firmware : {} ; Hardware {} ; Serial number : {}",
       d.getFirmwareVersion(), d.getHardwareVersion(), d.getSerialNumber());
+  }
+
+  @Override
+  public void setSensorOrigin(Point origin) {
+    log.info("Set sensor origin to {}", origin);
+    this.sensorOrigin.setX(origin.getX());
+    this.sensorOrigin.setY(origin.getY());
   }
 
   @Override
