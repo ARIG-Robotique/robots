@@ -8,7 +8,7 @@ javacan = "3.3.2"
 [libraries]
 anyangle-path-finding = { module = "com.github.Ohohcakester:Any-Angle-Pathfinding", version = "master-7b196baf6b-1" }
 apache-commons-collections = { module = "org.apache.commons:commons-collections4", version = "4.5.0-M1" }
-apache-commons-io = { module = "commons-io:commons-io", version = "2.16.0" }
+apache-commons-io = { module = "commons-io:commons-io", version = "2.19.0" }
 apache-commons-math = { module = "org.apache.commons:commons-math4-legacy", version = "4.0-beta1" }
 google-guava = { module = "com.google.guava:guava", version = "33.1.0-jre" }
 javacan-core = { module = "tel.schich:javacan-core", version.ref = "javacan" }
