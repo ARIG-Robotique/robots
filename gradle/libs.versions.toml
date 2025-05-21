@@ -2,7 +2,7 @@
 spring-boot = "3.1.0"
 graalvm-buildtools = "0.9.20"
 
-junixsocket = "2.6.2"
+junixsocket = "2.10.1"
 javacan = "3.3.2"
 
 [libraries]
