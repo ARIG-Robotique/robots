@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.model.ConstructionArea;
 import org.arig.robot.model.GradinBrut;
+import org.arig.robot.model.NerellPriseGradinState;
 import org.arig.robot.model.NerellRobotStatus;
 import org.arig.robot.model.Point;
 
@@ -17,10 +18,6 @@ public abstract class AbstractNerellFaceService {
   protected final TrajectoryManager mv;
   protected final NerellRobotServosService servos;
   protected final NerellIOService ioService;
-
-  public enum PriseGradinState {
-    OK, ERREUR_PINCES, ERREUR_TIROIR, ERREUR_COLONNES
-  }
 
   protected abstract boolean iosPinces();
 
@@ -42,7 +39,7 @@ public abstract class AbstractNerellFaceService {
 
   protected abstract void deplacementPriseColonnesSol() throws AvoidingException;
 
-  protected abstract void echappementPriseGradinBrut(PriseGradinState state) throws AvoidingException;
+  protected abstract void echappementPriseGradinBrut(NerellPriseGradinState state) throws AvoidingException;
 
   protected abstract void deplacementDeposeInit() throws AvoidingException;
 
@@ -69,22 +66,22 @@ public abstract class AbstractNerellFaceService {
     ouvreFacePourPrise();
   }
 
-  public PriseGradinState prendreGradinBrutStockTiroir() throws AvoidingException {
+  public NerellPriseGradinState prendreGradinBrutStockTiroir() throws AvoidingException {
     log.info("Prise du gradin brut pour stock tiroir");
 
     deplacementPriseColonnesPinces();
     if (!iosPinces()) {
       log.warn("Erreur de chargement du gradin brut dans les pinces (G : {} ; D : {})", ioService.pinceAvantGauche(false), ioService.pinceAvantDroite(false));
-      echappementPriseGradinBrut(PriseGradinState.ERREUR_PINCES);
-      return PriseGradinState.ERREUR_PINCES;
+      echappementPriseGradinBrut(NerellPriseGradinState.ERREUR_PINCES);
+      return NerellPriseGradinState.ERREUR_PINCES;
     }
     updatePincesState(true, true);
 
     log.info(" - Mise en stock du gradin brut");
     if (!miseEnStockTiroir()) {
       log.warn("Erreur de mise en stock du gradin brut (B : {} ; H : {})", ioService.tiroirAvantBas(false), ioService.tiroirAvantHaut(false));
-      echappementPriseGradinBrut(PriseGradinState.ERREUR_TIROIR);
-      return PriseGradinState.ERREUR_TIROIR;
+      echappementPriseGradinBrut(NerellPriseGradinState.ERREUR_TIROIR);
+      return NerellPriseGradinState.ERREUR_TIROIR;
     }
     updateTiroirState(true, true);
 
@@ -92,14 +89,14 @@ public abstract class AbstractNerellFaceService {
     deplacementPriseColonnesSol();
     if (!iosColonnesSol()) {
       log.warn("Erreur de prise des colonnes au sol (G : {} ; D : {})", ioService.solAvantGauche(false), ioService.solAvantDroite(false));
-      echappementPriseGradinBrut(PriseGradinState.ERREUR_COLONNES);
-      return PriseGradinState.ERREUR_COLONNES;
+      echappementPriseGradinBrut(NerellPriseGradinState.ERREUR_COLONNES);
+      return NerellPriseGradinState.ERREUR_COLONNES;
     }
     updateColonnesSolState(true, true);
 
     log.info(" - Vérouillage des colonnes au sol");
     verrouillageColonnesSol();
-    return PriseGradinState.OK;
+    return NerellPriseGradinState.OK;
   }
 
   public void deposeGradin(ConstructionArea constructionArea, Point rangPosition,

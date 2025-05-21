@@ -5,6 +5,8 @@ import org.arig.robot.constants.EurobotConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.GradinBrut;
+import org.arig.robot.model.NerellFace;
+import org.arig.robot.model.NerellPriseGradinState;
 import org.arig.robot.services.AbstractNerellFaceService;
 import org.arig.robot.services.NerellFaceWrapper;
 import org.arig.robot.strategy.actions.AbstractNerellAction;
@@ -60,21 +62,21 @@ public abstract class AbstractPriseGradinBrut extends AbstractNerellAction {
   public void execute() {
     mv.setVitessePercent(100, 100);
 
-    AbstractNerellFaceService.PriseGradinState priseGradinState = null;
+    NerellPriseGradinState priseGradinState = null;
     try {
       mv.pathTo(entryPoint());
 
       GradinBrut gradin = gradin();
-      NerellFaceWrapper.Face face = faceWrapper.getEmptyFace(rs.useTwoFaces());
+      NerellFace face = faceWrapper.getEmptyFace(rs.useTwoFaces());
       AbstractNerellFaceService faceService = faceWrapper.getFaceService(face);
 
       faceService.preparePriseGradinBrut(gradin);
       priseGradinState = faceService.prendreGradinBrutStockTiroir();
       log.info("Prise de gradin brut {} : {}", gradin.id(), priseGradinState);
-      if (priseGradinState == AbstractNerellFaceService.PriseGradinState.OK) {
+      if (priseGradinState == NerellPriseGradinState.OK) {
         gradin().setGradinPris();
         if (gradin.bordure()) {
-          if (face == NerellFaceWrapper.Face.AVANT) {
+          if (face == NerellFace.AVANT) {
             mv.reculeMM(100);
           } else {
             mv.avanceMM(100);

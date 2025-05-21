@@ -5,6 +5,7 @@ import org.arig.robot.constants.EurobotConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.ConstructionArea;
+import org.arig.robot.model.NerellFace;
 import org.arig.robot.model.Point;
 import org.arig.robot.services.AbstractNerellFaceService;
 import org.arig.robot.services.NerellFaceWrapper;
@@ -105,7 +106,7 @@ public abstract class AbstractDeposeGradin extends AbstractNerellAction {
         }
         log.info("Demande de construction de {} etage(s).", nbEtageRequis);
 
-        NerellFaceWrapper.Face face = faceWrapper.getConstructionFace(nbEtageRequis);
+        /*NerellFace face = faceWrapper.getConstructionFace(nbEtageRequis);
         if (face == null) {
           log.warn("Pas de face pour la dépose de {} étage(s)", nbEtageRequis);
           return;
@@ -113,7 +114,7 @@ public abstract class AbstractDeposeGradin extends AbstractNerellAction {
         AbstractNerellFaceService faceService = faceWrapper.getFaceService(face);
 
         Point rangPosition = rangPosition(rang);
-        faceService.deposeGradin(constructionArea(), rangPosition, rang, etage, nbEtageRequis);
+        faceService.deposeGradin(constructionArea(), rangPosition, rang, etage, nbEtageRequis);*/
       }
     } catch (NoPathFoundException | AvoidingException e) {
       log.warn("Erreur prise {} : {}", name(), e.toString());

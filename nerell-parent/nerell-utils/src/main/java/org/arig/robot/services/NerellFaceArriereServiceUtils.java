@@ -2,6 +2,7 @@ package org.arig.robot.services;
 
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.exception.AvoidingException;
+import org.arig.robot.model.NerellPriseGradinState;
 import org.arig.robot.model.NerellRobotStatus;
 import org.arig.robot.model.Point;
 import org.arig.robot.utils.ThreadUtils;
@@ -33,7 +34,7 @@ public class NerellFaceArriereServiceUtils extends NerellFaceArriereService {
   }
 
   @Override
-  protected void echappementPriseGradinBrut(PriseGradinState state) throws AvoidingException {
+  protected void echappementPriseGradinBrut(NerellPriseGradinState state) throws AvoidingException {
     log.info("Echappement prise gradin brut {}", state.name());
     ThreadUtils.sleep(5000);
     servos.groupeBlockColonneArriereOuvert(false);

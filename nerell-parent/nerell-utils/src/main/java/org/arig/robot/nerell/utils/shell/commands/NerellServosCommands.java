@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.model.ConstructionArea;
 import org.arig.robot.model.GradinBrut;
+import org.arig.robot.model.NerellFace;
+import org.arig.robot.model.NerellPriseGradinState;
 import org.arig.robot.services.AbstractEnergyService;
 import org.arig.robot.services.AbstractNerellFaceService;
 import org.arig.robot.services.NerellFaceWrapper;
@@ -212,15 +214,15 @@ public class NerellServosCommands {
 
   @ShellMethod("Chargement face avant")
   public void testChargementFaceAvant() {
-    testChargementFace(NerellFaceWrapper.Face.AVANT);
+    testChargementFace(NerellFace.AVANT);
   }
 
   @ShellMethod("Chargement face arriere")
   public void testChargementFaceArriere() {
-    testChargementFace(NerellFaceWrapper.Face.ARRIERE);
+    testChargementFace(NerellFace.ARRIERE);
   }
 
-  private void testChargementFace(NerellFaceWrapper.Face face) {
+  private void testChargementFace(NerellFace face) {
     AbstractNerellFaceService faceService = faceWrapper.getFaceService(face);
 
     try {
@@ -232,8 +234,8 @@ public class NerellServosCommands {
         log.error("Tirette non détectée");
         return;
       }
-      AbstractNerellFaceService.PriseGradinState priseGradinState = faceService.prendreGradinBrutStockTiroir();
-      if (priseGradinState == AbstractNerellFaceService.PriseGradinState.ERREUR_COLONNES) {
+      NerellPriseGradinState priseGradinState = faceService.prendreGradinBrutStockTiroir();
+      if (priseGradinState == NerellPriseGradinState.ERREUR_COLONNES) {
         log.info("Enleve tirrette pour stock colonnes");
         boolean tiretteEnleve = ThreadUtils.waitUntil(() -> !ioService.tirette(), 1000, 60000);
         if (!tiretteEnleve) {
@@ -241,7 +243,7 @@ public class NerellServosCommands {
           return;
         }
         servosService.groupeBlockColonneAvantFerme(true);
-        priseGradinState = AbstractNerellFaceService.PriseGradinState.OK;
+        priseGradinState = NerellPriseGradinState.OK;
       }
       log.info("Résultat chargement face {} : {}", face, priseGradinState);
     } catch (Exception e) {
@@ -251,25 +253,25 @@ public class NerellServosCommands {
 
   @ShellMethod("Test construction etage 1 avant")
   public void testConstructionEtage1Avant() {
-    testConstructionEtage(NerellFaceWrapper.Face.AVANT, ConstructionArea.Etage.ETAGE_1);
+    testConstructionEtage(NerellFace.AVANT, ConstructionArea.Etage.ETAGE_1);
   }
 
   @ShellMethod("Test construction etage 1 arriere")
   public void testConstructionEtage1Arriere() {
-    testConstructionEtage(NerellFaceWrapper.Face.ARRIERE, ConstructionArea.Etage.ETAGE_1);
+    testConstructionEtage(NerellFace.ARRIERE, ConstructionArea.Etage.ETAGE_1);
   }
 
   @ShellMethod("Test construction etage 2 avant")
   public void testConstructionEtage2Avant() {
-    testConstructionEtage(NerellFaceWrapper.Face.AVANT, ConstructionArea.Etage.ETAGE_2);
+    testConstructionEtage(NerellFace.AVANT, ConstructionArea.Etage.ETAGE_2);
   }
 
   @ShellMethod("Test construction etage 2 arriere")
   public void testConstructionEtage2Arriere() {
-    testConstructionEtage(NerellFaceWrapper.Face.ARRIERE, ConstructionArea.Etage.ETAGE_2);
+    testConstructionEtage(NerellFace.ARRIERE, ConstructionArea.Etage.ETAGE_2);
   }
 
-  private void testConstructionEtage(NerellFaceWrapper.Face face, ConstructionArea.Etage etage) {
+  private void testConstructionEtage(NerellFace face, ConstructionArea.Etage etage) {
     try {
       log.info("Début test construction etage {} sur la face {}. Start avec tirette", etage.name(), face);
       boolean tirette = ThreadUtils.waitUntil(ioService::tirette, 1000, 60000);

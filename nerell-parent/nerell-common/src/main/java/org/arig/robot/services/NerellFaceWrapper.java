@@ -2,7 +2,11 @@ package org.arig.robot.services;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.arig.robot.model.NerellFace;
 import org.arig.robot.model.NerellRobotStatus;
+import org.arig.robot.model.Position;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -10,48 +14,26 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class NerellFaceWrapper {
 
-  public enum Face {
-    AVANT, ARRIERE
-  }
-
+  private final Position currentPosition;
   private final NerellRobotStatus robotStatus;
   private final NerellFaceAvantService faceAvantService;
   private final NerellFaceArriereService faceArriereService;
 
-  public Face getEmptyFace(boolean useTwoFaces) {
+  public NerellFace getEmptyFace(boolean useTwoFaces) {
+    // Ajouter une priorité sur la face déja orienté
     boolean avantEmpty = robotStatus.faceAvant().isEmpty();
     boolean arriereEmpty = robotStatus.faceArriere().isEmpty();
     if (avantEmpty) {
-      return Face.AVANT;
+      return NerellFace.AVANT;
     }
     if (useTwoFaces && arriereEmpty) {
-      return Face.ARRIERE;
+      return NerellFace.ARRIERE;
     }
 
     return null;
   }
 
-  public Face getConstructionFace(int nbEtageRequis) {
-    // Récupération de la face avec le nombre d'étage requis s'il y en a une
-    if (robotStatus.faceAvant().nbEtageConstructible() == nbEtageRequis) {
-      return Face.AVANT;
-    } else if (robotStatus.faceArriere().nbEtageConstructible() == nbEtageRequis) {
-      return Face.ARRIERE;
-    }
-
-    // Sinon on regarde si on peut construire un étage avec une des faces
-    if (robotStatus.faceAvant().nbEtageConstructible() > 0) {
-      return Face.AVANT;
-    } else if (robotStatus.faceArriere().nbEtageConstructible() > 0) {
-      return Face.ARRIERE;
-    }
-
-    // Rien ne correspond, c'est louche
-    log.warn("Aucune face ne correspond à la construction pour {} étage(s). Bizarre !", nbEtageRequis);
-    return null;
-  }
-
-  public AbstractNerellFaceService getFaceService(final Face face) {
+  public AbstractNerellFaceService getFaceService(final NerellFace face) {
     if (face == null) {
       return null;
     }
