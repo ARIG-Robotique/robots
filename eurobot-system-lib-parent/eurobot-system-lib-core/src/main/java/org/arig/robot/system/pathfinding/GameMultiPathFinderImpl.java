@@ -51,9 +51,9 @@ public class GameMultiPathFinderImpl extends MultiPathFinderImpl {
     if (robotName.id() == RobotName.RobotIdentification.PAMI_TRIANGLE) {
       // Super star, pas de "table", que de la scene
       if (rs.team() == Team.JAUNE) {
-        obstacles.add(new Rectangle(0, 155, 105 + rayonPamiCm, 25 + rayonPamiCm));
+        obstacles.add(new Rectangle(0, 155, 105 + rayonPamiCm, 20 + rayonPamiCm));
       } else {
-        obstacles.add(new Rectangle(150 - rayonPamiCm, 155, 105 + rayonPamiCm, 25 + rayonPamiCm));
+        obstacles.add(new Rectangle(195 - rayonPamiCm, 155, 105 + rayonPamiCm, 20 + rayonPamiCm));
       }
     } else {
       // PAMI, pas de "scene", que de la table
