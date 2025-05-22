@@ -15,15 +15,12 @@ public class DeposeGrandGradinAdverse extends AbstractDeposeGradin {
   private static final int CENTER_Y = 875;
 
   @Override
-  public Point entryPoint() {
-    Point entry = super.entryPoint();
-    entry.addDeltaY(-EurobotConfig.offsetDeposeGradin); // Reset opération super.entryPoint
+  protected void applyOffsetRangPosition(Point position) {
     if (rs.team() == Team.JAUNE) {
-      entry.addDeltaX(-EurobotConfig.offsetDeposeGradin);
+      position.addDeltaX(-EurobotConfig.offsetDeposeGradin);
     } else {
-      entry.addDeltaX(EurobotConfig.offsetDeposeGradin);
+      position.addDeltaX(EurobotConfig.offsetDeposeGradin);
     }
-    return entry;
   }
 
   @Override
