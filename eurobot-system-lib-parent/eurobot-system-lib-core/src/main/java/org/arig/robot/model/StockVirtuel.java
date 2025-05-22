@@ -49,10 +49,10 @@ public class StockVirtuel {
     return avant.size() + arriere.size();
   }
 
-  public Face getFaceWithDoubleStack() {
-    if (avant.size() == 2) {
+  public Face emptyFace() {
+    if (avant.isEmpty()) {
       return Face.AVANT;
-    } else if (arriere.size() == 2) {
+    } else if (arriere.isEmpty()) {
       return Face.ARRIERE;
     }
     return null;

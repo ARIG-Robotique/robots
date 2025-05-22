@@ -37,6 +37,9 @@ public class DeposePetitGradinEquipe extends AbstractDeposeGradin {
 
   @Override
   protected Point rangPosition(Rang rang) {
+    if (rang == Rang.CONSTRUCTION) {
+      return new Point(getX(CENTER_X), EurobotConfig.rang2Coord);
+    }
     return new Point(getX(CENTER_X), EurobotConfig.rang1Coord);
   }
 }

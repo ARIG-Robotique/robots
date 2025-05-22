@@ -19,6 +19,7 @@ public class ConstructionArea {
   private final byte nbRang;
   @Getter(AccessLevel.NONE)
   private final byte nbEtage = 3;
+  private final byte nbEtageConstructible = 2;
   private final boolean[][] data;
 
   public ConstructionArea(String name) {
@@ -68,34 +69,43 @@ public class ConstructionArea {
     data[rang.idx][etage.idx] = false;
   }
 
-  public Rang getFirstConstructibleRang(boolean limit2Etage) {
-    byte nbEtage = limit2Etage ? 2 : this.nbEtage;
+  public Rang getFirstRangWithElement(int expected) {
+    for (byte row = 0; row < nbRang; row++) {
+      Rang rang = Rang.fromIdx(row);
+      int nbElements = getNbElementsInRang(rang);
+      if (nbElements == expected) {
+        return rang;
+      }
+    }
+    return null;
+  }
 
+  public Rang getFirstConstructibleRang() {
     // Récupération du premier rang non vide
     Rang firstRangNonVide = null;
     boolean firstRangNonVideConstructible = false;
-    if (nbRang > 2 && !rangEmpty(Rang.RANG_3, nbEtage)) {
+    if (nbRang > 2 && !rangEmpty(Rang.RANG_3, nbEtageConstructible)) {
       firstRangNonVide = Rang.RANG_3;
-      firstRangNonVideConstructible = getFirstConstructibleEtage(Rang.RANG_3, limit2Etage) != null;
-    } else if (nbRang > 1 && !rangEmpty(Rang.RANG_2, nbEtage)) {
+      firstRangNonVideConstructible = getFirstConstructibleEtage(Rang.RANG_3) != null;
+    } else if (nbRang > 1 && !rangEmpty(Rang.RANG_2, nbEtageConstructible)) {
       firstRangNonVide = Rang.RANG_2;
-      firstRangNonVideConstructible = getFirstConstructibleEtage(Rang.RANG_2, limit2Etage) != null;
-    } else if (!rangEmpty(Rang.RANG_1, nbEtage)) {
+      firstRangNonVideConstructible = getFirstConstructibleEtage(Rang.RANG_2) != null;
+    } else if (!rangEmpty(Rang.RANG_1, nbEtageConstructible)) {
       firstRangNonVide = Rang.RANG_1;
-      firstRangNonVideConstructible = getFirstConstructibleEtage(Rang.RANG_1, limit2Etage) != null;
+      firstRangNonVideConstructible = getFirstConstructibleEtage(Rang.RANG_1) != null;
     }
 
     Rang firstRangVide = null;
     boolean firstRangVideConstructible = false;
-    if (rangEmpty(Rang.RANG_1, nbEtage)) {
+    if (rangEmpty(Rang.RANG_1, nbEtageConstructible)) {
       firstRangVide = Rang.RANG_1;
-      firstRangVideConstructible = getFirstConstructibleEtage(Rang.RANG_1, limit2Etage) != null;
-    } else if (nbRang > 1 && rangEmpty(Rang.RANG_2, nbEtage)) {
+      firstRangVideConstructible = getFirstConstructibleEtage(Rang.RANG_1) != null;
+    } else if (nbRang > 1 && rangEmpty(Rang.RANG_2, nbEtageConstructible)) {
       firstRangVide = Rang.RANG_2;
-      firstRangVideConstructible = getFirstConstructibleEtage(Rang.RANG_2, limit2Etage) != null;
-    } else if (nbRang > 2 && rangEmpty(Rang.RANG_3, nbEtage)) {
+      firstRangVideConstructible = getFirstConstructibleEtage(Rang.RANG_2) != null;
+    } else if (nbRang > 2 && rangEmpty(Rang.RANG_3, nbEtageConstructible)) {
       firstRangVide = Rang.RANG_3;
-      firstRangVideConstructible = getFirstConstructibleEtage(Rang.RANG_3, limit2Etage) != null;
+      firstRangVideConstructible = getFirstConstructibleEtage(Rang.RANG_3) != null;
     }
 
     if (firstRangNonVide == null && firstRangVide == null) {
@@ -118,12 +128,12 @@ public class ConstructionArea {
 
     if (firstRangVide != null && firstRangNonVide != null) {
       // Cas nominal
-      if (firstRangVide.idx > firstRangNonVide.idx) {
+      if (firstRangVide.after(firstRangNonVide)) {
         return firstRangNonVideConstructible ? firstRangNonVide : firstRangVide;
       }
 
       // Si le premier rang vide est inférieur au premier rang non vide -> pb
-      if (firstRangVide.idx < firstRangNonVide.idx) {
+      if (firstRangVide.before(firstRangNonVide)) {
         if (firstRangNonVideConstructible) {
           return firstRangNonVide;
         }
@@ -134,10 +144,9 @@ public class ConstructionArea {
     return null;
   }
 
-  public Etage getFirstConstructibleEtage(Rang rang, boolean limit2Etage) {
+  public Etage getFirstConstructibleEtage(Rang rang) {
     if (rang != null) {
-      byte nbEtage = limit2Etage ? 2 : this.nbEtage;
-      for (byte etage = 0; etage < nbEtage; etage++) {
+      for (byte etage = 0; etage < nbEtageConstructible; etage++) {
         if (!data[rang.idx][etage]) {
           return Etage.fromIdx(etage);
         }
@@ -147,6 +156,9 @@ public class ConstructionArea {
   }
 
   public int getNbElementsInRang(Rang rang) {
+    if (rang == null) {
+      return -1;
+    }
     if (data[rang.idx][Etage.ETAGE_3.idx]) {
       return 3;
     }
@@ -170,10 +182,9 @@ public class ConstructionArea {
     return true;
   }
 
-  public boolean isFull(boolean limit2Etages) {
-    byte nbEtage = limit2Etages ? 2 : this.nbEtage;
+  public boolean isUnconstructable() {
     for (byte row = 0; row < nbRang; row++) {
-      for (byte col = 0; col < nbEtage; col++) {
+      for (byte col = 0; col < nbEtageConstructible; col++) {
         if (!data[row][col]) {
           return false;
         }

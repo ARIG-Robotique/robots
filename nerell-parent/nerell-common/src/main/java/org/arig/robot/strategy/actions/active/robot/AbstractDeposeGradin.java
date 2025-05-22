@@ -15,18 +15,15 @@ import org.arig.robot.model.Point;
 import org.arig.robot.model.Rang;
 import org.arig.robot.model.StockPosition;
 import org.arig.robot.services.AbstractNerellFaceService;
-import org.arig.robot.services.MaxThreeFloorConstructionPlannerService;
-import org.arig.robot.services.MaxTwoFloorConstructionPlannerService;
+import org.arig.robot.services.ConstructionPlannerService;
 import org.arig.robot.strategy.actions.AbstractNerellAction;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.Optional;
 
 @Slf4j
 public abstract class AbstractDeposeGradin extends AbstractNerellAction {
 
-  @Autowired private MaxTwoFloorConstructionPlannerService twoFloorPlannerService;
-  @Autowired private MaxThreeFloorConstructionPlannerService threeFloorPlannerService;
+  @Autowired
+  private ConstructionPlannerService constructionPlannerService;
 
   protected abstract ConstructionArea constructionArea();
   protected abstract Point rangPosition(Rang rang);
@@ -38,7 +35,7 @@ public abstract class AbstractDeposeGradin extends AbstractNerellAction {
 
   @Override
   public final Point entryPoint() {
-    return entryPoint(planConstruction());
+    return entryPoint(constructionPlannerService.plan(constructionArea()));
   }
 
   private Point entryPoint(ConstructionPlanResult planResult) {
@@ -58,7 +55,7 @@ public abstract class AbstractDeposeGradin extends AbstractNerellAction {
 
   @Override
   public int order() {
-    final ConstructionPlanResult planResult = planConstruction();
+    final ConstructionPlanResult planResult = constructionPlannerService.plan(constructionArea());
     int order = planResult.newArea().score() - constructionArea().score();
     return order + tableUtils.alterOrder(entryPoint(planResult));
   }
@@ -82,7 +79,7 @@ public abstract class AbstractDeposeGradin extends AbstractNerellAction {
     }
 
     // SI aucun rang n'est constructible, on ne peut pas déposer
-    final ConstructionPlanResult planResult = planConstruction();
+    final ConstructionPlanResult planResult = constructionPlannerService.plan(constructionArea());
     return isTimeValid() && !planResult.actions().isEmpty();
   }
 
@@ -96,7 +93,7 @@ public abstract class AbstractDeposeGradin extends AbstractNerellAction {
     mv.setVitessePercent(100, 100);
 
     try {
-      final ConstructionPlanResult planResult = planConstruction();
+      final ConstructionPlanResult planResult = constructionPlannerService.plan(constructionArea());
       log.info("Plan de construction pour {}", constructionArea().name());
       for (ConstructionAction action : planResult.actions()) {
         log.info(" - {}", action);
@@ -134,17 +131,10 @@ public abstract class AbstractDeposeGradin extends AbstractNerellAction {
       log.warn("Erreur prise {} : {}", name(), e.toString());
       updateValidTime();
     } finally {
-      if (constructionArea().isFull(rs.limiter2Etages())) {
+      if (constructionArea().isUnconstructable()) {
         // On a déposé tous les gradins, on ne peut plus rien faire
         complete();
       }
     }
-  }
-
-  private ConstructionPlanResult planConstruction() {
-    if (rs.limiter2Etages()) {
-      return twoFloorPlannerService.plan(constructionArea());
-    }
-    return threeFloorPlannerService.plan(constructionArea());
   }
 }

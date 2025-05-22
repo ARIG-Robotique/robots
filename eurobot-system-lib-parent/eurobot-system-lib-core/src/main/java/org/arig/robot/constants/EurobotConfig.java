@@ -28,6 +28,7 @@ public interface EurobotConfig {
   int rang1Coord = 100;
   int rang2Coord = 250;
   int rang3Coord = 400;
+  int rang4Coord = 550;
 
   // Noms des actions
   String ACTION_RETOUR_BACKSTAGE = "Retour backstage";

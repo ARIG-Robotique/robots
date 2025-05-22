@@ -24,6 +24,7 @@ public class DeposeGrandGradinEquipe extends AbstractDeposeGradin {
       case RANG_1 -> new Point(getX(CENTER_X), EurobotConfig.rang1Coord);
       case RANG_2 -> new Point(getX(CENTER_X), EurobotConfig.rang2Coord);
       case RANG_3 -> new Point(getX(CENTER_X), EurobotConfig.rang3Coord);
+      case CONSTRUCTION -> new Point(getX(CENTER_X), EurobotConfig.rang4Coord);
     };
   }
 }

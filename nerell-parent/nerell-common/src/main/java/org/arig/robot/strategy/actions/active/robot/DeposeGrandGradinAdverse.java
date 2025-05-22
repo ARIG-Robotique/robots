@@ -35,6 +35,7 @@ public class DeposeGrandGradinAdverse extends AbstractDeposeGradin {
       case RANG_1 -> new Point(tableUtils.getX(rs.team() == Team.JAUNE, EurobotConfig.rang1Coord), CENTER_Y);
       case RANG_2 -> new Point(tableUtils.getX(rs.team() == Team.JAUNE, EurobotConfig.rang2Coord), CENTER_Y);
       case RANG_3 -> new Point(tableUtils.getX(rs.team() == Team.JAUNE, EurobotConfig.rang3Coord), CENTER_Y);
+      case CONSTRUCTION -> new Point(tableUtils.getX(rs.team() == Team.JAUNE, EurobotConfig.rang4Coord), CENTER_Y);
     };
   }
 }

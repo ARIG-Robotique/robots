@@ -36,88 +36,76 @@ public class ConstructionAreaTest {
   }
 
   @Test
-  public void testFirstRangConstructiblePetiteZoneLimit2Etage() {
-    final boolean limit2Etage = true;
-    ConstructionArea area = new ConstructionArea("petite zone test", (byte) 1);
-
-    // Vide
-    Assertions.assertEquals(Rang.RANG_1, area.getFirstConstructibleRang(limit2Etage));
-    Assertions.assertEquals(Etage.ETAGE_1, area.getFirstConstructibleEtage(Rang.RANG_1, limit2Etage));
-
-    // Rang 1 etage 1
-    area.addGradin(Rang.RANG_1, Etage.ETAGE_1);
-    Assertions.assertEquals(Rang.RANG_1, area.getFirstConstructibleRang(limit2Etage));
-    Assertions.assertEquals(Etage.ETAGE_2, area.getFirstConstructibleEtage(Rang.RANG_1, limit2Etage));
-
-    // Rang 1 etage 2
-    area.addGradin(Rang.RANG_1, Etage.ETAGE_2);
-    Assertions.assertNull(area.getFirstConstructibleRang(limit2Etage));
-    Assertions.assertNull(area.getFirstConstructibleEtage(Rang.RANG_1, limit2Etage));
-    Assertions.assertNull(area.getFirstConstructibleEtage(null, limit2Etage));
-  }
-
-  @Test
   public void testFirstRangConstructiblePetiteZone() {
-    final boolean limit2Etage = false;
     ConstructionArea area = new ConstructionArea("petite zone test", (byte) 1);
 
     // Vide
-    Assertions.assertEquals(Rang.RANG_1, area.getFirstConstructibleRang(limit2Etage));
-    Assertions.assertEquals(Etage.ETAGE_1, area.getFirstConstructibleEtage(Rang.RANG_1, limit2Etage));
+    Assertions.assertEquals(Rang.RANG_1, area.getFirstConstructibleRang());
+    Assertions.assertEquals(Etage.ETAGE_1, area.getFirstConstructibleEtage(Rang.RANG_1));
 
     // Rang 1 etage 1
     area.addGradin(Rang.RANG_1, Etage.ETAGE_1);
-    Assertions.assertEquals(Rang.RANG_1, area.getFirstConstructibleRang(limit2Etage));
-    Assertions.assertEquals(Etage.ETAGE_2, area.getFirstConstructibleEtage(Rang.RANG_1, limit2Etage));
+    Assertions.assertEquals(Rang.RANG_1, area.getFirstConstructibleRang());
+    Assertions.assertEquals(Etage.ETAGE_2, area.getFirstConstructibleEtage(Rang.RANG_1));
 
     // Rang 1 etage 2
     area.addGradin(Rang.RANG_1, Etage.ETAGE_2);
-    Assertions.assertEquals(Rang.RANG_1, area.getFirstConstructibleRang(limit2Etage));
-    Assertions.assertEquals(Etage.ETAGE_3, area.getFirstConstructibleEtage(Rang.RANG_1, limit2Etage));
-
-    // Rang 1 etage 3
-    area.addGradin(Rang.RANG_1, Etage.ETAGE_3);
-    Assertions.assertNull(area.getFirstConstructibleRang(limit2Etage));
-    Assertions.assertNull(area.getFirstConstructibleEtage(null, limit2Etage));
+    Assertions.assertNull(area.getFirstConstructibleRang());
+    Assertions.assertNull(area.getFirstConstructibleEtage(Rang.RANG_1));
+    Assertions.assertNull(area.getFirstConstructibleEtage(null));
   }
 
   @Test
-  public void testFirstRangConstructibleGrandeZoneLimit2Etage() {
-    boolean limit2Etage = true;
+  public void testFirstRangConstructibleGrandeZone() {
     ConstructionArea area = new ConstructionArea("grande zone test", (byte) 3);
 
     // Vide
-    Assertions.assertEquals(Rang.RANG_1, area.getFirstConstructibleRang(limit2Etage));
-    Assertions.assertEquals(Etage.ETAGE_1, area.getFirstConstructibleEtage(Rang.RANG_1, limit2Etage));
+    Assertions.assertEquals(Rang.RANG_1, area.getFirstConstructibleRang());
+    Assertions.assertEquals(Etage.ETAGE_1, area.getFirstConstructibleEtage(Rang.RANG_1));
 
     // Rang 1 etage 1
     area.addGradin(Rang.RANG_1, Etage.ETAGE_1);
-    Assertions.assertEquals(Rang.RANG_1, area.getFirstConstructibleRang(limit2Etage));
-    Assertions.assertEquals(Etage.ETAGE_2, area.getFirstConstructibleEtage(Rang.RANG_1, limit2Etage));
+    Assertions.assertEquals(Rang.RANG_1, area.getFirstConstructibleRang());
+    Assertions.assertEquals(Etage.ETAGE_2, area.getFirstConstructibleEtage(Rang.RANG_1));
 
     // Rang 1 etage 2
     area.addGradin(Rang.RANG_1, Etage.ETAGE_2);
-    Assertions.assertEquals(Rang.RANG_2, area.getFirstConstructibleRang(limit2Etage));
-    Assertions.assertEquals(Etage.ETAGE_1, area.getFirstConstructibleEtage(Rang.RANG_2, limit2Etage));
+    Assertions.assertEquals(Rang.RANG_2, area.getFirstConstructibleRang());
+    Assertions.assertEquals(Etage.ETAGE_1, area.getFirstConstructibleEtage(Rang.RANG_2));
+
+    // Rang 1 etage 3
+    area.addGradin(Rang.RANG_1, Etage.ETAGE_3);
+    Assertions.assertEquals(Rang.RANG_2, area.getFirstConstructibleRang());
+    Assertions.assertEquals(Etage.ETAGE_1, area.getFirstConstructibleEtage(Rang.RANG_2));
 
     // Rang 2 etage 1
     area.addGradin(Rang.RANG_2, Etage.ETAGE_1);
-    Assertions.assertEquals(Rang.RANG_2, area.getFirstConstructibleRang(limit2Etage));
-    Assertions.assertEquals(Etage.ETAGE_2, area.getFirstConstructibleEtage(Rang.RANG_2, limit2Etage));
+    Assertions.assertEquals(Rang.RANG_2, area.getFirstConstructibleRang());
+    Assertions.assertEquals(Etage.ETAGE_2, area.getFirstConstructibleEtage(Rang.RANG_2));
 
     // Rang 2 etage 2
     area.addGradin(Rang.RANG_2, Etage.ETAGE_2);
-    Assertions.assertEquals(Rang.RANG_3, area.getFirstConstructibleRang(limit2Etage));
-    Assertions.assertEquals(Etage.ETAGE_1, area.getFirstConstructibleEtage(Rang.RANG_3, limit2Etage));
+    Assertions.assertEquals(Rang.RANG_3, area.getFirstConstructibleRang());
+    Assertions.assertEquals(Etage.ETAGE_1, area.getFirstConstructibleEtage(Rang.RANG_3));
+
+    // Rang 2 etage 3
+    area.addGradin(Rang.RANG_2, Etage.ETAGE_3);
+    Assertions.assertEquals(Rang.RANG_3, area.getFirstConstructibleRang());
+    Assertions.assertEquals(Etage.ETAGE_1, area.getFirstConstructibleEtage(Rang.RANG_3));
 
     // Rang 3 etage 1
     area.addGradin(Rang.RANG_3, Etage.ETAGE_1);
-    Assertions.assertEquals(Rang.RANG_3, area.getFirstConstructibleRang(limit2Etage));
-    Assertions.assertEquals(Etage.ETAGE_2, area.getFirstConstructibleEtage(Rang.RANG_3, limit2Etage));
+    Assertions.assertEquals(Rang.RANG_3, area.getFirstConstructibleRang());
+    Assertions.assertEquals(Etage.ETAGE_2, area.getFirstConstructibleEtage(Rang.RANG_3));
 
     // Rang 3 etage 2
     area.addGradin(Rang.RANG_3, Etage.ETAGE_2);
-    Assertions.assertNull(area.getFirstConstructibleRang(limit2Etage));
-    Assertions.assertNull(area.getFirstConstructibleEtage(null, limit2Etage));
+    Assertions.assertNull(area.getFirstConstructibleRang());
+    Assertions.assertNull(area.getFirstConstructibleEtage(null));
+
+    // Rang 3 etage 3
+    area.addGradin(Rang.RANG_3, Etage.ETAGE_3);
+    Assertions.assertNull(area.getFirstConstructibleRang());
+    Assertions.assertNull(area.getFirstConstructibleEtage(null));
   }
 }
