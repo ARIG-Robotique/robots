@@ -38,7 +38,11 @@ public interface ILidarTelemeter {
 
   Point getSensorOrigin();
 
-  void setSensorOrigin(Point origin);
+  default void setSensorOrigin(Point origin) {
+    setSensorOrigin(origin.getX(), origin.getY());
+  }
+
+  void setSensorOrigin(double x, double y);
 
   ScanInfos grabData();
 

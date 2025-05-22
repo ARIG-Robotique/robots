@@ -43,10 +43,10 @@ public class LidarTelemeterBouchon implements ILidarTelemeter {
   }
 
   @Override
-  public void setSensorOrigin(Point origin) {
-    log.info("Set sensor origin to {}", origin);
-    this.sensorOrigin.setX(origin.getX());
-    this.sensorOrigin.setY(origin.getY());
+  public void setSensorOrigin(double x, double y) {
+    log.info("Set sensor origin to X={}mm ; Y={}mm", x, y);
+    this.sensorOrigin.setX(x);
+    this.sensorOrigin.setY(y);
   }
 
   @Override

@@ -2,6 +2,7 @@ package org.arig.robot.system.capteurs;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.lidar.DeviceInfos;
 import org.arig.robot.model.lidar.HealthInfos;
@@ -11,6 +12,7 @@ import org.arig.robot.system.capteurs.socket.ILidarTelemeter;
 
 import java.util.Collections;
 
+@Slf4j
 public class LidarTelemeterMock implements ILidarTelemeter {
 
   @Setter
@@ -18,7 +20,6 @@ public class LidarTelemeterMock implements ILidarTelemeter {
   private boolean enabled = true;
 
   @Getter
-  @Setter
   private Point sensorOrigin = new Point(0, 0);
 
   @Override
@@ -75,6 +76,13 @@ public class LidarTelemeterMock implements ILidarTelemeter {
 
   @Override
   public void setConfiguration(boolean reverse, double offsetAngle, int excludeLowerThan, int excludeGreaterThan) {
+  }
+
+  @Override
+  public void setSensorOrigin(double x, double y) {
+    log.info("Set sensor origin to X={}mm ; Y={}mm", x, y);
+    this.sensorOrigin.setX(x);
+    this.sensorOrigin.setY(y);
   }
 
   @Override
