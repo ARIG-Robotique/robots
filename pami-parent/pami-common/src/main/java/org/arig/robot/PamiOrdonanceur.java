@@ -79,7 +79,7 @@ public class PamiOrdonanceur extends AbstractOrdonanceur {
 
   @Override
   protected void startLidar() {
-    log.info("Pas de Lidar sur un pami !");
+    log.info("Pas de start scan Lidar sur les D500 des PAMIs !");
   }
 
   @Override
