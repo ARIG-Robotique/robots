@@ -65,4 +65,9 @@ public class StockFace {
     tiroirHaut = false;
     tiroirBas = false;
   }
+
+  public String toString() {
+    return String.format("PinceGauche: %s, PinceDroite: %s, SolGauche: %s, SolDroite: %s, TiroirHaut: %s, TiroirBas: %s",
+        pinceGauche, pinceDroite, solGauche, solDroite, tiroirHaut, tiroirBas);
+  }
 }

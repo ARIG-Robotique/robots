@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.EurobotConfig;
 import org.arig.robot.model.ConstructionArea;
 import org.arig.robot.model.Point;
+import org.arig.robot.model.Rang;
 import org.arig.robot.model.Team;
 import org.springframework.stereotype.Component;
 
@@ -31,7 +32,7 @@ public class DeposeGrandGradinAdverse extends AbstractDeposeGradin {
   }
 
   @Override
-  protected Point rangPosition(ConstructionArea.Rang rang) {
+  protected Point rangPosition(Rang rang) {
     // Use tableUtils directly to reverse the game inverse in this action
     return switch (rang) {
       case RANG_1 -> new Point(tableUtils.getX(rs.team() == Team.JAUNE, EurobotConfig.rang1Coord), CENTER_Y);

@@ -4,19 +4,32 @@ import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.EurobotConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
+import org.arig.robot.model.ConstructionAction;
 import org.arig.robot.model.ConstructionArea;
-import org.arig.robot.model.NerellFace;
+import org.arig.robot.model.ConstructionFloorAction;
+import org.arig.robot.model.ConstructionMoveAction;
+import org.arig.robot.model.ConstructionPlanResult;
+import org.arig.robot.model.Etage;
+import org.arig.robot.model.Face;
 import org.arig.robot.model.Point;
+import org.arig.robot.model.Rang;
+import org.arig.robot.model.StockPosition;
 import org.arig.robot.services.AbstractNerellFaceService;
-import org.arig.robot.services.NerellFaceWrapper;
+import org.arig.robot.services.MaxThreeFloorConstructionPlannerService;
+import org.arig.robot.services.MaxTwoFloorConstructionPlannerService;
 import org.arig.robot.strategy.actions.AbstractNerellAction;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.Optional;
 
 @Slf4j
 public abstract class AbstractDeposeGradin extends AbstractNerellAction {
 
-  protected abstract ConstructionArea constructionArea();
+  @Autowired private MaxTwoFloorConstructionPlannerService twoFloorPlannerService;
+  @Autowired private MaxThreeFloorConstructionPlannerService threeFloorPlannerService;
 
-  protected abstract Point rangPosition(ConstructionArea.Rang rang);
+  protected abstract ConstructionArea constructionArea();
+  protected abstract Point rangPosition(Rang rang);
 
   @Override
   public String name() {
@@ -24,33 +37,30 @@ public abstract class AbstractDeposeGradin extends AbstractNerellAction {
   }
 
   @Override
-  public Point entryPoint() {
-    ConstructionArea.Rang rang = constructionArea().getFirstConstructibleRang(rs.limiter2Etages());
+  public final Point entryPoint() {
+    return entryPoint(planConstruction());
+  }
+
+  private Point entryPoint(ConstructionPlanResult planResult) {
+    Rang rang = planResult.actions().stream()
+      .filter(ConstructionMoveAction.class::isInstance)
+      .map(ConstructionAction::rang)
+      .findFirst().orElse(Rang.RANG_1);
     Point entry = rangPosition(rang);
-    entry.addDeltaY(EurobotConfig.offsetDeposeGradin);
+    applyOffsetRangPosition(entry);
     return entry;
   }
 
+  protected void applyOffsetRangPosition(Point position) {
+    position.addDeltaY(EurobotConfig.offsetDeposeGradin);
+  }
+
+
   @Override
   public int order() {
-    // TODO : Prendre en compte la dépose des gradins exact pour le score
-    int order = 0;
-    int nbEtageAvant = rs.faceAvant().nbEtageConstructible();
-    int nbEtageArriere = rs.faceArriere().nbEtageConstructible();
-    if (nbEtageAvant > 0) {
-      order += nbEtageAvant == 2 ? 12 : 4;
-    }
-    if (nbEtageArriere > 0) {
-      order += nbEtageArriere == 2 ? 12 : 4;
-    }
-
-    if (constructionArea().nbRang() == 1) {
-      if (rs.limiter2Etages() && order > 12) {
-        order = 12;
-      }
-    }
-
-    return order + tableUtils.alterOrder(entryPoint()); // Deux niveaux
+    final ConstructionPlanResult planResult = planConstruction();
+    int order = planResult.newArea().score() - constructionArea().score();
+    return order + tableUtils.alterOrder(entryPoint(planResult));
   }
 
   @Override
@@ -72,9 +82,8 @@ public abstract class AbstractDeposeGradin extends AbstractNerellAction {
     }
 
     // SI aucun rang n'est constructible, on ne peut pas déposer
-    ConstructionArea.Rang rang = constructionArea().getFirstConstructibleRang(rs.limiter2Etages());
-    ConstructionArea.Etage etage = constructionArea().getFirstConstructibleEtage(rang, rs.limiter2Etages());
-    return isTimeValid() && rang != null && etage != null;
+    final ConstructionPlanResult planResult = planConstruction();
+    return isTimeValid() && !planResult.actions().isEmpty();
   }
 
   @Override
@@ -87,43 +96,55 @@ public abstract class AbstractDeposeGradin extends AbstractNerellAction {
     mv.setVitessePercent(100, 100);
 
     try {
-      int nbDeposeCombine = !rs.faceAvant().isEmpty() ? 1 : 0;
-      nbDeposeCombine += !rs.faceArriere().isEmpty() ? 1 : 0;
-      for (int i = 0; i < nbDeposeCombine; i++) {
-        mv.pathTo(entryPoint());
+      final ConstructionPlanResult planResult = planConstruction();
+      log.info("Plan de construction pour {}", constructionArea().name());
+      for (ConstructionAction action : planResult.actions()) {
+        log.info(" - {}", action);
+      }
+      Rang currentRang = null;
+      boolean firstDepose = true;
+      for (ConstructionAction action : planResult.actions()) {
+        if (action instanceof ConstructionMoveAction moveAction) {
+          firstDepose = true;
+          if (currentRang == null) {
+            currentRang = moveAction.rang();
+            mv.pathTo(entryPoint(planResult));
+          } else {
+            Point pt = rangPosition(currentRang);
+            applyOffsetRangPosition(pt);
+            mv.gotoPoint(pt);
+          }
 
-        ConstructionArea.Rang rang = constructionArea().getFirstConstructibleRang(rs.limiter2Etages());
-        ConstructionArea.Etage etage = constructionArea().getFirstConstructibleEtage(rang, rs.limiter2Etages());
+        } else if (action instanceof ConstructionFloorAction floorAction) {
+          Face face = floorAction.face();
+          Rang rang = floorAction.rang();
+          Etage etage = floorAction.etage();
+          StockPosition stockPosition = floorAction.stockPosition();
 
-        log.info("Dépose dans le {} sur {}", rang.name(), etage.name());
+          Point rangPosition = rangPosition(rang);
 
-        final int nbEtageRequis;
-        if (rs.limiter2Etages()) {
-          // Si on limite a 2 étage soit 1 ou 2 étage
-          nbEtageRequis = etage == ConstructionArea.Etage.ETAGE_1 ? 2 : 1;
-        } else {
-          throw new RuntimeException("Impossible de déposer sur un rang sans limite a 2 étages. Pour le moment 😅");
+          AbstractNerellFaceService faceService = faceWrapper.getFaceService(face);
+          faceService.prepareDeposeGradin(rangPosition, firstDepose);
+          firstDepose = false;
+          faceService.deposeGradin(etage);
+          constructionArea().addGradin(rang, etage);
         }
-        log.info("Demande de construction de {} etage(s).", nbEtageRequis);
-
-        /*NerellFace face = faceWrapper.getConstructionFace(nbEtageRequis);
-        if (face == null) {
-          log.warn("Pas de face pour la dépose de {} étage(s)", nbEtageRequis);
-          return;
-        }
-        AbstractNerellFaceService faceService = faceWrapper.getFaceService(face);
-
-        Point rangPosition = rangPosition(rang);
-        faceService.deposeGradin(constructionArea(), rangPosition, rang, etage, nbEtageRequis);*/
       }
     } catch (NoPathFoundException | AvoidingException e) {
       log.warn("Erreur prise {} : {}", name(), e.toString());
       updateValidTime();
     } finally {
-      if (constructionArea().getFirstConstructibleRang(rs.limiter2Etages()) == null) {
+      if (constructionArea().isFull(rs.limiter2Etages())) {
         // On a déposé tous les gradins, on ne peut plus rien faire
         complete();
       }
     }
+  }
+
+  private ConstructionPlanResult planConstruction() {
+    if (rs.limiter2Etages()) {
+      return twoFloorPlannerService.plan(constructionArea());
+    }
+    return threeFloorPlannerService.plan(constructionArea());
   }
 }

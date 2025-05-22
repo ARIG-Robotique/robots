@@ -1,5 +1,5 @@
 package org.arig.robot.model;
 
-public enum NerellFace {
+public enum Face {
     AVANT, ARRIERE
 }

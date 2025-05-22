@@ -3,7 +3,8 @@ package org.arig.robot.services;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.model.ConstructionArea;
-import org.arig.robot.model.NerellPriseGradinState;
+import org.arig.robot.model.Etage;
+import org.arig.robot.model.PriseGradinState;
 import org.arig.robot.model.NerellRobotStatus;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.StockFace;
@@ -50,7 +51,7 @@ public class NerellFaceAvantService extends AbstractNerellFaceService {
   }
 
   @Override
-  protected void echappementPriseGradinBrut(NerellPriseGradinState state) throws AvoidingException {
+  protected void echappementPriseGradinBrut(PriseGradinState state) throws AvoidingException {
     log.info("Echappement de la prise du gradin brut. Erreur {}", state.name());
 
     servos.groupeBlockColonneAvantOuvert(false);
@@ -182,7 +183,7 @@ public class NerellFaceAvantService extends AbstractNerellFaceService {
   }
 
   @Override
-  protected void deposeEtage(ConstructionArea.Etage etage) throws AvoidingException {
+  protected void deposeEtage(Etage etage) throws AvoidingException {
     StockFace face = rs.faceAvant();
     log.info("Tentative de dépose de l'étage {}", etage.name());
     if (!face.tiroirBas()) {
@@ -211,7 +212,7 @@ public class NerellFaceAvantService extends AbstractNerellFaceService {
       servos.ascenseurAvantStock(true);
       servos.groupePincesAvantPrise(true);
       servos.ascenseurAvantHaut(true);
-      if (etage == ConstructionArea.Etage.ETAGE_2) {
+      if (etage == Etage.ETAGE_2) {
         deplacementDeposeEtage2();
       }
     }
@@ -228,14 +229,14 @@ public class NerellFaceAvantService extends AbstractNerellFaceService {
       servos.becAvantFerme(true);
       servos.tiroirAvantStock(true);
       updateTiroirState(true, false);
-      if (etage == ConstructionArea.Etage.ETAGE_1) {
+      if (etage == Etage.ETAGE_1) {
         servos.ascenseurAvantBas(true);
       } else {
         servos.ascenseurAvantEtage2(true);
       }
     } else {
       log.info("Pas de split tiroir");
-      if (etage == ConstructionArea.Etage.ETAGE_1) {
+      if (etage == Etage.ETAGE_1) {
         servos.ascenseurAvantBas(true);
       } else {
         servos.ascenseurAvantEtage2(true);

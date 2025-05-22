@@ -21,44 +21,6 @@ public class ConstructionArea {
   private final byte nbEtage = 3;
   private final boolean[][] data;
 
-  @Accessors(fluent = true)
-  @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-  public enum Rang {
-    RANG_1((byte) 0),
-    RANG_2((byte) 1),
-    RANG_3((byte) 2);
-
-    private final byte idx;
-
-    private static Rang fromIdx(byte rang) {
-      return switch (rang) {
-        case 0 -> RANG_1;
-        case 1 -> RANG_2;
-        case 2 -> RANG_3;
-        default -> throw new IllegalArgumentException("Invalid rang index: " + rang);
-      };
-    }
-  }
-
-  @Accessors(fluent = true)
-  @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-  public enum Etage {
-    ETAGE_1((byte) 0),
-    ETAGE_2((byte) 1),
-    ETAGE_3((byte) 2);
-
-    private final byte idx;
-
-    private static Etage fromIdx(byte etage) {
-      return switch (etage) {
-        case 0 -> ETAGE_1;
-        case 1 -> ETAGE_2;
-        case 2 -> ETAGE_3;
-        default -> throw new IllegalArgumentException("Invalid etage index: " + etage);
-      };
-    }
-  }
-
   public ConstructionArea(String name) {
     this(name, (byte) 1);
   }
@@ -87,12 +49,22 @@ public class ConstructionArea {
   }
 
   public void addGradin(Rang rang, Etage etage) {
-    log.info("Ajout tribune rang {} etage {}", rang, etage);
+    addGradin(rang, etage, false);
+  }
+  public void addGradin(Rang rang, Etage etage, boolean skipLog) {
+    if (!skipLog) {
+      log.info("{} : Ajout tribune {} {}", name, rang, etage);
+    }
     data[rang.idx][etage.idx] = true;
   }
 
   public void removeGradin(Rang rang, Etage etage) {
-    log.info("Remove tribune rang {} etage {}", rang, etage);
+    removeGradin(rang, etage, false);
+  }
+  public void removeGradin(Rang rang, Etage etage, boolean skipLog) {
+    if (!skipLog) {
+      log.info("{} : Remove tribune {} {}", name, rang, etage);
+    }
     data[rang.idx][etage.idx] = false;
   }
 
@@ -174,10 +146,35 @@ public class ConstructionArea {
     return null;
   }
 
+  public int getNbElementsInRang(Rang rang) {
+    if (data[rang.idx][Etage.ETAGE_3.idx]) {
+      return 3;
+    }
+    if (data[rang.idx][Etage.ETAGE_2.idx]) {
+      return 2;
+    }
+    if (data[rang.idx][Etage.ETAGE_1.idx]) {
+      return 1;
+    }
+    return 0;
+  }
+
   public boolean isEmpty() {
     for (byte row = 0; row < nbRang; row++) {
       for (byte col = 0; col < nbEtage; col++) {
         if (data[row][col]) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
+  public boolean isFull(boolean limit2Etages) {
+    byte nbEtage = limit2Etages ? 2 : this.nbEtage;
+    for (byte row = 0; row < nbRang; row++) {
+      for (byte col = 0; col < nbEtage; col++) {
+        if (!data[row][col]) {
           return false;
         }
       }
@@ -190,7 +187,7 @@ public class ConstructionArea {
     return Arrays.deepToString(data);
   }
 
-  void clean() {
+  public void clean() {
     for (byte row = 0; row < nbRang; row++) {
       for (byte col = 0; col < nbEtage; col++) {
         data[row][col] = false;
@@ -205,5 +202,15 @@ public class ConstructionArea {
       }
     }
     return true;
+  }
+
+  public ConstructionArea clone() {
+    ConstructionArea clone = new ConstructionArea(name + " [CLONE]", nbRang);
+    for (byte row = 0; row < nbRang; row++) {
+      for (byte col = 0; col < nbEtage; col++) {
+        clone.data[row][col] = data[row][col];
+      }
+    }
+    return clone;
   }
 }

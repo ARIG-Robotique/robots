@@ -2,11 +2,9 @@ package org.arig.robot.services;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.model.NerellFace;
+import org.arig.robot.model.Face;
 import org.arig.robot.model.NerellRobotStatus;
 import org.arig.robot.model.Position;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -19,21 +17,21 @@ public class NerellFaceWrapper {
   private final NerellFaceAvantService faceAvantService;
   private final NerellFaceArriereService faceArriereService;
 
-  public NerellFace getEmptyFace(boolean useTwoFaces) {
+  public Face getEmptyFace(boolean useTwoFaces) {
     // Ajouter une priorité sur la face déja orienté
     boolean avantEmpty = robotStatus.faceAvant().isEmpty();
     boolean arriereEmpty = robotStatus.faceArriere().isEmpty();
     if (avantEmpty) {
-      return NerellFace.AVANT;
+      return Face.AVANT;
     }
     if (useTwoFaces && arriereEmpty) {
-      return NerellFace.ARRIERE;
+      return Face.ARRIERE;
     }
 
     return null;
   }
 
-  public AbstractNerellFaceService getFaceService(final NerellFace face) {
+  public AbstractNerellFaceService getFaceService(final Face face) {
     if (face == null) {
       return null;
     }

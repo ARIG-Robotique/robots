@@ -5,10 +5,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.model.ConstructionArea;
+import org.arig.robot.model.Etage;
 import org.arig.robot.model.GradinBrut;
-import org.arig.robot.model.NerellPriseGradinState;
+import org.arig.robot.model.PriseGradinState;
 import org.arig.robot.model.NerellRobotStatus;
 import org.arig.robot.model.Point;
+import org.arig.robot.model.Rang;
+import org.arig.robot.model.StockPosition;
 
 @Slf4j
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
@@ -39,7 +42,7 @@ public abstract class AbstractNerellFaceService {
 
   protected abstract void deplacementPriseColonnesSol() throws AvoidingException;
 
-  protected abstract void echappementPriseGradinBrut(NerellPriseGradinState state) throws AvoidingException;
+  protected abstract void echappementPriseGradinBrut(PriseGradinState state) throws AvoidingException;
 
   protected abstract void deplacementDeposeInit() throws AvoidingException;
 
@@ -53,7 +56,7 @@ public abstract class AbstractNerellFaceService {
 
   protected abstract void verrouillageColonnesSol();
 
-  protected abstract void deposeEtage(ConstructionArea.Etage etage) throws AvoidingException;
+  protected abstract void deposeEtage(Etage etage) throws AvoidingException;
 
   public void preparePriseGradinBrut(GradinBrut gradin) throws AvoidingException {
     log.info("Préparation de la prise du gradin brut : {}", gradin.id());
@@ -66,22 +69,22 @@ public abstract class AbstractNerellFaceService {
     ouvreFacePourPrise();
   }
 
-  public NerellPriseGradinState prendreGradinBrutStockTiroir() throws AvoidingException {
+  public PriseGradinState prendreGradinBrutStockTiroir() throws AvoidingException {
     log.info("Prise du gradin brut pour stock tiroir");
 
     deplacementPriseColonnesPinces();
     if (!iosPinces()) {
       log.warn("Erreur de chargement du gradin brut dans les pinces (G : {} ; D : {})", ioService.pinceAvantGauche(false), ioService.pinceAvantDroite(false));
-      echappementPriseGradinBrut(NerellPriseGradinState.ERREUR_PINCES);
-      return NerellPriseGradinState.ERREUR_PINCES;
+      echappementPriseGradinBrut(PriseGradinState.ERREUR_PINCES);
+      return PriseGradinState.ERREUR_PINCES;
     }
     updatePincesState(true, true);
 
     log.info(" - Mise en stock du gradin brut");
     if (!miseEnStockTiroir()) {
       log.warn("Erreur de mise en stock du gradin brut (B : {} ; H : {})", ioService.tiroirAvantBas(false), ioService.tiroirAvantHaut(false));
-      echappementPriseGradinBrut(NerellPriseGradinState.ERREUR_TIROIR);
-      return NerellPriseGradinState.ERREUR_TIROIR;
+      echappementPriseGradinBrut(PriseGradinState.ERREUR_TIROIR);
+      return PriseGradinState.ERREUR_TIROIR;
     }
     updateTiroirState(true, true);
 
@@ -89,26 +92,24 @@ public abstract class AbstractNerellFaceService {
     deplacementPriseColonnesSol();
     if (!iosColonnesSol()) {
       log.warn("Erreur de prise des colonnes au sol (G : {} ; D : {})", ioService.solAvantGauche(false), ioService.solAvantDroite(false));
-      echappementPriseGradinBrut(NerellPriseGradinState.ERREUR_COLONNES);
-      return NerellPriseGradinState.ERREUR_COLONNES;
+      echappementPriseGradinBrut(PriseGradinState.ERREUR_COLONNES);
+      return PriseGradinState.ERREUR_COLONNES;
     }
     updateColonnesSolState(true, true);
 
     log.info(" - Vérouillage des colonnes au sol");
     verrouillageColonnesSol();
-    return NerellPriseGradinState.OK;
+    return PriseGradinState.OK;
   }
 
-  public void deposeGradin(ConstructionArea constructionArea, Point rangPosition,
-                           ConstructionArea.Rang rang, ConstructionArea.Etage etage,
-                           int nbEtageRequis) throws AvoidingException {
+  public void prepareDeposeGradin(Point rangPosition, boolean firstDepose) throws AvoidingException {
     aligneFace(rangPosition);
-    deplacementDeposeInit();
-    deposeEtage(etage);
-    constructionArea.addGradin(rang, etage);
-    if (nbEtageRequis == 2 && etage == ConstructionArea.Etage.ETAGE_1) {
-      deposeEtage(ConstructionArea.Etage.ETAGE_2);
-      constructionArea.addGradin(rang, ConstructionArea.Etage.ETAGE_2);
+    if (firstDepose) {
+      deplacementDeposeInit();
     }
+  }
+
+  public void deposeGradin(Etage etage) throws AvoidingException {
+    deposeEtage(etage);
   }
 }
