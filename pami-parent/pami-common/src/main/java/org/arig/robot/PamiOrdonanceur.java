@@ -227,36 +227,34 @@ public class PamiOrdonanceur extends AbstractOrdonanceur {
         RobotName.RobotIdentification id = robotName.id();
         double x = getX(PamiConstantesConfig.dstCallageArriere);
         double yBase = 1550;
+        double tailleZone = (double) 450 / 8;
         if (id == RobotName.RobotIdentification.PAMI_TRIANGLE) {
           position.setPt(new Point(
             conv.mmToPulse(x),
-            //conv.mmToPulse(yBase + PamiConstantesConfig.dstCallageCote)
-            conv.mmToPulse(2000 - 100)
+            conv.mmToPulse(yBase + 7 * tailleZone)
           ));
           groupService.initStep(InitStep.PAMI_TRIANGLE_CALAGE_TERMINE);
 
         } else if (id == RobotName.RobotIdentification.PAMI_CARRE) {
           position.setPt(new Point(
             conv.mmToPulse(x),
-            //conv.mmToPulse(yBase + 3 * PamiConstantesConfig.dstCallageCote)
-            conv.mmToPulse(2000 - 225)
+            conv.mmToPulse(yBase + 5 * tailleZone)
           ));
           groupService.initStep(InitStep.PAMI_CARRE_CALAGE_TERMINE);
 
         } else if (id == RobotName.RobotIdentification.PAMI_ROND) {
           position.setPt(new Point(
             conv.mmToPulse(x),
-            //conv.mmToPulse(yBase + 5 * PamiConstantesConfig.dstCallageArriere)
-            conv.mmToPulse(2000 - 375)
+            conv.mmToPulse(yBase + 3 * tailleZone)
           ));
           groupService.initStep(InitStep.PAMI_ROND_CALAGE_TERMINE);
 
         } else {
           position.setPt(new Point(
             conv.mmToPulse(x),
-            conv.mmToPulse(yBase + 7 * PamiConstantesConfig.dstCallageCote)
+            conv.mmToPulse(yBase + tailleZone)
           ));
-          groupService.initStep(InitStep.PAMI_CARRE_CALAGE_TERMINE);
+          groupService.initStep(InitStep.PAMI_STAR_CALAGE_TERMINE);
         }
 
         if (pamiRobotStatus.team() == Team.JAUNE) {

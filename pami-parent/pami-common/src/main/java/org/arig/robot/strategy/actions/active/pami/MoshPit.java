@@ -60,7 +60,7 @@ public class MoshPit extends AbstractEurobotAction {
       if (firstTime && robotName.id() == RobotName.RobotIdentification.PAMI_CARRE) {
         ThreadUtils.sleep(2000);
       }
-      if (firstTime && robotName.id() == RobotName.RobotIdentification.PAMI_CARRE) {
+      if (firstTime && robotName.id() == RobotName.RobotIdentification.PAMI_ROND) {
         ThreadUtils.sleep(1000);
       }
       mv.pathTo(entryPoint(), GotoOption.AVANT);

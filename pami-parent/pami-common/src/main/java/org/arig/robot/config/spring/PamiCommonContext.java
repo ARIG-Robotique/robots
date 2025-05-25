@@ -109,7 +109,7 @@ public class PamiCommonContext {
     } else if (robotName.id() == RobotName.RobotIdentification.PAMI_CARRE) {
       entraxe = PamiConstantesConfig.entraxeCarre;
     } else if (robotName.id() == RobotName.RobotIdentification.PAMI_ROND) {
-      entraxe = PamiConstantesConfig.entraxeTriangle;
+      entraxe = PamiConstantesConfig.entraxeRond;
     } else {
       entraxe = PamiConstantesConfig.entraxeStar;
     }
