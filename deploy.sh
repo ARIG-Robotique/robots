@@ -7,7 +7,7 @@ ROBOTS=$(
     echo "pami-triangle"
     echo "pami-carre"
     echo "pami-rond"
-    echo "pami-etoile"
+    echo "pami-star"
   ) | fzf -m --prompt="Choisir le nom des robots à déployer (tab pour selectionner)"
 )
 
