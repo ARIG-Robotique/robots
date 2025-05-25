@@ -105,7 +105,7 @@ public class PamiRobotContext {
 
     } else {
       encoders = new ARIG2024Can2WheelsEncoders(canBus, 1, 2);
-      encoders.setEncoderConfiguration(false, false);
+      encoders.setEncoderConfiguration(false, true);
     }
 
     encoders.setCoefs(PamiConstantesConfig.coefCodeurGauche, PamiConstantesConfig.coefCodeurDroit);
@@ -146,7 +146,7 @@ public class PamiRobotContext {
     } else {
       motors = new ARIG2024CanPropulsionsMotors(canBus);
       motors.assignMotors(1, 2);
-      motors.setMotorConfiguration(false, false);
+      motors.setMotorConfiguration(true, false);
     }
     return motors;
   }

@@ -104,25 +104,17 @@ public class PamiIOServiceRobot implements PamiIOService {
 
   @Override
   public boolean calageArriereGauche() {
-    if (robotName.id() == RobotName.RobotIdentification.PAMI_TRIANGLE) {
-      return arig2025IoPamiSensors.isInput2();
-    } else if (robotName.id() == RobotName.RobotIdentification.PAMI_CARRE) {
-      return arig2025IoPamiSensors.isInput2();
-    } else if (robotName.id() == RobotName.RobotIdentification.PAMI_ROND) {
+    if (robotName.id() == RobotName.RobotIdentification.PAMI_ROND) {
       return arig2025IoPamiSensors.isInput1();
     }
 
     // PAMI Star
-    return arig2025IoPamiSensors.isInput1();
+    return arig2025IoPamiSensors.isInput2();
   }
 
   @Override
   public boolean calageArriereDroit() {
-    if (robotName.id() == RobotName.RobotIdentification.PAMI_TRIANGLE) {
-      return arig2025IoPamiSensors.isInput1();
-    } else if (robotName.id() == RobotName.RobotIdentification.PAMI_CARRE) {
-      return arig2025IoPamiSensors.isInput1();
-    } else if (robotName.id() == RobotName.RobotIdentification.PAMI_ROND) {
+    if (robotName.id() == RobotName.RobotIdentification.PAMI_ROND) {
       return arig2025IoPamiSensors.isInput2();
     }
 

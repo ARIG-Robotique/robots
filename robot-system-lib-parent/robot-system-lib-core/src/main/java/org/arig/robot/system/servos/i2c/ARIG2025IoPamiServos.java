@@ -47,7 +47,7 @@ public class ARIG2025IoPamiServos extends AbstractServos {
 
   @Override
   protected void setSpeedImpl(byte servoNb, byte speed) {
-    log.warn("La vitesse n'est pas gérée par la carte ARIG2024IoPamiServos");
+    log.warn("La vitesse n'est pas gérée par la carte ARIG2025IoPamiServos");
   }
 
   @Override
