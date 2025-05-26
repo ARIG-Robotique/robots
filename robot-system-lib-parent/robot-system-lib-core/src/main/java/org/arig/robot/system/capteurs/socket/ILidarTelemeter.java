@@ -5,6 +5,8 @@ import org.arig.robot.model.lidar.DeviceInfos;
 import org.arig.robot.model.lidar.HealthInfos;
 import org.arig.robot.model.lidar.ScanInfos;
 
+import java.util.List;
+
 /**
  * @author gdepuille on 24/04/17.
  */
@@ -41,6 +43,10 @@ public interface ILidarTelemeter {
   default void setSensorOrigin(Point origin) {
     setSensorOrigin(origin.getX(), origin.getY());
   }
+
+  void setAnglesFiltered(List<double[]> anglesFiltered);
+
+  List<double[]> getAnglesFiltered();
 
   void setSensorOrigin(double x, double y);
 

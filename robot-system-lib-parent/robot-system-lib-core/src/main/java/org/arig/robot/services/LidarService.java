@@ -112,9 +112,22 @@ public class LidarService implements InitializingBean {
     for (ILidarTelemeter telemeter : telemeters) {
       ScanInfos lidarScan = telemeter.grabData();
       Point sensorOrigin = telemeter.getSensorOrigin();
+      List<double[]> anglesFiltered = telemeter.getAnglesFiltered();
       if (lidarScan != null) {
         detectedPointsMm.addAll(
           lidarScan.getScan().parallelStream()
+            .filter(scan -> {
+              if (CollectionUtils.isEmpty(anglesFiltered)) {
+                return false;
+              }
+              // true = gardé
+              for (double[] range : anglesFiltered) {
+                if (scan.getAngleDeg() >= range[0] && scan.getAngleDeg() <= range[1]) {
+                  return false;
+                }
+              }
+              return true;
+            })
             .map(scan -> {
               Point pt = tableUtils.getPointFromAngle(scan.getDistanceMm(), scan.getAngleDeg(), sensorOrigin.getX(), sensorOrigin.getY());
               pt.addDeltaX(telemeter.getSensorOrigin().getX());

@@ -11,6 +11,7 @@ import org.arig.robot.model.lidar.enums.HealthState;
 import org.arig.robot.system.capteurs.socket.ILidarTelemeter;
 
 import java.util.Collections;
+import java.util.List;
 
 @Slf4j
 public class LidarTelemeterMock implements ILidarTelemeter {
@@ -91,5 +92,14 @@ public class LidarTelemeterMock implements ILidarTelemeter {
     r.setIgnored((short) 359);
     r.setScan(Collections.emptyList());
     return r;
+  }
+
+  @Override
+  public void setAnglesFiltered(List<double[]> anglesFiltered) {
+  }
+
+  @Override
+  public List<double[]> getAnglesFiltered() {
+    return List.of();
   }
 }

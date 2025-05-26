@@ -24,6 +24,9 @@ import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.logging.LogLevel;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Slf4j
 public class PamiOrdonanceur extends AbstractOrdonanceur {
 
@@ -75,6 +78,10 @@ public class PamiOrdonanceur extends AbstractOrdonanceur {
     super.initLidar();
     lidar.setConfiguration(true, -20.23, 50, 900);
     lidar.setSensorOrigin(0, 70);
+    List<double[]> excludedRanges = new ArrayList<>();
+    // Superieur ou égal à [0] et inférieur ou égal à [1]
+    excludedRanges.add(new double[]{ 80, Math.toRadians(180) });
+    excludedRanges.add(new double[]{ Math.toRadians(-180), Math.toRadians(-80) });
   }
 
   @Override

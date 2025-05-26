@@ -138,6 +138,15 @@ public class GP2D12Telemeter implements ILidarTelemeter {
   }
 
   @Override
+  public void setAnglesFiltered(List<double[]> anglesFiltered) {
+  }
+
+  @Override
+  public List<double[]> getAnglesFiltered() {
+    return List.of();
+  }
+
+  @Override
   public ScanInfos grabData() {
     if (!enabled) {
       return null;

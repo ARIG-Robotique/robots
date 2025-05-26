@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.model.lidar.DeviceInfos;
 
 import java.io.File;
+import java.util.List;
 
 /**
  * @author gdepuille on 03/03/17.
@@ -34,5 +35,14 @@ public class RPLidarA2TelemeterOverSocket extends AbstractTelemeterOverSocket {
     DeviceInfos d = deviceInfo();
     log.info("RPLidar A2 version [Bridge driver : {} ; Firmware : {} ; Hardware {} ; Serial number : {}]",
       d.getDriver(), d.getFirmwareVersion(), d.getHardwareVersion(), d.getSerialNumber());
+  }
+
+  @Override
+  public void setAnglesFiltered(List<double[]> anglesFiltered) {
+  }
+
+  @Override
+  public List<double[]> getAnglesFiltered() {
+    return List.of();
   }
 }

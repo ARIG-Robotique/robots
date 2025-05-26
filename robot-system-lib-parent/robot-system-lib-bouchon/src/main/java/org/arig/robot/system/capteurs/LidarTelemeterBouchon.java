@@ -103,6 +103,15 @@ public class LidarTelemeterBouchon implements ILidarTelemeter {
   }
 
   @Override
+  public void setAnglesFiltered(List<double[]> anglesFiltered) {
+  }
+
+  @Override
+  public List<double[]> getAnglesFiltered() {
+    return List.of();
+  }
+
+  @Override
   public ScanInfos grabData() {
     ScanInfos r = new ScanInfos();
     r.setIgnored((short) 359);

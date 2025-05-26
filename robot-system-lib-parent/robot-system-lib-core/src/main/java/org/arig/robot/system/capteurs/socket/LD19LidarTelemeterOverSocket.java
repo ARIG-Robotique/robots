@@ -4,11 +4,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.model.lidar.DeviceInfos;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 public class LD19LidarTelemeterOverSocket extends AbstractTelemeterOverSocket {
 
   public static final String DRIVER_NAME = "ldlidar";
+
+  private final List<double[]> anglesFiltered = new ArrayList<>();
 
   public LD19LidarTelemeterOverSocket(String hostname, Integer port) throws Exception {
     this(hostname, port, 1000);
@@ -28,4 +32,16 @@ public class LD19LidarTelemeterOverSocket extends AbstractTelemeterOverSocket {
     log.info("LD19 Lidar D500 version [Bridge driver : {} ; Firmware : {} ; Hardware {} ; Serial number : {}]",
       d.getDriver(), d.getFirmwareVersion(), d.getHardwareVersion(), d.getSerialNumber());
   }
+
+  @Override
+  public void setAnglesFiltered(List<double[]> anglesFiltered) {
+    this.anglesFiltered.clear();
+    this.anglesFiltered.addAll(anglesFiltered);
+  }
+
+  @Override
+  public List<double[]> getAnglesFiltered() {
+    return anglesFiltered;
+  }
+
 }
