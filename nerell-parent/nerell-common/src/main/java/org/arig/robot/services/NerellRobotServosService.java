@@ -50,12 +50,12 @@ public class NerellRobotServosService extends AbstractCommonRobotServosService {
       .position(POS_FERME, 1610);
     Servo ascAvant = servo(ASCENSEUR_AVANT_ID, ASCENSEUR_AVANT)
       .time(TIME_ASCENSEUR)
-      .position(POS_HAUT, 490)
-      .position(POS_SPLIT, 650)
-      .position(POS_STOCK, 780)
-      .position(POS_ETAGE_2, 890)
-      .position(POS_REPOS, 2120)
-      .position(POS_BAS, 2200);
+      .position(POS_HAUT, 580)
+      .position(POS_SPLIT, 740)
+      .position(POS_STOCK, 870)
+      .position(POS_ETAGE_2, 980)
+      .position(POS_REPOS, 2160) // 106 mm
+      .position(POS_BAS, 2290);
     group(GROUP_INDIVIDUAL_AVANT_ID, GROUP_INDIVIDUAL_AVANT)
       .addServo(tiroirAvant)
       .addServo(becAvant)
@@ -74,12 +74,12 @@ public class NerellRobotServosService extends AbstractCommonRobotServosService {
       .position(POS_FERME, 1530);
     Servo ascArriere = servo(ASCENSEUR_ARRIERE_ID, ASCENSEUR_ARRIERE)
       .time(TIME_ASCENSEUR)
-      .position(POS_HAUT, 540)
-      .position(POS_SPLIT, 680)
-      .position(POS_STOCK, 800)
-      .position(POS_ETAGE_2, 910)
-      .position(POS_REPOS, 2130)
-      .position(POS_BAS, 2250);
+      .position(POS_HAUT, 570)
+      .position(POS_SPLIT, 800)
+      .position(POS_STOCK, 830)
+      .position(POS_ETAGE_2, 940)
+      .position(POS_REPOS, 2160) // 107 mm
+      .position(POS_BAS, 2280);
     group(GROUP_INDIVIDUAL_ARRIERE_ID, GROUP_INDIVIDUAL_ARRIERE)
       .addServo(tiroirArriere)
       .addServo(becArriere)
