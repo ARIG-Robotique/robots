@@ -6,12 +6,12 @@ import org.arig.robot.utils.SocketUtils;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeAll;
 
-public class RPLidarInetOdinSocketTest extends RPLidarA2TelemeterOverSocketTest {
+public class RPLidarInetPCGabrielSocketTest extends RPLidarA2TelemeterOverSocketTest {
 
   @BeforeAll
   @SneakyThrows
   static void initTest() {
-    String host = "odin";
+    String host = "192.168.0.114";
     int port = 8686;
     Assumptions.assumeTrue(SocketUtils.serverListening(host, port));
 
