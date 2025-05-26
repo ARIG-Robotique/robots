@@ -142,26 +142,44 @@ public class TableUtils {
    *
    * @param distanceMm     Distance par rapport au robot.
    * @param offsetAngle    Valeur en degré par rapport au robot.
-   * @param offsetXRobotMm Valeur en mm de décalage du capteur par rapport au robot sur l'axe X
-   * @param offsetYRobotMm Valeur en mm de décalage du capteur par rapport au robot sur l'axe Y
+   * @param offsetXSensorMm Valeur en mm de décalage du capteur par rapport au robot sur l'axe X
+   * @param offsetYSensorMm Valeur en mm de décalage du capteur par rapport au robot sur l'axe Y
    * @return Le point si présent sur la table, null sinon
    */
-  public Point getPointFromAngle(double distanceMm, double offsetAngle, double offsetXRobotMm, double offsetYRobotMm) {
-    // 1. Récupération du point dans le repère cartésien de la table
+  public Point getPointFromAngle(double distanceMm, double offsetAngle, double offsetXSensorMm, double offsetYSensorMm) {
+    // S on a un ofset de capteur par rapport au robot, on le prend en compte
+    if (offsetXSensorMm != 0 || offsetYSensorMm != 0) {
+      // Transformation des points pour les mettre dans le repère Lidar (cartesian)
+      double thetaLidar = Math.toRadians(offsetAngle);
+      Point ptLidar = new Point();
+      ptLidar.setX(distanceMm * Math.cos(thetaLidar));
+      ptLidar.setY(distanceMm * Math.sin(thetaLidar));
+
+      // Transformation des points pour les mettre dans le repère du robot
+      ptLidar.addDeltaX(offsetXSensorMm);
+      ptLidar.addDeltaY(offsetYSensorMm);
+
+      // Transformation polaire pour avoir le point dans le repere de la table
+      double thetaRobot = conv.pulseToRad(position.getAngle());
+      double xRobot = conv.pulseToMm(position.getPt().getX());
+      double yRobot = conv.pulseToMm(position.getPt().getY());
+      Point ptObstacle = new Point();
+      ptObstacle.setX(xRobot + ptLidar.getX() * Math.cos(thetaRobot) - ptLidar.getY() * Math.sin(thetaRobot));
+      ptObstacle.setY(yRobot + ptLidar.getX() * Math.sin(thetaRobot) + ptLidar.getY() * Math.cos(thetaRobot));
+      return ptObstacle;
+    }
+
+    return getPointFromAngle(distanceMm, offsetAngle);
+  }
+
+  public Point getPointFromAngle(double distanceMm, double offsetAngle) {
+    // 2. Récupération du point dans le repère cartésien de la table
     double theta = conv.pulseToRad(position.getAngle()) + Math.toRadians(offsetAngle); // On calcul la position sur l'angle du repère pour n'avoir que la translation a faire
     Point ptObstacle = new Point();
     ptObstacle.setX(distanceMm * Math.cos(theta));
     ptObstacle.setY(distanceMm * Math.sin(theta));
 
-    // 2. Translation du point de la position du robot
-    ptObstacle.addDeltaX(conv.pulseToMm(position.getPt().getX()) + offsetXRobotMm);
-    ptObstacle.addDeltaY(conv.pulseToMm(position.getPt().getY()) + offsetYRobotMm);
-
     return ptObstacle;
-  }
-
-  public Point getPointFromAngle(double distanceMm, double offsetAngle) {
-    return getPointFromAngle(distanceMm, offsetAngle, 0, 0);
   }
 
   /**
