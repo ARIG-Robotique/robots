@@ -13,8 +13,8 @@ ROBOTS=$(
 
 UTILS=$(
   (
-    echo "oui"
     echo "non"
+    echo "oui"
   ) | fzf --prompt="Déployer le shell"
 )
 
