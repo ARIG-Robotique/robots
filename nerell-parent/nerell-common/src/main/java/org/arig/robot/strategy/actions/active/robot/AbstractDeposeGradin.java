@@ -107,6 +107,7 @@ public abstract class AbstractDeposeGradin extends AbstractNerellAction {
             currentRang = moveAction.rang();
             mv.pathTo(entryPoint(planResult));
           } else {
+            currentRang = moveAction.rang();
             Point pt = rangPosition(currentRang);
             applyOffsetRangPosition(pt);
             mv.gotoPoint(pt);
