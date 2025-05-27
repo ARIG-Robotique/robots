@@ -86,7 +86,7 @@ public class GameMultiPathFinderImpl extends MultiPathFinderImpl {
     if (rs.getRemainingTime() <= EurobotConfig.validRetourBackstageRemainingTime) {
 
       // /!\ Create polygon obstacle travaille en MM, et retourne en CM
-      Polygon pol = tableUtils.createPolygonObstacle(new Point(1500, 2000), (85 + rayonRobotCm) * 20);
+      Polygon pol = tableUtils.createPolygonObstacle(new Point(1500, 2000), (100 + rayonRobotCm) * 20);
       obstacles.add(pol);
     }
 
