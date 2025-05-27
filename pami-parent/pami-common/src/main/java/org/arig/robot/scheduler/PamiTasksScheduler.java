@@ -75,7 +75,7 @@ public class PamiTasksScheduler {
     }
   }
 
-  private byte ledsCounter = 0;
+  private boolean enableLed = false;
 
   @Scheduled(fixedDelay = 300)
   public void showTimeTask() {
@@ -85,50 +85,11 @@ public class PamiTasksScheduler {
       } else {
         pamiRobotServosService.handOuvert1(false);
       }
-
-      ARIG2025IoPamiLeds.LedColor ledColor = rs.team() == Team.JAUNE ?
-        ARIG2025IoPamiLeds.LedColor.Yellow : ARIG2025IoPamiLeds.LedColor.Blue;
-      switch (ledsCounter) {
-        case 0:
-          leds.setAllLeds(ARIG2025IoPamiLeds.LedColor.Black);
-          break;
-        case 1:
-          leds.setLedColor(ARIG2025IoPamiLeds.LedId.LED1, ledColor);
-          break;
-        case 2:
-          leds.setLedColor(ARIG2025IoPamiLeds.LedId.LED1, ledColor);
-          leds.setLedColor(ARIG2025IoPamiLeds.LedId.LED2, ledColor);
-          break;
-        case 3:
-          leds.setLedColor(ARIG2025IoPamiLeds.LedId.LED2, ledColor);
-          leds.setLedColor(ARIG2025IoPamiLeds.LedId.LED3, ledColor);
-          break;
-        case 4:
-          leds.setLedColor(ARIG2025IoPamiLeds.LedId.LED3, ledColor);
-          leds.setLedColor(ARIG2025IoPamiLeds.LedId.LED4, ledColor);
-          break;
-        case 5:
-          leds.setLedColor(ARIG2025IoPamiLeds.LedId.LED4, ledColor);
-          leds.setLedColor(ARIG2025IoPamiLeds.LedId.LED5, ledColor);
-          break;
-        case 6:
-          leds.setLedColor(ARIG2025IoPamiLeds.LedId.LED5, ledColor);
-          leds.setLedColor(ARIG2025IoPamiLeds.LedId.LED6, ledColor);
-          break;
-        case 7:
-          leds.setLedColor(ARIG2025IoPamiLeds.LedId.LED6, ledColor);
-          leds.setLedColor(ARIG2025IoPamiLeds.LedId.LED7, ledColor);
-          break;
-        case 8:
-          leds.setLedColor(ARIG2025IoPamiLeds.LedId.LED7, ledColor);
-          break;
-        case 9:
-          leds.setAllLeds(ARIG2025IoPamiLeds.LedColor.Black);
-          break;
-      }
-      ledsCounter++;
-      if (ledsCounter > 9) {
-        ledsCounter = 0;
+      if (!enableLed) {
+        ARIG2025IoPamiLeds.LedColor ledColor = rs.team() == Team.JAUNE ?
+          ARIG2025IoPamiLeds.LedColor.Yellow : ARIG2025IoPamiLeds.LedColor.Blue;
+        leds.setAllLeds(ledColor);
+        enableLed = true;
       }
     }
   }
