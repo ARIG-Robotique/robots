@@ -86,15 +86,15 @@ public interface PamiConstantesConfig {
   // Parametres PID //
   // -------------- //
   double kpDistance = 90;
-  double kiDistance = 1.0;
+  double kiDistance = 3.0;
   double kdDistance = 125;
   double kpDistanceSimu = 12.9;
   double kiDistanceSimu = 0.1;
   double kdDistanceSimu = 0.008;
 
-  double kpOrientation = 45;
-  double kiOrientation = 1.0;
-  double kdOrientation = 30;
+  double kpOrientation = 90;
+  double kiOrientation = 2.0;
+  double kdOrientation = 125;
   double kpOrientationSimu = 6.0;
   double kiOrientationSimu = 0.1;
   double kdOrientationSimu = 0.01;
@@ -130,8 +130,8 @@ public interface PamiConstantesConfig {
   // Paramètre path finding //
   // ---------------------- //
   PathFinderAlgorithm pathFindingAlgo = PathFinderAlgorithm.ANYA16;
-  int pathFindingAngle = 45;
-  int pathFindingAngleSafe = 50;
+  int pathFindingAngle = 30;
+  int pathFindingAngleSafe = 40;
   int pathFindingSeuilProximite = 160;
   int pathFindingSeuilProximiteSafe = 200;
   int pathFindingSeuilProximiteArig = 140;
@@ -139,7 +139,7 @@ public interface PamiConstantesConfig {
   int pathFindingTailleObstacleArig = PamiConstantesConfig.pathFindingSeuilProximiteArig * 2 + 50;
 
   int lidarClusterSizeMm = 50;
-  int lidarOffsetPointMm = 30; // "recule" les points détectés pour prendre en compte qu'on ne detecte que les faces avant
+  int lidarOffsetPointMm = 0; // "recule" les points détectés pour prendre en compte qu'on ne detecte que les faces avant
 
   // ----------------- //
   // Paramètres métier //
