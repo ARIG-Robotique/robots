@@ -82,9 +82,9 @@ public class NerellFaceAvantService extends AbstractNerellFaceService {
     rs.enableCalage(TypeCalage.FORCE);
     mv.setVitessePercent(100, 100);
     if (!reverse) {
-      mv.reculeMM(50);
+      mv.reculeMM(60);
     } else {
-      mv.avanceMM(50);
+      mv.avanceMM(60);
     }
   }
 
