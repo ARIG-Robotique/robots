@@ -130,8 +130,6 @@ public class LidarService implements InitializingBean {
             })
             .map(scan -> {
               Point pt = tableUtils.getPointFromAngle(scan.getDistanceMm(), scan.getAngleDeg(), sensorOrigin.getX(), sensorOrigin.getY());
-              pt.addDeltaX(telemeter.getSensorOrigin().getX());
-              pt.addDeltaY(telemeter.getSensorOrigin().getY());
               if (!tableUtils.isInTable(pt)) {
                 return null;
               }
