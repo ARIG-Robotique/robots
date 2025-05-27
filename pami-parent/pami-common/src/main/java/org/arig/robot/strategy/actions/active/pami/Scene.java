@@ -26,7 +26,7 @@ public class Scene extends AbstractEurobotAction {
 
   @Override
   public Point entryPoint() {
-    return new Point(getX(1255), 1900);
+    return null;
   }
 
   @Override
@@ -52,17 +52,40 @@ public class Scene extends AbstractEurobotAction {
 
   @Override
   public void execute() {
+    GotoOption avant = GotoOption.AVANT;
     try {
       mv.setVitessePercent(100, 100);
-      Point entry = entryPoint();
-      mv.gotoPoint(entry, GotoOption.AVANT);
-      mv.gotoPoint(entry.getX(), 1650, GotoOption.AVANT);
-      mv.setVitessePercent(20, 100);
+      rs.disableAvoidance();
+      mv.avanceMM(95);
+      mv.gotoPoint(getX(350), 1910, avant);
+
+      // Rampes, on réduit les accels et la vitesse
+      //mv.setVitessePercent(100, 30);
+      //mv.setRampeOrientationPercent(10, 100);
+      //mv.setRampesDistancePercent(10, 100);
+
+      mv.gotoPoint(getX(1200), 1910, avant, GotoOption.SANS_ORIENTATION);
+
+      // On rétablit les accels et la vitesse pour la suite
+      //mv.setRampeOrientationPercent(100, 100);
+      //mv.setRampesDistancePercent(100, 100);
+      //mv.setVitessePercent(100, 100);
+
+      mv.gotoOrientationDeg(-90);
+      mv.avanceMM(300);
+
+      // Bord de scene, on réduit les accels et la vitesse
+      mv.setVitessePercent(10, 10);
+      mv.setRampeOrientationPercent(10, 100);
+      mv.setRampesDistancePercent(10, 100);
+
       rs.enableCalage(TypeCalage.PRISE_PRODUIT_SOL_AVANT);
-      mv.gotoPoint(entry.getX(), 1500, GotoOption.AVANT);
+      mv.avanceMM(70);
+      //mv.setVitessePercent(20, 100);
+      //rs.enableCalage(TypeCalage.PRISE_PRODUIT_SOL_AVANT);
+      //mv.avanceMM(42);
 
       complete(true);
-      rs.disableAvoidance();
 
       ThreadUtils.sleep((int) rs.getRemainingTime());
     } catch (AvoidingException e) {

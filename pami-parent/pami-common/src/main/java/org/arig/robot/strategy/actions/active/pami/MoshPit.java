@@ -29,7 +29,7 @@ public class MoshPit extends AbstractEurobotAction {
 
   @Override
   public Point entryPoint() {
-    return new Point(getX(600), 1625);
+    return null;
   }
 
   @Override
@@ -55,41 +55,60 @@ public class MoshPit extends AbstractEurobotAction {
 
   @Override
   public void execute() {
+    GotoOption avant = GotoOption.AVANT;
     try {
       mv.setVitessePercent(100, 100);
-      if (firstTime && robotName.id() == RobotName.RobotIdentification.PAMI_CARRE) {
-        ThreadUtils.sleep(2000);
+      rs.disableAvoidance();
+      if (firstTime) {
+        if (robotName.id() == RobotName.RobotIdentification.PAMI_STAR) {
+          mv.avanceMM(380);
+          mv.gotoPoint(getX(750), 1370, avant);
+        }
+        if (robotName.id() == RobotName.RobotIdentification.PAMI_ROND) {
+          ThreadUtils.sleep(5000);
+          mv.avanceMM(160);
+        }
+        if (robotName.id() == RobotName.RobotIdentification.PAMI_CARRE) {
+          ThreadUtils.sleep(10000);
+          mv.avanceMM(140);
+          mv.gotoPoint(getX(660), 1460, avant);
+        }
       }
-      if (firstTime && robotName.id() == RobotName.RobotIdentification.PAMI_ROND) {
-        ThreadUtils.sleep(1000);
-      }
-      mv.pathTo(entryPoint(), GotoOption.AVANT);
+      rs.enableAvoidance();
+
       if (robotName.id() == RobotName.RobotIdentification.PAMI_STAR) {
         if (tryFinalPoint == 0) {
-          mv.pathTo(getX(2000), 1380);
+          mv.gotoPoint(getX(1800), 1380, avant);
         } else if (tryFinalPoint == 1) {
-          mv.pathTo(getX(1800), 1300);
+          mv.gotoPoint(getX(2000), 1300, avant);
         } else if (tryFinalPoint == 2) {
-          mv.pathTo(getX(1750), 1400);
+          mv.gotoPoint(getX(1750), 1400, avant);
         }
       }
       if (robotName.id() == RobotName.RobotIdentification.PAMI_ROND) {
         if (tryFinalPoint == 0) {
-          mv.pathTo(getX(1500), 1280);
+          mv.gotoPoint(getX(1200), 1350, avant);
         } else if (tryFinalPoint == 1) {
-          mv.pathTo(getX(1500), 1440);
+          mv.gotoPoint(getX(1500), 1440, avant);
         } else if (tryFinalPoint == 2) {
-          mv.pathTo(getX(1200), 1300);
+          mv.gotoPoint(getX(1200), 1300, avant);
         }
-      } else if (robotName.id() == RobotName.RobotIdentification.PAMI_CARRE) {
-        mv.pathTo(getX(830), 1520);
       }
-      mv.alignFrontTo(getX(1270), 1600);
+      if (robotName.id() == RobotName.RobotIdentification.PAMI_CARRE) {
+        if (tryFinalPoint == 0) {
+          mv.gotoPoint(getX(920), 1460, avant);
+        } else if (tryFinalPoint == 1) {
+          mv.gotoPoint(getX(1200), 1290, avant);
+        } else if (tryFinalPoint == 2) {
+          mv.gotoPoint(getX(880), 1520, avant);
+        }
+      }
+
       complete(true);
       rs.disableAvoidance();
 
       ThreadUtils.sleep((int) rs.getRemainingTime());
-    } catch (AvoidingException | NoPathFoundException e) {
+    } catch (AvoidingException e) {
       log.error("Erreur d'accès au mosh pit", e);
     } finally {
       firstTime = false;
