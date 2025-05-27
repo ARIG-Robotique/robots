@@ -91,7 +91,7 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
     if (ecranService.config() != null && ecranService.config().isExit()) {
       ecranService.displayMessage("Arret du programme");
       if (robotStatus.pamiTriangleGroupOk()) {
-      pamiTriangleGroupService.quit();
+        pamiTriangleGroupService.quit();
       }
       if (robotStatus.pamiCarreGroupOk()) {
         pamiCarreGroupService.quit();
@@ -134,6 +134,7 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
           case QUALIF:
           case FINALE_1:
           case FINALE_2:
+            mv.avanceMM(50);
             log.info("Strategy {}. Calage terminé", nerellRobotStatus.strategy().name());
             break;
 
@@ -382,7 +383,7 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
 
       switch (nerellRobotStatus.strategy()) {
         case QUALIF:
-          mv.gotoPoint(getX(1225), 225);
+          mv.gotoPoint(getX(1175), 225);
           mv.gotoOrientationDeg(-90);
           break;
         case FINALE_1:
@@ -390,7 +391,7 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
         case FINALE_2:
           // Start milieu coté adverse
         default:
-          mv.gotoPoint(getX(1225), 225);
+          mv.gotoPoint(getX(1175), 225);
           mv.gotoOrientationDeg(-90);
           break;
       }
