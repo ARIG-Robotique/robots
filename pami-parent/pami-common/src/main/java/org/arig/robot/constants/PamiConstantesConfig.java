@@ -32,10 +32,10 @@ public interface PamiConstantesConfig {
   // Configuration des convertions //
   // ----------------------------- //
 
-  double entraxeTriangle = 101.5;
-  double entraxeCarre = 99.5;
-  double entraxeRond = 99;
-  double entraxeStar = 100;
+  double entraxeTriangle = 110.0094727205884;
+  double entraxeCarre = 104.72747511715694;
+  double entraxeRond = 105.33522951647504;
+  double entraxeStar = 105.52939546733161;
 
   // Diam <d_roue> mm => périmètre <xx> mm
   // <pulse_tour> p => <distance_tour> mm : <pulse_tour> / <distance_tour> = countPerMm
@@ -49,8 +49,14 @@ public interface PamiConstantesConfig {
   // <perimetre_roue> mm => <countPerMM> * <perimetre> / 180 = countPerDeg
   double countPerDeg = 9.09560723514212; // X4
 
-  double coefCodeurDroit = 1.0;
-  double coefCodeurGauche = 1.0;
+  double coefCodeurDroitTriangle = 1.0;
+  double coefCodeurGaucheTriangle = (0.9995061300101105 +  0.9988893648753708) / 2;
+  double coefCodeurDroitCarre = 1.0;
+  double coefCodeurGaucheCarre = 0.9907354676640796;
+  double coefCodeurDroitRond = 1.0;
+  double coefCodeurGaucheRond = 0.9952581446633484;
+  double coefCodeurDroitStar = 0.9929760887532072;
+  double coefCodeurGaucheStar = 1.0;
 
   // ------------------------ //
   // Configuration des rampes //
@@ -80,14 +86,14 @@ public interface PamiConstantesConfig {
   // Parametres PID //
   // -------------- //
   double kpDistance = 90;
-  double kiDistance = 0.5;
+  double kiDistance = 1.0;
   double kdDistance = 125;
   double kpDistanceSimu = 12.9;
   double kiDistanceSimu = 0.1;
   double kdDistanceSimu = 0.008;
 
   double kpOrientation = 45;
-  double kiOrientation = 0.6;
+  double kiOrientation = 1.0;
   double kdOrientation = 30;
   double kpOrientationSimu = 6.0;
   double kiOrientationSimu = 0.1;

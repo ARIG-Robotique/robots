@@ -94,21 +94,24 @@ public class PamiRobotContext {
     if (robotName.id() == RobotIdentification.PAMI_TRIANGLE) {
       encoders = new ARIG2024Can2WheelsEncoders(canBus, 1, 2);
       encoders.setEncoderConfiguration(false, true);
+      encoders.setCoefs(PamiConstantesConfig.coefCodeurGaucheTriangle, PamiConstantesConfig.coefCodeurDroitTriangle);
 
     } else if (robotName.id() == RobotIdentification.PAMI_CARRE) {
       encoders = new ARIG2024Can2WheelsEncoders(canBus, 2, 1);
       encoders.setEncoderConfiguration(false, true);
+      encoders.setCoefs(PamiConstantesConfig.coefCodeurGaucheCarre, PamiConstantesConfig.coefCodeurDroitCarre);
 
     } else if (robotName.id() == RobotIdentification.PAMI_ROND) {
       encoders = new ARIG2024Can2WheelsEncoders(canBus, 2, 1);
       encoders.setEncoderConfiguration(false, true);
+      encoders.setCoefs(PamiConstantesConfig.coefCodeurGaucheRond, PamiConstantesConfig.coefCodeurDroitRond);
 
     } else {
       encoders = new ARIG2024Can2WheelsEncoders(canBus, 1, 2);
       encoders.setEncoderConfiguration(false, true);
+      encoders.setCoefs(PamiConstantesConfig.coefCodeurGaucheStar, PamiConstantesConfig.coefCodeurDroitStar);
     }
 
-    encoders.setCoefs(PamiConstantesConfig.coefCodeurGauche, PamiConstantesConfig.coefCodeurDroit);
     return encoders;
   }
 

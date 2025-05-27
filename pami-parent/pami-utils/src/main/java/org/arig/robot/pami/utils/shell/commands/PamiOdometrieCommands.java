@@ -357,13 +357,13 @@ public class PamiOdometrieCommands {
       rs.enableForceMonitoring();
       monitoringWrapper.cleanAllPoints();
       currentPosition.updatePosition(0, 0, 0);
-      trajectoryManager.avanceMM(70);
+      trajectoryManager.avanceMM(80);
       trajectoryManager.tourneDeg(360 * (first ? nbCycle : -nbCycle));
       trajectoryManager.gotoOrientationDeg(0);
       rs.enableCalage(TypeCalage.ARRIERE);
-      trajectoryManager.reculeMM(70);
+      trajectoryManager.reculeMM(80);
       rs.enableCalage(TypeCalage.ARRIERE);
-      trajectoryManager.reculeMMSansAngle(70);
+      trajectoryManager.reculeMMSansAngle(80);
 
       rs.disableForceMonitoring();
       double finalAngle = convRobot.pulseToDeg(currentPosition.getAngle());
