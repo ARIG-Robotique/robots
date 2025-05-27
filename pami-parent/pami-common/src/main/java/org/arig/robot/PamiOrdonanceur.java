@@ -227,7 +227,7 @@ public class PamiOrdonanceur extends AbstractOrdonanceur {
       }
 
       if (!skip) {
-        robotStatus.enableCalageTempo(2000);
+        robotStatus.enableCalageTempo(1000);
         mv.reculeMMSansAngle(300);
 
         RobotName.RobotIdentification id = robotName.id();
@@ -250,7 +250,6 @@ public class PamiOrdonanceur extends AbstractOrdonanceur {
           position.setPt(new Point(
             conv.mmToPulse(x),
             conv.mmToPulse(1720)
-            //conv.mmToPulse(1625)
           ));
           groupService.initStep(InitStep.PAMI_ROND_CALAGE_TERMINE);
 
