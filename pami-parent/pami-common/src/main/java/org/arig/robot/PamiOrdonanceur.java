@@ -232,33 +232,32 @@ public class PamiOrdonanceur extends AbstractOrdonanceur {
 
         RobotName.RobotIdentification id = robotName.id();
         double x = getX(PamiConstantesConfig.dstCallageArriere);
-        double yBase = 1550;
-        double tailleZone = (double) 450 / 8;
         if (id == RobotName.RobotIdentification.PAMI_TRIANGLE) {
           position.setPt(new Point(
             conv.mmToPulse(x),
-            conv.mmToPulse(yBase + 7 * tailleZone)
+            conv.mmToPulse(1940)
           ));
           groupService.initStep(InitStep.PAMI_TRIANGLE_CALAGE_TERMINE);
 
         } else if (id == RobotName.RobotIdentification.PAMI_CARRE) {
           position.setPt(new Point(
             conv.mmToPulse(x),
-            conv.mmToPulse(yBase + 5 * tailleZone)
+            conv.mmToPulse(1830)
           ));
           groupService.initStep(InitStep.PAMI_CARRE_CALAGE_TERMINE);
 
         } else if (id == RobotName.RobotIdentification.PAMI_ROND) {
           position.setPt(new Point(
             conv.mmToPulse(x),
-            conv.mmToPulse(yBase + 3 * tailleZone)
+            conv.mmToPulse(1720)
+            //conv.mmToPulse(1625)
           ));
           groupService.initStep(InitStep.PAMI_ROND_CALAGE_TERMINE);
 
         } else {
           position.setPt(new Point(
             conv.mmToPulse(x),
-            conv.mmToPulse(yBase + tailleZone)
+            conv.mmToPulse(1610)
           ));
           groupService.initStep(InitStep.PAMI_STAR_CALAGE_TERMINE);
         }
