@@ -1,5 +1,6 @@
 package org.arig.robot.system.capteurs.socket;
 
+import org.arig.robot.model.AngleRange;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.lidar.DeviceInfos;
 import org.arig.robot.model.lidar.HealthInfos;
@@ -44,9 +45,9 @@ public interface ILidarTelemeter {
     setSensorOrigin(origin.getX(), origin.getY());
   }
 
-  void setAnglesFiltered(List<double[]> anglesFiltered);
+  default void addAnglesFiltered(AngleRange angleRange) {}
 
-  List<double[]> getAnglesFiltered();
+  List<AngleRange> getAnglesFiltered();
 
   void setSensorOrigin(double x, double y);
 

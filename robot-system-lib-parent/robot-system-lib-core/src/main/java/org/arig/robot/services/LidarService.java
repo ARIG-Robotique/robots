@@ -6,6 +6,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.math4.legacy.ml.clustering.Clusterable;
 import org.apache.commons.math4.legacy.ml.clustering.DBSCANClusterer;
 import org.arig.robot.model.AbstractRobotStatus;
+import org.arig.robot.model.AngleRange;
 import org.arig.robot.model.Cercle;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.RobotConfig;
@@ -112,18 +113,17 @@ public class LidarService implements InitializingBean {
     for (ILidarTelemeter telemeter : telemeters) {
       ScanInfos lidarScan = telemeter.grabData();
       Point sensorOrigin = telemeter.getSensorOrigin();
-      List<double[]> anglesFiltered = telemeter.getAnglesFiltered();
+      List<AngleRange> anglesFiltered = telemeter.getAnglesFiltered();
       if (lidarScan != null) {
         detectedPointsMm.addAll(
           lidarScan.getScan().parallelStream()
             .filter(scan -> {
-              if (CollectionUtils.isEmpty(anglesFiltered)) {
-                return false;
+              if (anglesFiltered == null || anglesFiltered.isEmpty()) {
+                return true; // Pas de filtre, on garde tous les points
               }
-              // true = gardé
-              for (double[] range : anglesFiltered) {
-                if (scan.getAngleDeg() >= range[0] && scan.getAngleDeg() <= range[1]) {
-                  return false;
+              for (AngleRange angleRange : anglesFiltered) {
+                if (angleRange.contains(scan.getAngleDeg())) {
+                  return false; // Le point est dans l'intervalle, on le filtre
                 }
               }
               return true;

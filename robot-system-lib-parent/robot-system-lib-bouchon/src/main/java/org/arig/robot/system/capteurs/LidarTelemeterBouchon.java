@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.arig.robot.model.AngleRange;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.lidar.DeviceInfos;
 import org.arig.robot.model.lidar.HealthInfos;
@@ -34,6 +35,9 @@ public class LidarTelemeterBouchon implements ILidarTelemeter {
 
   @Getter
   private final Point sensorOrigin = new Point(0, 0);
+
+  @Getter
+  private final List<AngleRange> anglesFiltered = new ArrayList<>();
 
   @Override
   public void printDeviceInfo() {
@@ -100,15 +104,6 @@ public class LidarTelemeterBouchon implements ILidarTelemeter {
   @Override
   public void setConfiguration(boolean reverse, double offsetAngle, int excludeLowerThan, int excludeGreaterThan) {
     // NOOP
-  }
-
-  @Override
-  public void setAnglesFiltered(List<double[]> anglesFiltered) {
-  }
-
-  @Override
-  public List<double[]> getAnglesFiltered() {
-    return List.of();
   }
 
   @Override

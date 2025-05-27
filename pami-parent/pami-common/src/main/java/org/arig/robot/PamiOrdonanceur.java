@@ -8,6 +8,7 @@ import org.arig.robot.exception.ExitProgram;
 import org.arig.robot.filters.common.ChangeFilter;
 import org.arig.robot.filters.common.SignalEdgeFilter;
 import org.arig.robot.filters.common.SignalEdgeFilter.Type;
+import org.arig.robot.model.AngleRange;
 import org.arig.robot.model.InitStep;
 import org.arig.robot.model.PamiRobotStatus;
 import org.arig.robot.model.Point;
@@ -78,10 +79,8 @@ public class PamiOrdonanceur extends AbstractOrdonanceur {
     super.initLidar();
     lidar.setConfiguration(true, -20.23, 50, 900);
     lidar.setSensorOrigin(0, 70);
-    List<double[]> excludedRanges = new ArrayList<>();
-    // Superieur ou égal à [0] et inférieur ou égal à [1]
-    excludedRanges.add(new double[]{ 80, Math.toRadians(180) });
-    excludedRanges.add(new double[]{ Math.toRadians(-180), Math.toRadians(-80) });
+    lidar.addAnglesFiltered(AngleRange.builder().minDeg(80).maxDeg(180).build());
+    lidar.addAnglesFiltered(AngleRange.builder().minDeg(-180).maxDeg(-80).build());
   }
 
   @Override

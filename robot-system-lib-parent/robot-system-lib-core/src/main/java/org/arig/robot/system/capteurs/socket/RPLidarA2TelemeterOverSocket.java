@@ -1,9 +1,12 @@
 package org.arig.robot.system.capteurs.socket;
 
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.arig.robot.model.AngleRange;
 import org.arig.robot.model.lidar.DeviceInfos;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,6 +20,9 @@ public class RPLidarA2TelemeterOverSocket extends AbstractTelemeterOverSocket {
   public static short LOW_MORTOR_PWM = 250;
   public static short MAX_MOTOR_PWM = 1023;
   public static short DEFAULT_MOTOR_PWM = 660;
+
+  @Getter
+  private final List<AngleRange> anglesFiltered = new ArrayList<>();
 
   public RPLidarA2TelemeterOverSocket(String hostname, Integer port) throws Exception {
     this(hostname, port, 1000);
@@ -38,11 +44,7 @@ public class RPLidarA2TelemeterOverSocket extends AbstractTelemeterOverSocket {
   }
 
   @Override
-  public void setAnglesFiltered(List<double[]> anglesFiltered) {
-  }
-
-  @Override
-  public List<double[]> getAnglesFiltered() {
-    return List.of();
+  public void addAnglesFiltered(AngleRange angleRange) {
+    this.anglesFiltered.add(angleRange);
   }
 }

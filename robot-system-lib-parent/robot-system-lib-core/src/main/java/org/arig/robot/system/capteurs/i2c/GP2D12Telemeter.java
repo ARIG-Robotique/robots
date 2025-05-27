@@ -5,6 +5,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.filters.average.DoubleValueAverage;
 import org.arig.robot.filters.sensors.GP2DPhantomFilter;
+import org.arig.robot.model.AngleRange;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.lidar.DeviceInfos;
 import org.arig.robot.model.lidar.HealthInfos;
@@ -32,6 +33,9 @@ public class GP2D12Telemeter implements ILidarTelemeter {
 
   @Getter
   private final Point sensorOrigin = new Point(0, 0);
+
+  @Getter
+  private final List<AngleRange> anglesFiltered = new ArrayList<>();
 
   public static class Device extends Point {
     private final byte adcId;
@@ -135,15 +139,6 @@ public class GP2D12Telemeter implements ILidarTelemeter {
     log.info("Set sensor origin to X={}mm ; Y={}mm", x, y);
     this.sensorOrigin.setX(x);
     this.sensorOrigin.setY(y);
-  }
-
-  @Override
-  public void setAnglesFiltered(List<double[]> anglesFiltered) {
-  }
-
-  @Override
-  public List<double[]> getAnglesFiltered() {
-    return List.of();
   }
 
   @Override

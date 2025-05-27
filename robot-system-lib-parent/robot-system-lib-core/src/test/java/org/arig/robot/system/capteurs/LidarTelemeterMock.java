@@ -3,6 +3,7 @@ package org.arig.robot.system.capteurs;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.arig.robot.model.AngleRange;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.lidar.DeviceInfos;
 import org.arig.robot.model.lidar.HealthInfos;
@@ -10,6 +11,7 @@ import org.arig.robot.model.lidar.ScanInfos;
 import org.arig.robot.model.lidar.enums.HealthState;
 import org.arig.robot.system.capteurs.socket.ILidarTelemeter;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -22,6 +24,9 @@ public class LidarTelemeterMock implements ILidarTelemeter {
 
   @Getter
   private Point sensorOrigin = new Point(0, 0);
+
+  @Getter
+  private final List<AngleRange> anglesFiltered = new ArrayList<>();
 
   @Override
   public boolean isClusterable() {
@@ -92,14 +97,5 @@ public class LidarTelemeterMock implements ILidarTelemeter {
     r.setIgnored((short) 359);
     r.setScan(Collections.emptyList());
     return r;
-  }
-
-  @Override
-  public void setAnglesFiltered(List<double[]> anglesFiltered) {
-  }
-
-  @Override
-  public List<double[]> getAnglesFiltered() {
-    return List.of();
   }
 }
