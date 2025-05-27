@@ -28,12 +28,18 @@ public class ConstructionPlannerService {
   private final EurobotStatus rs;
 
   public ConstructionPlanResult plan(ConstructionArea rootArea) {
+    return plan(rootArea, false);
+  }
+
+  public ConstructionPlanResult plan(ConstructionArea rootArea, boolean skipLog) {
     ConstructionArea area = rootArea.clone();
     List<ConstructionAction> actions = new ArrayList<>();
     ConstructionPlanResult result = new ConstructionPlanResult(area, actions);
     StockVirtuel stock = new StockVirtuel(rs.faceAvant().nbEtageConstructible(), rs.faceArriere().nbEtageConstructible());
 
-    logBeforePlan(area);
+    if (!skipLog) {
+      logBeforePlan(area);
+    }
     while(stock.totalSize() > 0) {
       Rang rang = area.getFirstConstructibleRang();
       int nbElementsInRang = area.getNbElementsInRang(rang);
@@ -85,7 +91,9 @@ public class ConstructionPlannerService {
       break;
     }
 
-    logPlan(actions);
+    if (!skipLog) {
+      logPlan(actions);
+    }
     return result;
   }
 

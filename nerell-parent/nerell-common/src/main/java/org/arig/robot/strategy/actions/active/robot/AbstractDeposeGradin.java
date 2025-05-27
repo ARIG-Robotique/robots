@@ -35,7 +35,7 @@ public abstract class AbstractDeposeGradin extends AbstractNerellAction {
 
   @Override
   public final Point entryPoint() {
-    return entryPoint(constructionPlannerService.plan(constructionArea()));
+    return entryPoint(constructionPlannerService.plan(constructionArea(), true));
   }
 
   private Point entryPoint(ConstructionPlanResult planResult) {
@@ -55,7 +55,7 @@ public abstract class AbstractDeposeGradin extends AbstractNerellAction {
 
   @Override
   public int order() {
-    final ConstructionPlanResult planResult = constructionPlannerService.plan(constructionArea());
+    final ConstructionPlanResult planResult = constructionPlannerService.plan(constructionArea(), true);
     int order = planResult.newArea().score() - constructionArea().score();
     return order + tableUtils.alterOrder(entryPoint(planResult));
   }
@@ -79,7 +79,7 @@ public abstract class AbstractDeposeGradin extends AbstractNerellAction {
     }
 
     // SI aucun rang n'est constructible, on ne peut pas déposer
-    final ConstructionPlanResult planResult = constructionPlannerService.plan(constructionArea());
+    final ConstructionPlanResult planResult = constructionPlannerService.plan(constructionArea(), true);
     return isTimeValid() && !planResult.actions().isEmpty();
   }
 
