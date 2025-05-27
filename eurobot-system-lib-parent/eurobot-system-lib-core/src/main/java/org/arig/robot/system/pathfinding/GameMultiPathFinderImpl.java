@@ -133,19 +133,18 @@ public class GameMultiPathFinderImpl extends MultiPathFinderImpl {
       }
     }
     if (!rs.grandGradinAdverse().isEmpty()) {
-      int y = 28;
+      int y = 87;
       int x;
       if (rs.grandGradinAdverse().data()[0][0]) {
-        x = tableUtils.getX(rs.team() == Team.BLEU, EurobotConfig.rang1Coord) / 10;
+        x = tableUtils.getX(rs.team() == Team.JAUNE, EurobotConfig.rang1Coord) / 10;
         obstacles.add(getObstacleGradin(x, y, GradinBrut.Orientation.VERTICAL));
       }
       if (rs.grandGradinAdverse().data()[1][0]) {
-        x = tableUtils.getX(rs.team() == Team.BLEU, EurobotConfig.rang2Coord) / 10;
-        ;
+        x = tableUtils.getX(rs.team() == Team.JAUNE, EurobotConfig.rang2Coord) / 10;
         obstacles.add(getObstacleGradin(x, y, GradinBrut.Orientation.VERTICAL));
       }
       if (rs.grandGradinAdverse().data()[2][0]) {
-        x = tableUtils.getX(rs.team() == Team.BLEU, EurobotConfig.rang3Coord) / 10;
+        x = tableUtils.getX(rs.team() == Team.JAUNE, EurobotConfig.rang3Coord) / 10;
         obstacles.add(getObstacleGradin(x, y, GradinBrut.Orientation.VERTICAL));
       }
     }
@@ -166,7 +165,7 @@ public class GameMultiPathFinderImpl extends MultiPathFinderImpl {
       }
     }
 
-    // Ajout des gradins bruts (en stocks)
+    // Ajout des gradins bruts présent sur la table
     if (rs.getRemainingTime() > EurobotConfig.validRetourBackstageRemainingTime) {
       for (GradinBrut gradin : rs.gradinBrutStocks()) {
         if (gradin.present()) {
