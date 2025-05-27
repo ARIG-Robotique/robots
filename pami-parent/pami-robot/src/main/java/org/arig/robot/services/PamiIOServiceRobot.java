@@ -79,7 +79,17 @@ public class PamiIOServiceRobot implements PamiIOService {
 
   @Override
   public boolean calagePriseProduitSolAvant(int mandatorySensors) {
-    throw new NotImplementedException("calagePriseProduitSolAvant not implemented on PAMI");
+    if (robotName.id() == RobotName.RobotIdentification.PAMI_TRIANGLE) {
+      if (mandatorySensors > 2) {
+        throw new IllegalArgumentException("Le nombre de capteurs sol obligatoires ne peut pas être supérieur à 2");
+      }
+      int count = !presenceSolGauche(true) ? 1 : 0;
+      count += !presenceSolDroit(true) ? 1 : 0;
+      return count >= mandatorySensors;
+    }
+
+    // Pas branché sur les autres.
+    return false;
   }
 
   @Override
