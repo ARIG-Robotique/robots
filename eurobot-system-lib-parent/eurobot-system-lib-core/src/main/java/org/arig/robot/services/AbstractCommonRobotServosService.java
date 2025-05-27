@@ -39,6 +39,7 @@ public abstract class AbstractCommonRobotServosService extends AbstractServosSer
   protected static final String POS_BAS = "Bas";
   protected static final String POS_ETAGE_2 = "Etage 2";
   protected static final String POS_REPOS = "Repos";
+  protected static final String POS_BANDEROLE = "Banderole";
 
   protected static final byte FULL_SPEED = 0;
   protected static final byte HALF_SPEED = 30;
@@ -73,7 +74,7 @@ public abstract class AbstractCommonRobotServosService extends AbstractServosSer
     // Batch
     groupePincesAvantRepos(false);
     groupePincesArriereRepos(false);
-    groupeDoigtsAvantFerme(false);
+    groupeDoigtsAvantBanderole(false);
     groupeDoigtsArriereFerme(false);
     groupeBlockColonneAvantOuvert(false);
     groupeBlockColonneArriereOuvert(false);
@@ -82,7 +83,7 @@ public abstract class AbstractCommonRobotServosService extends AbstractServosSer
     tiroirAvantStock(false);
     tiroirArriereStock(false);
     if (!endMatch) {
-      ascenseurAvantRepos(false);
+      ascenseurAvantBanderole(false);
       ascenseurArriereRepos(false);
     } else {
       ascenseurAvantStock(false);
@@ -149,6 +150,10 @@ public abstract class AbstractCommonRobotServosService extends AbstractServosSer
 
   public void groupeDoigtsAvantSerre(boolean wait) {
     setPositionBatch(GROUP_DOIGTS_AVANT, POS_SERRE, wait);
+  }
+
+  public void groupeDoigtsAvantBanderole(boolean wait) {
+    setPositionBatch(GROUP_DOIGTS_AVANT, POS_BANDEROLE, wait);
   }
 
   public void groupeDoigtsAvantFerme(boolean wait) {
@@ -285,6 +290,10 @@ public abstract class AbstractCommonRobotServosService extends AbstractServosSer
 
   public void ascenseurAvantRepos(boolean wait) {
     setPosition(ASCENSEUR_AVANT, POS_REPOS, wait);
+  }
+
+  public void ascenseurAvantBanderole(boolean wait) {
+    setPosition(ASCENSEUR_AVANT, POS_BANDEROLE, wait);
   }
 
   public void ascenseurAvantEtage2(boolean wait) {
