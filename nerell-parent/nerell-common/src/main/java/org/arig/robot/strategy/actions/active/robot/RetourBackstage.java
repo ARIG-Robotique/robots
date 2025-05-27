@@ -7,6 +7,7 @@ import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.BackstageState;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.Position;
+import org.arig.robot.model.Team;
 import org.arig.robot.strategy.actions.AbstractNerellAction;
 import org.arig.robot.utils.ThreadUtils;
 import org.springframework.stereotype.Component;
@@ -16,7 +17,7 @@ import org.springframework.stereotype.Component;
 public class RetourBackstage extends AbstractNerellAction {
 
   private static final int FINAL_X = 350;
-  private static final int ENTRY_Y = 1400;
+  private static final int ENTRY_Y = 1350;
   private final Position position;
 
   public RetourBackstage(Position position) {
@@ -60,14 +61,20 @@ public class RetourBackstage extends AbstractNerellAction {
       mv.pathTo(entryPoint());
       if (position.getAngle() > 0) {
         // Face Avant
-        mv.gotoOrientationDeg(90);
-        servosNerell.tiroirAvantDepose(false);
-        servosNerell.becAvantOuvert(false);
+        if (rs.team() == Team.JAUNE) {
+          mv.gotoOrientationDeg(180 - 35);
+        } else {
+          mv.gotoOrientationDeg(35);
+        }
+        servosNerell.groupePincesAvantOuvert(false);
       } else {
         // Face Arrière
-        mv.gotoOrientationDeg(-90);
-        servosNerell.tiroirArriereDepose(false);
-        servosNerell.becArriereOuvert(false);
+        if (rs.team() == Team.JAUNE) {
+          mv.gotoOrientationDeg(-35);
+        } else {
+          mv.gotoOrientationDeg(-180 + 35);
+        }
+        servosNerell.groupePincesArriereOuvert(false);
       }
       log.info("Arrivée au backstage");
       groups.forEach(g -> g.backstage(BackstageState.TARGET_REACHED));
