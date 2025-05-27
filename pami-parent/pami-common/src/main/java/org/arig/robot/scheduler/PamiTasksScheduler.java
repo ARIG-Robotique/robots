@@ -77,7 +77,7 @@ public class PamiTasksScheduler {
 
   private boolean enableLed = false;
 
-  @Scheduled(fixedDelay = 300)
+  @Scheduled(fixedDelay = 1000)
   public void showTimeTask() {
     if (rs.showTime()) {
       if (pamiRobotServosService.isOuvert1()) {
@@ -86,10 +86,10 @@ public class PamiTasksScheduler {
         pamiRobotServosService.handOuvert1(false);
       }
       if (!enableLed) {
+        enableLed = true;
         ARIG2025IoPamiLeds.LedColor ledColor = rs.team() == Team.JAUNE ?
           ARIG2025IoPamiLeds.LedColor.Yellow : ARIG2025IoPamiLeds.LedColor.Blue;
         leds.setAllLeds(ledColor);
-        enableLed = true;
       }
     }
   }
