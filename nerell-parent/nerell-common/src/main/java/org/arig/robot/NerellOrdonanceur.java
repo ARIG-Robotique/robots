@@ -9,7 +9,6 @@ import org.arig.robot.filters.common.ChangeFilter;
 import org.arig.robot.filters.common.SignalEdgeFilter;
 import org.arig.robot.filters.common.SignalEdgeFilter.Type;
 import org.arig.robot.model.BackstageState;
-import org.arig.robot.model.InitStep;
 import org.arig.robot.model.NerellRobotStatus;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.Strategy;
@@ -91,11 +90,18 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
   protected void exitFromScreen() {
     if (ecranService.config() != null && ecranService.config().isExit()) {
       ecranService.displayMessage("Arret du programme");
+      if (robotStatus.pamiTriangleGroupOk()) {
       pamiTriangleGroupService.quit();
-      pamiCarreGroupService.quit();
-      pamiRondGroupService.quit();
-      pamiStarGroupService.quit();
-
+      }
+      if (robotStatus.pamiCarreGroupOk()) {
+        pamiCarreGroupService.quit();
+      }
+      if (robotStatus.pamiRondGroupOk()) {
+        pamiRondGroupService.quit();
+      }
+      if (robotStatus.pamiStarGroupOk()) {
+        pamiStarGroupService.quit();
+      }
       throw new ExitProgram(true);
     }
   }
@@ -193,10 +199,18 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
 
   @Override
   public void beforePowerOff() {
-    pamiTriangleGroupService.end();
-    pamiCarreGroupService.end();
-    pamiRondGroupService.end();
-    pamiStarGroupService.end();
+    if (robotStatus.pamiTriangleGroupOk()) {
+      pamiTriangleGroupService.end();
+    }
+    if (robotStatus.pamiCarreGroupOk()) {
+      pamiCarreGroupService.end();
+    }
+    if (robotStatus.pamiRondGroupOk()) {
+      pamiRondGroupService.end();
+    }
+    if (robotStatus.pamiStarGroupOk()) {
+      pamiStarGroupService.end();
+    }
 
     nerellIO.enableAlimServos();
 
@@ -258,10 +272,19 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
       nerellRobotStatus.ejectionCoupDePute(nerellEcranService.config().hasOption(StrategyOption.EJECTION_COUP_DE_PUTE.description()));
 
       if (Boolean.TRUE.equals(configChangeFilter.filter(nerellEcranService.config()))) {
-        pamiTriangleGroupService.configuration();
-        pamiCarreGroupService.configuration();
-        pamiRondGroupService.configuration();
-        pamiStarGroupService.configuration();
+        if (robotStatus.pamiTriangleGroupOk()) {
+          pamiTriangleGroupService.configuration();
+        }
+        if (robotStatus.pamiCarreGroupOk()) {
+          pamiCarreGroupService.configuration();
+        }
+        if (robotStatus.pamiRondGroupOk()) {
+          pamiRondGroupService.configuration();
+        }
+        if (robotStatus.pamiStarGroupOk()) {
+          pamiStarGroupService.configuration();
+        }
+
         log.info("Config {}", nerellEcranService.config());
       }
 
@@ -277,25 +300,25 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
     if (pamiTriangleGroupService.getGroup().isOpen()) {
       nerellEcranService.displayMessage("Calage Triangle");
       pamiTriangleGroupService.calage();
-      pamiTriangleGroupService.waitInitStep(InitStep.PAMI_TRIANGLE_CALAGE_TERMINE, 5);
+      //pamiTriangleGroupService.waitInitStep(InitStep.PAMI_TRIANGLE_CALAGE_TERMINE, 5);
     }
 
     if (pamiCarreGroupService.getGroup().isOpen()) {
       nerellEcranService.displayMessage("Calage Carre");
       pamiCarreGroupService.calage();
-      pamiCarreGroupService.waitInitStep(InitStep.PAMI_CARRE_CALAGE_TERMINE, 5);
+      //pamiCarreGroupService.waitInitStep(InitStep.PAMI_CARRE_CALAGE_TERMINE, 5);
     }
 
     if (pamiRondGroupService.getGroup().isOpen()) {
       nerellEcranService.displayMessage("Calage Rond");
       pamiRondGroupService.calage();
-      pamiRondGroupService.waitInitStep(InitStep.PAMI_ROND_CALAGE_TERMINE, 5);
+      //pamiRondGroupService.waitInitStep(InitStep.PAMI_ROND_CALAGE_TERMINE, 5);
     }
 
     if (pamiStarGroupService.getGroup().isOpen()) {
       nerellEcranService.displayMessage("Calage Star");
       pamiStarGroupService.calage();
-      pamiStarGroupService.waitInitStep(InitStep.PAMI_STAR_CALAGE_TERMINE, 5);
+      //pamiStarGroupService.waitInitStep(InitStep.PAMI_STAR_CALAGE_TERMINE, 5);
     }
 
     nerellEcranService.displayMessage("Calage bordure");
@@ -406,10 +429,18 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
       if (!manuel && !nerellEcranService.config().isSkipCalageBordure()) {
         nerellEcranService.displayMessage("Attente mise de la tirette, choix config ou mode manuel");
 
-        pamiTriangleGroupService.configuration();
-        pamiCarreGroupService.configuration();
-        pamiRondGroupService.configuration();
-        pamiStarGroupService.configuration();
+        if (robotStatus.pamiTriangleGroupOk()) {
+          pamiTriangleGroupService.configuration();
+        }
+        if (robotStatus.pamiCarreGroupOk()) {
+          pamiCarreGroupService.configuration();
+        }
+        if (robotStatus.pamiRondGroupOk()) {
+          pamiRondGroupService.configuration();
+        }
+        if (robotStatus.pamiStarGroupOk()) {
+          pamiStarGroupService.configuration();
+        }
       }
 
       robotStatus.twoRobots(nerellEcranService.config().isTwoRobots());
