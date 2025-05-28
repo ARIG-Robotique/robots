@@ -207,4 +207,4 @@ pamis:
 
 # Ecran
 ecran:
-  binary: ${user.home}/dev/ARIG/arig-wksp/cpp-linux/robots-gui-build/robots-gui
+  binary: ${user.home}/dev/arig-wksp/cpp-linux/robots-gui/build/Desktop-Debug/robots-gui

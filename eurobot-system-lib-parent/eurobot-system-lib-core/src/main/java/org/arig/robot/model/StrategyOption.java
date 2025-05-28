@@ -9,7 +9,6 @@ import lombok.experimental.Accessors;
 public enum StrategyOption {
   LIMITER_2_ETAGES("Limiter à 2 étages", true),
   EVITER_COTE_ADVERSE("Eviter coté adverse", true),
-  USE_TWO_FACES("Utiliser les deux faces", true),
   EJECTION_COUP_DE_PUTE("Ejection coup de pute", false);
 
   @Getter
