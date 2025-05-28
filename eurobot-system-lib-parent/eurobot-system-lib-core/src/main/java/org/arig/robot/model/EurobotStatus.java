@@ -104,10 +104,7 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
    */
 
   @Setter(AccessLevel.NONE)
-  private boolean banderolleDansRobot = false;
-
-  @Setter(AccessLevel.NONE)
-  private boolean banderolleDeployee = false;
+  private boolean banderoleDeployee = false;
 
   private final StockFace faceAvant = new StockFace();
   private final StockFace faceArriere = new StockFace();
@@ -126,9 +123,11 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
 
   private List<ZoneMines> mines = new ArrayList<>();
 
-  public void banderolleDeployee(boolean banderolleDeployee) {
-    log.info("[RS] Banderolle déployée : {}", banderolleDeployee);
-    this.banderolleDeployee = banderolleDeployee;
+  public void banderoleDeployee(boolean banderoleDeployee) {
+    if (this.banderoleDeployee != banderoleDeployee) {
+      log.info("[RS] Banderole déployée : {}", banderoleDeployee);
+      this.banderoleDeployee = banderoleDeployee;
+    }
   }
 
   public void backstage(BackstageState backstage) {
@@ -149,7 +148,7 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
   }
 
   private int scoreBanderolle() {
-    return banderolleDeployee ? 20 : 0;
+    return banderoleDeployee ? 20 : 0;
   }
 
   private int scoreRetourBackstage() {
@@ -204,8 +203,7 @@ public abstract class EurobotStatus extends AbstractRobotStatus {
   @Override
   public Map<String, Boolean> gameFlags() {
     Map<String, Boolean> r = new HashMap<>();
-    r.put("Banderolle dans le robot", banderolleDansRobot);
-    r.put("Banderolle déployé", banderolleDeployee);
+    r.put("Banderole déployé", banderoleDeployee);
     return r;
   }
 

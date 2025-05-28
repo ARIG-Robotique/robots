@@ -134,7 +134,7 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
           case QUALIF:
           case FINALE_1:
           case FINALE_2:
-            mv.avanceMM(50);
+            mv.avanceMM(40);
             log.info("Strategy {}. Calage terminé", nerellRobotStatus.strategy().name());
             break;
 

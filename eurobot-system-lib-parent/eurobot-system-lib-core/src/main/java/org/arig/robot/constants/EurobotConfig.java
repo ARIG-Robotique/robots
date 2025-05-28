@@ -25,13 +25,14 @@ public interface EurobotConfig {
   int offsetPriseGradin = 270;
   int offsetDeposeGradin = 300;
 
-  int rang1Coord = 100;
-  int rang2Coord = 250;
-  int rang3Coord = 400;
-  int rang4Coord = 550;
+  int rang1Coord = 120;
+  int rang2Coord = 270;
+  int rang3Coord = 420;
+  int rang4Coord = 570;
 
   // Noms des actions
   String ACTION_RETOUR_BACKSTAGE = "Retour backstage";
+  String ACTION_DEPOSE_BANDEROLLE = "Dépose banderole";
 
   // Actions d'échappement
   String ACTION_DEPOSE_GRADIN_PREFIX = "Depose ";
