@@ -2,13 +2,10 @@ package org.arig.robot.nerell.utils.shell.commands;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.model.ConstructionArea;
 import org.arig.robot.model.Etage;
 import org.arig.robot.model.GradinBrut;
 import org.arig.robot.model.Face;
 import org.arig.robot.model.PriseGradinState;
-import org.arig.robot.model.Rang;
-import org.arig.robot.model.StockPosition;
 import org.arig.robot.services.AbstractEnergyService;
 import org.arig.robot.services.AbstractNerellFaceService;
 import org.arig.robot.services.NerellFaceWrapper;
@@ -61,7 +58,7 @@ public class NerellServosCommands {
   public void configWaitPinceAvant(int wait) {
     servosService.groupeDoigtsAvantFerme(true);
     for (int i = 0; i < nbLoop; i++) {
-      servosService.groupePincesAvantOuvert(false);
+      servosService.groupePincesAvantOuvertNePasUtiliserEnMatch(false);
       ThreadUtils.sleep(wait);
       servosService.groupePincesAvantRepos(false);
       ThreadUtils.sleep(wait);
@@ -74,7 +71,7 @@ public class NerellServosCommands {
   public void configWaitPinceArriere(int wait) {
     servosService.groupeDoigtsArriereFerme(true);
     for (int i = 0; i < nbLoop; i++) {
-      servosService.groupePincesArriereOuvert(false);
+      servosService.groupePincesArriereOuvertNePasUtiliserEnMatch(false);
       ThreadUtils.sleep(wait);
       servosService.groupePincesArriereRepos(false);
       ThreadUtils.sleep(wait);
@@ -85,7 +82,7 @@ public class NerellServosCommands {
 
   @ShellMethod("Configuration attente doigts avant")
   public void configWaitDoigtsAvant(int wait) {
-    servosService.groupePincesAvantOuvert(true);
+    servosService.groupePincesAvantOuvertNePasUtiliserEnMatch(true);
     for (int i = 0; i < nbLoop; i++) {
       servosService.groupeDoigtsAvantOuvert(false);
       ThreadUtils.sleep(wait);
@@ -98,7 +95,7 @@ public class NerellServosCommands {
 
   @ShellMethod("Configuration attente doigts arriere")
   public void configWaitDoigtsArriere(int wait) {
-    servosService.groupePincesArriereOuvert(true);
+    servosService.groupePincesArriereOuvertNePasUtiliserEnMatch(true);
     for (int i = 0; i < nbLoop; i++) {
       servosService.groupeDoigtsArriereOuvert(false);
       ThreadUtils.sleep(wait);
@@ -111,7 +108,7 @@ public class NerellServosCommands {
 
   @ShellMethod("Configuration attente block colonne avant")
   public void configWaitBlockColonneAvant(int wait) {
-    servosService.groupePincesAvantOuvert(false);
+    servosService.groupePincesAvantOuvertNePasUtiliserEnMatch(false);
     servosService.ascenseurAvantHaut(true);
     for (int i = 0; i < nbLoop; i++) {
       servosService.groupeBlockColonneAvantOuvert(false);
@@ -125,7 +122,7 @@ public class NerellServosCommands {
 
   @ShellMethod("Configuration attente block colonne arriere")
   public void configWaitBlockColonneArriere(int wait) {
-    servosService.groupePincesArriereOuvert(false);
+    servosService.groupePincesArriereOuvertNePasUtiliserEnMatch(false);
     servosService.ascenseurArriereHaut(true);
     for (int i = 0; i < nbLoop; i++) {
       servosService.groupeBlockColonneArriereOuvert(false);
@@ -139,7 +136,7 @@ public class NerellServosCommands {
 
   @ShellMethod("Configuration attente ascenseur avant")
   public void configWaitAscenseurAvant(int wait) {
-    servosService.groupePincesAvantOuvert(true);
+    servosService.groupePincesAvantPrise(true);
     for (int i = 0; i < nbLoop; i++) {
       servosService.ascenseurAvantHaut(false);
       ThreadUtils.sleep(wait);
@@ -152,7 +149,7 @@ public class NerellServosCommands {
 
   @ShellMethod("Configuration attente ascenseur arriere")
   public void configWaitAscenseurArriere(int wait) {
-    servosService.groupePincesArriereOuvert(true);
+    servosService.groupePincesArrierePrise(true);
     for (int i = 0; i < nbLoop; i++) {
       servosService.ascenseurArriereHaut(false);
       ThreadUtils.sleep(wait);
@@ -195,7 +192,7 @@ public class NerellServosCommands {
     for (int i = 0; i < nbLoop; i++) {
       servosService.becAvantOuvert(false);
       ThreadUtils.sleep(wait);
-      servosService.becAvantFerme(false);
+      servosService.becAvantRepos(false);
       ThreadUtils.sleep(wait);
     }
 
@@ -208,7 +205,7 @@ public class NerellServosCommands {
     for (int i = 0; i < nbLoop; i++) {
       servosService.becArriereOuvert(false);
       ThreadUtils.sleep(wait);
-      servosService.becArriereFerme(false);
+      servosService.becArriereRepos(false);
       ThreadUtils.sleep(wait);
     }
 

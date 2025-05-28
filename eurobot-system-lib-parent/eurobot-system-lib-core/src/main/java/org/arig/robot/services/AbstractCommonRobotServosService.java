@@ -96,7 +96,7 @@ public abstract class AbstractCommonRobotServosService extends AbstractServosSer
   //*******************************************//
   //* Déplacements de groupe                  *//
   //*******************************************//
-  public void groupePincesAvantOuvert(boolean wait) {
+  public void groupePincesAvantOuvertNePasUtiliserEnMatch(boolean wait) {
     setPositionBatch(GROUP_PINCES_AVANT, POS_OUVERT, wait);
   }
 
@@ -116,7 +116,7 @@ public abstract class AbstractCommonRobotServosService extends AbstractServosSer
     setPositionBatch(GROUP_PINCES_AVANT, POS_REPOS, wait);
   }
 
-  public void groupePincesArriereOuvert(boolean wait) {
+  public void groupePincesArriereOuvertNePasUtiliserEnMatch(boolean wait) {
     setPositionBatch(GROUP_PINCES_ARRIERE, POS_OUVERT, wait);
   }
 
