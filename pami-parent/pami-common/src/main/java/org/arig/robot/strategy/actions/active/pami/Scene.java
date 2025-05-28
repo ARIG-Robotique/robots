@@ -79,12 +79,13 @@ public class Scene extends AbstractEurobotAction {
       mv.setRampeOrientationPercent(10, 100);
       mv.setRampesDistancePercent(10, 100);
 
-      rs.enableCalage(TypeCalage.PRISE_PRODUIT_SOL_AVANT);
+      rs.enableCalageTempo(2000);
       mv.avanceMM(70);
       //mv.setVitessePercent(20, 100);
       //rs.enableCalage(TypeCalage.PRISE_PRODUIT_SOL_AVANT);
       //mv.avanceMM(42);
 
+      rs.disableAsserv();
       complete(true);
 
       ThreadUtils.sleep((int) rs.getRemainingTime());
