@@ -30,8 +30,8 @@ public class NerellFaceAvantService extends AbstractNerellFaceService {
     servos.becAvantOuvert(false);
     servos.groupeBlockColonneAvantOuvert(false);
     servos.groupeDoigtsAvantLache(false);
+    servos.ascenseurAvantBas(false);
     servos.groupePincesAvantPrise(true);
-    servos.ascenseurAvantBas(true);
   }
 
   @Override
@@ -55,18 +55,19 @@ public class NerellFaceAvantService extends AbstractNerellFaceService {
     log.info("Echappement de la prise du gradin brut. Erreur {}", state.name());
 
     servos.groupeBlockColonneAvantOuvert(false);
+    servos.becAvantOuvert(false);
+    servos.tiroirAvantDepose(false);
+    servos.groupeDoigtsAvantLache(false);
+    servos.groupePincesAvantPrise(false);
 
     mv.setVitessePercent(100, 100);
     mv.reculeMM(100);
 
-    servos.tiroirAvantDepose(false);
-    servos.becAvantOuvert(false);
-    servos.groupeDoigtsAvantLache(false);
-    servos.groupePincesAvantPrise(false);
     servos.becAvantFerme(false);
-    servos.ascenseurAvantRepos(true);
-    servos.groupeDoigtsAvantFerme(true);
-    servos.groupePincesAvantRepos(false);
+    servos.ascenseurAvantRepos(false);
+    servos.groupeDoigtsAvantLache(false);
+    servos.groupePincesAvantStock(false);
+    servos.ascenseurAvantStock(false);
     servos.tiroirAvantStock(false);
   }
 
@@ -198,14 +199,15 @@ public class NerellFaceAvantService extends AbstractNerellFaceService {
       !face.pinceDroite()
     ) {
       log.info("Récupération des colonnes en stock depuis le sol");
-      servos.groupePincesAvantPriseSol(true);
-      servos.groupeDoigtsAvantOuvert(true);
-      servos.groupeBlockColonneAvantOuvert(true);
+      servos.groupeBlockColonneAvantOuvert(false);
+      servos.groupePincesAvantPriseSol(false);
+      servos.groupeDoigtsAvantOuvert(false);
       deplacementDeposeColonnesSol(false);
-      servos.ascenseurAvantBas(true);
-      deplacementDeposeColonnesSol(true);
+      servos.ascenseurAvantRepos(true);
       servos.groupeDoigtsAvantPriseSol(false);
+      deplacementDeposeColonnesSol(true);
       servos.groupePincesAvantStock(true);
+      servos.ascenseurAvantBas(true);
       servos.groupeDoigtsAvantSerre(true);
       updateColonnesSolState(false, false);
       updatePincesState(true, true);
@@ -221,7 +223,7 @@ public class NerellFaceAvantService extends AbstractNerellFaceService {
     servos.groupePincesAvantPrise(true);
     servos.ascenseurAvantHaut(true);
     servos.tiroirAvantDepose(true);
-    servos.becAvantOuvert(true);
+    servos.becAvantOuvert(false);
 
     if (face.tiroirHaut()) {
       log.info("Split tiroir avant pour la dépose");
@@ -249,7 +251,7 @@ public class NerellFaceAvantService extends AbstractNerellFaceService {
     servos.groupeDoigtsAvantLache(true);
     deplacementDeposeEtage();
     updatePincesState(false, false);
-    servos.groupeDoigtsAvantFerme(true);
+    servos.groupeDoigtsAvantFerme(false);
     servos.ascenseurAvantStock(true);
     servos.groupePincesAvantRepos(false);
   }
