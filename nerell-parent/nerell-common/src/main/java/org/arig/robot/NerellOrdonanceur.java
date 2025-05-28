@@ -406,7 +406,7 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
    * Etape du choix des options + config balise
    */
   private void choixConfig() {
-    nerellEcranService.displayMessage("Attente mise de la tirette, choix config ou mode manuel");
+    nerellEcranService.displayMessage("Mise de la banderolle (/!\\ ELASTIQUE)");
 
     SignalEdgeFilter manuelRisingEdge = new SignalEdgeFilter(nerellEcranService.config().isModeManuel(), Type.RISING);
     SignalEdgeFilter manuelFallingEdge = new SignalEdgeFilter(nerellEcranService.config().isModeManuel(), Type.FALLING);
