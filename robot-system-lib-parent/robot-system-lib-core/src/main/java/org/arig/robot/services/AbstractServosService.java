@@ -236,10 +236,14 @@ public abstract class AbstractServosService {
     }
   }
 
+  public void setPositionBatch(String groupName, String positionName, boolean wait) {
+    setPositionBatchAndSpeed(groupName, positionName, (byte) -1, wait);
+  }
+
   /**
    * Déplace un groupe de servos à une position nommée
    */
-  public void setPositionBatch(String groupName, String positionName, boolean wait) {
+  public void setPositionBatchAndSpeed(String groupName, String positionName, byte speed, boolean wait) {
     ServoGroup group = groups.get(groupName);
     assert group != null;
     assert group.batch().contains(positionName);
@@ -255,11 +259,11 @@ public abstract class AbstractServosService {
 
       OffsetedDevice device = getDevice(servo.id());
       int currentPosition = device.servo().getPosition((byte) (servo.id() - device.offset()));
-
-      device.servo().setPositionAndSpeed((byte) (servo.id() - device.offset()), position.value(), position.speed());
+      byte realSpeed = speed != -1 ? speed : position.speed();
+      device.servo().setPositionAndSpeed((byte) (servo.id() - device.offset()), position.value(), realSpeed);
 
       if (currentPosition != position.value()) {
-        waitTime = Math.max(waitTime, computeWaitTime(servo, currentPosition, position.value(), position.speed()));
+        waitTime = Math.max(waitTime, computeWaitTime(servo, currentPosition, position.value(), realSpeed));
       }
     }
 
