@@ -406,7 +406,8 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
    * Etape du choix des options + config balise
    */
   private void choixConfig() {
-    nerellEcranService.displayMessage("Mise de la banderolle (/!\\ ELASTIQUE)");
+    String messageDefault = "Mise de la banderolle (/!\\ ELASTIQUE), puis Tirette";
+    nerellEcranService.displayMessage(messageDefault);
 
     SignalEdgeFilter manuelRisingEdge = new SignalEdgeFilter(nerellEcranService.config().isModeManuel(), Type.RISING);
     SignalEdgeFilter manuelFallingEdge = new SignalEdgeFilter(nerellEcranService.config().isModeManuel(), Type.FALLING);
@@ -423,12 +424,12 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
       } else if (manuel && Boolean.TRUE.equals(manuelFallingEdge.filter(nerellEcranService.config().isModeManuel()))) {
         manuel = false;
         endMonitoring();
-        nerellEcranService.displayMessage("Attente mise de la tirette, choix config ou mode manuel");
+        nerellEcranService.displayMessage(messageDefault);
       }
 
       // Si on est pas en manuel, gestion de la strategy
       if (!manuel && !nerellEcranService.config().isSkipCalageBordure()) {
-        nerellEcranService.displayMessage("Attente mise de la tirette, choix config ou mode manuel");
+        nerellEcranService.displayMessage(messageDefault);
 
         if (robotStatus.pamiTriangleGroupOk()) {
           pamiTriangleGroupService.configuration();
