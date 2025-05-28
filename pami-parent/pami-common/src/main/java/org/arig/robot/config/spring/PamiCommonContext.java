@@ -216,5 +216,36 @@ public class PamiCommonContext {
     final String ecranHost = env.getRequiredProperty("ecran.socket.host");
     final Integer ecranPort = env.getRequiredProperty("ecran.socket.port", Integer.class);
     return new EcranOverSocket(ecranHost, ecranPort);
+
+    /*
+    return new IEcran<>() {
+      @Override
+      public void end() { }
+
+      @Override
+      public boolean setParams(EcranParams params) {
+        return true;
+      }
+
+      @Override
+      public EcranConfig configInfos() {
+        return new EcranConfig();
+      }
+
+      @Override
+      public boolean updateState(EcranState data) {
+        return true;
+      }
+
+      @Override
+      public boolean updateMatch(EcranMatchInfo data) {
+        return true;
+      }
+
+      @Override
+      public void updatePhoto(EcranPhoto photo) { }
+    };
+    */
+
   }
 }

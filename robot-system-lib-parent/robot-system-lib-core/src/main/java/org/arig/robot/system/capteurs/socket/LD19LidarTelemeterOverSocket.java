@@ -13,6 +13,7 @@ import java.util.List;
 public class LD19LidarTelemeterOverSocket extends AbstractTelemeterOverSocket {
 
   public static final String DRIVER_NAME = "ldlidar";
+
   @Getter
   private final List<AngleRange> anglesFiltered = new ArrayList<>();
 
