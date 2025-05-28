@@ -144,9 +144,13 @@ public class TableUtils {
    * @param offsetAngle    Valeur en degré par rapport au robot.
    * @param offsetXSensorMm Valeur en mm de décalage du capteur par rapport au robot sur l'axe X
    * @param offsetYSensorMm Valeur en mm de décalage du capteur par rapport au robot sur l'axe Y
+   * @param couloirRobotXMm Valeur en mm de la largeur du couloir devant le robot sur l'axe X
+   * @param couloirRobotYMm Valeur en mm de la largeur du couloir devant le robot sur l'axe X
    * @return Le point si présent sur la table, null sinon
    */
-  public Point getPointFromAngle(double distanceMm, double offsetAngle, double offsetXSensorMm, double offsetYSensorMm) {
+  public Point getPointFromAngle(double distanceMm, double offsetAngle,
+                                 double offsetXSensorMm, double offsetYSensorMm,
+                                 double couloirRobotXMm, double couloirRobotYMm) {
     // S on a un ofset de capteur par rapport au robot, on le prend en compte
     if (offsetXSensorMm != 0 || offsetYSensorMm != 0) {
       // Transformation des points pour les mettre dans le repère Lidar (cartesian)
@@ -159,7 +163,15 @@ public class TableUtils {
       ptLidar.addDeltaX(offsetXSensorMm);
       ptLidar.addDeltaY(offsetYSensorMm);
 
-      // Transformation polaire pour avoir le point dans le repere de la table
+      // Si le point est dans le couloir du robot, on ne le prend pas en compte
+      if (couloirRobotXMm > 0 && (Math.abs(ptLidar.getX()) > couloirRobotXMm)) {
+        return null;
+      }
+      if (couloirRobotYMm > 0 && (Math.abs(ptLidar.getY()) > couloirRobotYMm)) {
+        return null;
+      }
+
+      // Transformation pour avoir le point dans le repere de la table
       double thetaRobot = conv.pulseToRad(position.getAngle());
       double xRobot = conv.pulseToMm(position.getPt().getX());
       double yRobot = conv.pulseToMm(position.getPt().getY());
@@ -170,6 +182,20 @@ public class TableUtils {
     }
 
     return getPointFromAngle(distanceMm, offsetAngle);
+  }
+
+  /**
+   * Définition d'un point (dans le repère table) en fonction d'une distance
+   * et d'un angle par rapport à la position du robot
+   *
+   * @param distanceMm     Distance par rapport au robot.
+   * @param offsetAngle    Valeur en degré par rapport au robot.
+   * @param offsetXSensorMm Valeur en mm de décalage du capteur par rapport au robot sur l'axe X
+   * @param offsetYSensorMm Valeur en mm de décalage du capteur par rapport au robot sur l'axe Y
+   * @return Le point si présent sur la table, null sinon
+   */
+  public Point getPointFromAngle(double distanceMm, double offsetAngle, double offsetXSensorMm, double offsetYSensorMm) {
+    return getPointFromAngle(distanceMm, offsetAngle, offsetXSensorMm, offsetYSensorMm, -1.0, -1.0);
   }
 
   public Point getPointFromAngle(double distanceMm, double offsetAngle) {

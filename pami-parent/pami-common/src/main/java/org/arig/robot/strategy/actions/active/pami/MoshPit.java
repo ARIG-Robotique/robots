@@ -105,8 +105,6 @@ public class MoshPit extends AbstractEurobotAction {
       }
 
       complete(true);
-      rs.disableAvoidance();
-
       ThreadUtils.sleep((int) rs.getRemainingTime());
     } catch (AvoidingException e) {
       log.error("Erreur d'accès au mosh pit", e);

@@ -113,6 +113,8 @@ public class LidarService implements InitializingBean {
     for (ILidarTelemeter telemeter : telemeters) {
       ScanInfos lidarScan = telemeter.grabData();
       Point sensorOrigin = telemeter.getSensorOrigin();
+      double couloirXMm = telemeter.getCouloirXMm();
+      double couloirYMm = telemeter.getCouloirYMm();
       List<AngleRange> anglesFiltered = telemeter.getAnglesFiltered();
       if (lidarScan != null) {
         detectedPointsMm.addAll(
@@ -129,8 +131,9 @@ public class LidarService implements InitializingBean {
               return true;
             })
             .map(scan -> {
-              Point pt = tableUtils.getPointFromAngle(scan.getDistanceMm(), scan.getAngleDeg(), sensorOrigin.getX(), sensorOrigin.getY());
-              if (!tableUtils.isInTable(pt)) {
+              Point pt = tableUtils.getPointFromAngle(scan.getDistanceMm(), scan.getAngleDeg(),
+                sensorOrigin.getX(), sensorOrigin.getY(), couloirXMm, couloirYMm);
+              if (pt == null || !tableUtils.isInTable(pt)) {
                 return null;
               }
               int taille = lidarScan.getTailleObstacle() != null

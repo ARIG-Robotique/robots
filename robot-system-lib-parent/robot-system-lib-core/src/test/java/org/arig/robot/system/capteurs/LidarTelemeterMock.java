@@ -28,6 +28,14 @@ public class LidarTelemeterMock implements ILidarTelemeter {
   @Getter
   private final List<AngleRange> anglesFiltered = new ArrayList<>();
 
+  @Getter
+  @Setter
+  private double couloirXMm = -1;
+
+  @Getter
+  @Setter
+  private double couloirYMm = -1;
+
   @Override
   public boolean isClusterable() {
     return true;

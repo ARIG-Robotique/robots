@@ -42,6 +42,14 @@ public abstract class AbstractTelemeterOverSocket extends AbstractSocketClient<L
   @Getter
   private final Point sensorOrigin = new Point(0, 0);
 
+  @Getter
+  @Setter
+  private double couloirXMm = -1;
+
+  @Getter
+  @Setter
+  private double couloirYMm = -1;
+
   protected AbstractTelemeterOverSocket(String hostname, Integer port) throws Exception {
     this(hostname, port, true);
   }

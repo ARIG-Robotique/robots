@@ -39,6 +39,14 @@ public class LidarTelemeterBouchon implements ILidarTelemeter {
   @Getter
   private final List<AngleRange> anglesFiltered = new ArrayList<>();
 
+  @Getter
+  @Setter
+  private double couloirXMm = -1;
+
+  @Getter
+  @Setter
+  private double couloirYMm = -1;
+
   @Override
   public void printDeviceInfo() {
     DeviceInfos d = deviceInfo();

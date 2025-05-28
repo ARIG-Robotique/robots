@@ -39,6 +39,14 @@ public interface ILidarTelemeter {
 
   void setConfiguration(boolean reverse, double offsetAngle, int excludeLowerThan, int excludeGreaterThan);
 
+  double getCouloirXMm();
+
+  void setCouloirXMm(double couloirXMm);
+
+  double getCouloirYMm();
+
+  void setCouloirYMm(double couloirYMm);
+
   Point getSensorOrigin();
 
   default void setSensorOrigin(Point origin) {

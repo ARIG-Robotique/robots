@@ -77,10 +77,11 @@ public class PamiOrdonanceur extends AbstractOrdonanceur {
   @Override
   protected void initLidar() {
     super.initLidar();
-    lidar.setConfiguration(true, -20.23, 50, 900);
-    lidar.setSensorOrigin(0, 70);
-    lidar.addAnglesFiltered(AngleRange.builder().minDeg(80).maxDeg(180).build());
-    lidar.addAnglesFiltered(AngleRange.builder().minDeg(-180).maxDeg(-80).build());
+    lidar.setConfiguration(true, -20.23, 10, 500);
+    lidar.setSensorOrigin(70, 0);
+    lidar.addAnglesFiltered(AngleRange.builder().minDeg(70).maxDeg(180).build());
+    lidar.addAnglesFiltered(AngleRange.builder().minDeg(-180).maxDeg(-70).build());
+    lidar.setCouloirYMm((double) 110 / 2);
   }
 
   @Override
