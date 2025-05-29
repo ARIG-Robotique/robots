@@ -17,6 +17,13 @@ import org.arig.robot.model.StockPosition;
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public abstract class AbstractNerellFaceService {
 
+  protected static final int DEPL_INIT_PRISE = 130;
+  protected static final int DEPL_PRISE_COLONNES_SOL = 90;
+  protected static final int DEPL_PRISE_COLONNES_PINCES_1 = 90;
+  protected static final int DEPL_PRISE_COLONNES_PINCES_2 = 20;
+  protected static final int DEPL_DEPOSE_COLONNES_SOL = 60;
+  protected static final int DEPL_DEPOSE_ETAGE = 100;
+
   protected final NerellRobotStatus rs;
   protected final TrajectoryManager mv;
   protected final NerellRobotServosService servos;
@@ -38,6 +45,8 @@ public abstract class AbstractNerellFaceService {
 
   protected abstract void ouvreFacePourPrise();
 
+  protected abstract void ouvreFacePourPrise2Etages() throws AvoidingException;
+
   protected abstract void deplacementPriseColonnesPinces() throws AvoidingException;
 
   protected abstract void deplacementPriseColonnesSol() throws AvoidingException;
@@ -48,15 +57,17 @@ public abstract class AbstractNerellFaceService {
 
   protected abstract void deplacementDeposeColonnesSol(boolean reverse) throws AvoidingException;
 
-  protected abstract void deplacementDeposeEtage() throws AvoidingException;
-
-  protected abstract void deplacementDeposeEtage2() throws AvoidingException;
+  protected abstract void deplacementDeposeEtage(boolean reverse) throws AvoidingException;
 
   protected abstract boolean miseEnStockTiroir();
 
+  protected abstract void leverGradin2Etages();
+
+  protected abstract void poserGradin2Etages() throws AvoidingException;
+
   protected abstract void verrouillageColonnesSol();
 
-  protected abstract void deposeEtage(Etage etage) throws AvoidingException;
+  protected abstract void deposeEtage(Etage etage, StockPosition stockPosition) throws AvoidingException;
 
   public void preparePriseGradinBrut(GradinBrut gradin) throws AvoidingException {
     log.info("Préparation de la prise du gradin brut : {}", gradin.id());
@@ -109,7 +120,26 @@ public abstract class AbstractNerellFaceService {
     }
   }
 
-  public void deposeGradin(Etage etage) throws AvoidingException {
-    deposeEtage(etage);
+  public void deposeGradin(Etage etage, StockPosition stockPosition) throws AvoidingException {
+    deposeEtage(etage, stockPosition);
+  }
+
+  public PriseGradinState reprise2Gradin(Etage etage) throws AvoidingException {
+    ouvreFacePourPrise2Etages();
+    deplacementPriseColonnesPinces();
+    if (!iosPinces()) {
+      log.warn("Erreur de chargement du gradin 2 étages dans les pinces (G : {} ; D : {})", ioService.pinceAvantGauche(false), ioService.pinceAvantDroite(false));
+      deplacementDeposeEtage(false);
+      return PriseGradinState.ERREUR_PINCES;
+    }
+    updatePincesState(true, true);
+
+    leverGradin2Etages();
+
+    return PriseGradinState.OK;
+  }
+
+  public void depose2Gradins(Etage etage) throws AvoidingException {
+    poserGradin2Etages();
   }
 }

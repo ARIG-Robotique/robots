@@ -8,6 +8,7 @@ import org.arig.robot.model.PriseGradinState;
 import org.arig.robot.model.NerellRobotStatus;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.StockFace;
+import org.arig.robot.model.StockPosition;
 import org.arig.robot.model.enums.TypeCalage;
 import org.arig.robot.utils.ThreadUtils;
 
@@ -38,9 +39,9 @@ public class NerellFaceAvantService extends AbstractNerellFaceService {
   protected void deplacementPriseColonnesPinces() throws AvoidingException {
     rs.enableCalage(TypeCalage.FORCE);
     mv.setVitessePercent(20, 100);
-    mv.avanceMM(90);
+    mv.avanceMM(DEPL_PRISE_COLONNES_PINCES_1);
     mv.setVitessePercent(0, 100);
-    mv.avanceMM(20);
+    mv.avanceMM(DEPL_PRISE_COLONNES_PINCES_2);
     servos.groupeBlockColonneAvantOuvert(false);
   }
 
@@ -48,7 +49,7 @@ public class NerellFaceAvantService extends AbstractNerellFaceService {
   protected void deplacementPriseColonnesSol() throws AvoidingException {
     rs.enableCalage(TypeCalage.AVANT, TypeCalage.FORCE);
     mv.setVitessePercent(10, 100);
-    mv.avanceMM(90);
+    mv.avanceMM(DEPL_PRISE_COLONNES_SOL);
   }
 
   @Override
@@ -62,13 +63,13 @@ public class NerellFaceAvantService extends AbstractNerellFaceService {
     servos.groupePincesAvantPrise(false);
 
     mv.setVitessePercent(100, 100);
-    mv.reculeMM(100);
+    mv.reculeMM(DEPL_DEPOSE_ETAGE);
 
     servos.becAvantFerme(false);
     servos.ascenseurAvantRepos(false);
     servos.groupeDoigtsAvantLache(false);
+    servos.ascenseurAvantReposHaut(false);
     servos.groupePincesAvantStock(false);
-    servos.ascenseurAvantStock(false);
     servos.tiroirAvantStock(false);
   }
 
@@ -76,7 +77,7 @@ public class NerellFaceAvantService extends AbstractNerellFaceService {
   protected void deplacementDeposeInit() throws AvoidingException {
     rs.enableCalage(TypeCalage.FORCE);
     mv.setVitessePercent(100, 100);
-    mv.avanceMM(130);
+    mv.avanceMM(DEPL_INIT_PRISE);
   }
 
   @Override
@@ -84,20 +85,19 @@ public class NerellFaceAvantService extends AbstractNerellFaceService {
     rs.enableCalage(TypeCalage.FORCE);
     mv.setVitessePercent(100, 100);
     if (!reverse) {
-      mv.reculeMM(60);
+      mv.reculeMM(DEPL_DEPOSE_COLONNES_SOL);
     } else {
-      mv.avanceMM(60);
+      mv.avanceMM(DEPL_DEPOSE_COLONNES_SOL);
     }
   }
 
-  protected void deplacementDeposeEtage() throws AvoidingException {
+  protected void deplacementDeposeEtage(boolean reverse) throws AvoidingException {
     mv.setVitessePercent(100, 100);
-    mv.reculeMM(100);
-  }
-
-  protected void deplacementDeposeEtage2() throws AvoidingException {
-    mv.setVitessePercent(100, 100);
-    mv.avanceMM(100);
+    if (!reverse) {
+      mv.reculeMM(DEPL_DEPOSE_ETAGE);
+    } else {
+      mv.avanceMM(DEPL_DEPOSE_ETAGE);
+    }
   }
 
   @Override
@@ -185,20 +185,15 @@ public class NerellFaceAvantService extends AbstractNerellFaceService {
   }
 
   @Override
-  protected void deposeEtage(Etage etage) throws AvoidingException {
+  protected void deposeEtage(Etage etage, StockPosition stockPosition) throws AvoidingException {
     StockFace face = rs.faceAvant();
-    log.info("Tentative de dépose de l'étage {}", etage.name());
+    log.info("Tentative de dépose face AVANT de l'étage {} depuis le stock {}", etage.name(), stockPosition.name());
     if (!face.tiroirBas()) {
       log.warn("Tiroir avant bas vide, on ne peut pas déposer");
       return;
     }
 
-    if (face.tiroirBas() &&
-      face.solGauche() &&
-      face.solDroite() &&
-      !face.pinceGauche() &&
-      !face.pinceDroite()
-    ) {
+    if (stockPosition == StockPosition.BOTTOM || stockPosition == StockPosition.BOTTOM_FAST) {
       log.info("Récupération des colonnes en stock depuis le sol");
       servos.groupeBlockColonneAvantOuvert(false);
       servos.groupePincesAvantPriseSol(false);
@@ -216,7 +211,7 @@ public class NerellFaceAvantService extends AbstractNerellFaceService {
       servos.groupePincesAvantPrise(true);
       servos.ascenseurAvantHaut(true);
       if (etage == Etage.ETAGE_2) {
-        deplacementDeposeEtage2();
+        deplacementDeposeEtage(true);
       }
     }
 
@@ -251,10 +246,45 @@ public class NerellFaceAvantService extends AbstractNerellFaceService {
     }
 
     servos.groupeDoigtsAvantLache(true);
-    deplacementDeposeEtage();
+    deplacementDeposeEtage(false);
     updatePincesState(false, false);
     servos.groupeDoigtsAvantFerme(false);
     servos.ascenseurAvantStock(true);
+    servos.groupePincesAvantRepos(false);
+  }
+
+  @Override
+  protected void ouvreFacePourPrise2Etages() throws AvoidingException {
+    servos.groupePincesAvantPrise(false);
+    servos.groupeDoigtsAvantLache(false);
+    servos.ascenseurAvantBas(true);
+  }
+
+  @Override
+  protected void leverGradin2Etages() {
+    servos.groupeDoigtsAvantSerre(true);
+    if (ioService.tiroirArriereBas(true)) {
+      servos.groupePincesArrierePrise(true);
+      servos.ascenseurArriereHaut(false);
+    }
+    servos.tiroirArriereLibreAutreTiroir(false);
+    servos.tiroirAvantLever2Etages(false);
+    servos.becAvantLever2Etages(true);
+    servos.ascenseurAvantHaut(true);
+  }
+
+  @Override
+  protected void poserGradin2Etages() throws AvoidingException {
+    servos.ascenseurAvantEtage2(true);
+    servos.groupeDoigtsAvantLache(true);
+    deplacementDeposeEtage(false);
+    updatePincesState(false, false);
+    servos.groupeDoigtsAvantFerme(false);
+    if (ioService.tiroirArriereBas(true)) {
+      servos.ascenseurArriereStock(true);
+      servos.groupePincesArriereStock(false);
+    }
+    servos.ascenseurAvantRepos(true);
     servos.groupePincesAvantRepos(false);
   }
 }
