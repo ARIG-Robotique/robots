@@ -94,18 +94,16 @@ public abstract class AbstractDeposeGradin extends AbstractNerellAction {
 
     try {
       final ConstructionPlanResult planResult = constructionPlannerService.plan(constructionArea());
-      log.info("Plan de construction pour {}", constructionArea().name());
-      for (ConstructionAction action : planResult.actions()) {
-        log.info(" - {}", action);
-      }
       Rang currentRang = null;
       boolean firstDepose = true;
       for (ConstructionAction action : planResult.actions()) {
         if (action instanceof ConstructionMoveAction moveAction) {
           firstDepose = true;
+          rs.disableAvoidance();
           if (currentRang == null) {
             currentRang = moveAction.rang();
             mv.pathTo(entryPoint(planResult));
+            rs.disableAvoidance();
           } else {
             currentRang = moveAction.rang();
             Point pt = rangPosition(currentRang);
