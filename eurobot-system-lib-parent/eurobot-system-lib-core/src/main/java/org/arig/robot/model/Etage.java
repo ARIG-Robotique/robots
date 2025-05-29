@@ -21,4 +21,12 @@ public enum Etage {
       default -> throw new IllegalArgumentException("Invalid etage index: " + etage);
     };
   }
+
+  public Etage next() {
+    return switch (this) {
+      case ETAGE_1 -> ETAGE_2;
+      case ETAGE_2 -> ETAGE_3;
+      case ETAGE_3 -> throw new IllegalStateException("No more etage");
+    };
+  }
 }

@@ -67,6 +67,9 @@ public class ConstructionArea {
       log.info("{} : Remove tribune {} {}", name, rang, etage);
     }
     data[rang.idx][etage.idx] = false;
+    if ((etage.idx + 1) < nbEtage) {
+      removeGradin(rang, Etage.fromIdx((byte) (etage.idx + 1)), skipLog);
+    }
   }
 
   public Rang getFirstRangWithElement(int expected) {

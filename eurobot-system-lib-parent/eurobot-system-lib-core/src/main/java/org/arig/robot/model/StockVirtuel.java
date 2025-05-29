@@ -28,14 +28,16 @@ public class StockVirtuel {
   public List<ConstructionElementSource> takeElements(int expected) {
     List<ConstructionElementSource> result = new ArrayList<>();
     List<Face> faces = new ArrayList<>();
-    if (avant.size() > 1) {
+
+    if (hasAtLeast(Face.AVANT, expected)) {
       faces.add(Face.AVANT);
       faces.add(Face.ARRIERE);
     } else {
       faces.add(Face.ARRIERE);
       faces.add(Face.AVANT);
     }
-    for (Face face : Face.values()) {
+
+    for (Face face : faces) {
       while (expected > 0 && hasAtLeast(face, 1)) {
         result.add(takeElementFrom(face));
         expected--;

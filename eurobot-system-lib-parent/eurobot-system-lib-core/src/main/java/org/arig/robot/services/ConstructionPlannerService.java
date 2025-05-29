@@ -14,6 +14,7 @@ import org.arig.robot.model.Etage;
 import org.arig.robot.model.EurobotStatus;
 import org.arig.robot.model.Face;
 import org.arig.robot.model.Rang;
+import org.arig.robot.model.StockPosition;
 import org.arig.robot.model.StockVirtuel;
 import org.springframework.stereotype.Component;
 
@@ -65,12 +66,10 @@ public class ConstructionPlannerService {
         Rang rangTwoElements = area.getFirstRangWithElement(2);
         Face emptyFace = stock.emptyFace(); // TODO: Optim face avec que BOTTOM, ou empty face
         if (rangOneElement != null && rangTwoElements != null && rangOneElement.before(rangTwoElements) && emptyFace != null) {
-          actions.add(new ConstructionMoveAction(emptyFace, rangTwoElements));
           actions.add(new ConstructionTake2Action(emptyFace, rangTwoElements));
           actions.add(new ConstructionMoveAction(emptyFace, rangOneElement));
           actions.add(new Construction2FloorAction(emptyFace, rangOneElement));
           area.removeGradin(rangTwoElements, Etage.ETAGE_1, true);
-          area.removeGradin(rangTwoElements, Etage.ETAGE_2, true);
           area.addGradin(rangOneElement, Etage.ETAGE_2, true);
           area.addGradin(rangOneElement, Etage.ETAGE_3, true);
           continue;
@@ -114,8 +113,13 @@ public class ConstructionPlannerService {
   private void build1Floor(List<ConstructionAction> actions, StockVirtuel stock, Rang rang, ConstructionArea area) {
     // Pile de 1
     ConstructionElementSource source = stock.takeElements(1).get(0);
+    StockPosition stockPosition = source.stockPosition();
     actions.add(new ConstructionMoveAction(source.face(), rang));
-    actions.add(new ConstructionFloorAction(source.face(), rang, Etage.ETAGE_1, source.stockPosition()));
+    if (!rs.limiter2Etages() && area.nbRang() > 1 && rang == Rang.RANG_2 && stockPosition == StockPosition.BOTTOM) {
+      actions.add(new ConstructionFloorAction(source.face(), rang, Etage.ETAGE_1, StockPosition.BOTTOM_FAST));
+    } else {
+      actions.add(new ConstructionFloorAction(source.face(), rang, Etage.ETAGE_1, stockPosition));
+    }
     area.addGradin(rang, Etage.ETAGE_1, true);
   }
 

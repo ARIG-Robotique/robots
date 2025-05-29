@@ -136,7 +136,7 @@ public class MaxThreeFloorConstructionPlannerServiceTest {
 
     ConstructionPlanResult planResult = planner.plan(big);
     List<ConstructionAction> actions = planResult.actions();
-    Assertions.assertEquals(11, actions.size());
+    Assertions.assertEquals(10, actions.size());
     Assertions.assertEquals(32, planResult.newArea().score());
     Assertions.assertEquals(32, planResult.newArea().score() - big.score());
 
@@ -162,16 +162,16 @@ public class MaxThreeFloorConstructionPlannerServiceTest {
     Assertions.assertInstanceOf(ConstructionMoveAction.class, actions.get(2));
     moveAction = (ConstructionMoveAction) actions.get(2);
     Assertions.assertEquals(ConstructionActionType.MOVE, moveAction.type());
-    Assertions.assertEquals(Face.AVANT, moveAction.face());
+    Assertions.assertEquals(Face.ARRIERE, moveAction.face());
     Assertions.assertEquals(Rang.RANG_2, moveAction.rang());
 
     Assertions.assertInstanceOf(ConstructionFloorAction.class, actions.get(3));
     floorAction = (ConstructionFloorAction) actions.get(3);
     Assertions.assertEquals(ConstructionActionType.PLACE_ONE, floorAction.type());
-    Assertions.assertEquals(Face.AVANT, floorAction.face());
+    Assertions.assertEquals(Face.ARRIERE, floorAction.face());
     Assertions.assertEquals(Rang.RANG_2, floorAction.rang());
     Assertions.assertEquals(Etage.ETAGE_1, floorAction.etage());
-    Assertions.assertEquals(StockPosition.BOTTOM, floorAction.stockPosition());
+    Assertions.assertEquals(StockPosition.TOP, floorAction.stockPosition());
 
     Assertions.assertInstanceOf(ConstructionFloorAction.class, actions.get(4));
     floorAction = (ConstructionFloorAction) actions.get(4);
@@ -179,47 +179,41 @@ public class MaxThreeFloorConstructionPlannerServiceTest {
     Assertions.assertEquals(Face.ARRIERE, floorAction.face());
     Assertions.assertEquals(Rang.RANG_2, floorAction.rang());
     Assertions.assertEquals(Etage.ETAGE_2, floorAction.etage());
-    Assertions.assertEquals(StockPosition.TOP, floorAction.stockPosition());
+    Assertions.assertEquals(StockPosition.BOTTOM, floorAction.stockPosition());
 
-    Assertions.assertInstanceOf(ConstructionMoveAction.class, actions.get(5));
-    moveAction = (ConstructionMoveAction) actions.get(5);
-    Assertions.assertEquals(ConstructionActionType.MOVE, moveAction.type());
-    Assertions.assertEquals(Face.AVANT, moveAction.face());
-    Assertions.assertEquals(Rang.RANG_2, moveAction.rang());
-
-    Assertions.assertInstanceOf(ConstructionTake2Action.class, actions.get(6));
-    take2Action = (ConstructionTake2Action) actions.get(6);
+    Assertions.assertInstanceOf(ConstructionTake2Action.class, actions.get(5));
+    take2Action = (ConstructionTake2Action) actions.get(5);
     Assertions.assertEquals(ConstructionActionType.TAKE_TWO, take2Action.type());
-    Assertions.assertEquals(Face.AVANT, take2Action.face());
+    Assertions.assertEquals(Face.ARRIERE, take2Action.face());
     Assertions.assertEquals(Rang.RANG_2, take2Action.rang());
     Assertions.assertEquals(Etage.ETAGE_1, take2Action.etage());
 
-    Assertions.assertInstanceOf(ConstructionMoveAction.class, actions.get(7));
-    moveAction = (ConstructionMoveAction) actions.get(7);
+    Assertions.assertInstanceOf(ConstructionMoveAction.class, actions.get(6));
+    moveAction = (ConstructionMoveAction) actions.get(6);
     Assertions.assertEquals(ConstructionActionType.MOVE, moveAction.type());
-    Assertions.assertEquals(Face.AVANT, moveAction.face());
+    Assertions.assertEquals(Face.ARRIERE, moveAction.face());
     Assertions.assertEquals(Rang.RANG_1, moveAction.rang());
 
-    Assertions.assertInstanceOf(Construction2FloorAction.class, actions.get(8));
-    twoFloorAction = (Construction2FloorAction) actions.get(8);
+    Assertions.assertInstanceOf(Construction2FloorAction.class, actions.get(7));
+    twoFloorAction = (Construction2FloorAction) actions.get(7);
     Assertions.assertEquals(ConstructionActionType.PLACE_TWO, twoFloorAction.type());
-    Assertions.assertEquals(Face.AVANT, twoFloorAction.face());
+    Assertions.assertEquals(Face.ARRIERE, twoFloorAction.face());
     Assertions.assertEquals(Rang.RANG_1, twoFloorAction.rang());
     Assertions.assertEquals(Etage.ETAGE_2, twoFloorAction.etage());
 
-    Assertions.assertInstanceOf(ConstructionMoveAction.class, actions.get(9));
-    moveAction = (ConstructionMoveAction) actions.get(9);
+    Assertions.assertInstanceOf(ConstructionMoveAction.class, actions.get(8));
+    moveAction = (ConstructionMoveAction) actions.get(8);
     Assertions.assertEquals(ConstructionActionType.MOVE, moveAction.type());
-    Assertions.assertEquals(Face.ARRIERE, moveAction.face());
+    Assertions.assertEquals(Face.AVANT, moveAction.face());
     Assertions.assertEquals(Rang.RANG_2, moveAction.rang());
 
-    Assertions.assertInstanceOf(ConstructionFloorAction.class, actions.get(10));
-    floorAction = (ConstructionFloorAction) actions.get(10);
+    Assertions.assertInstanceOf(ConstructionFloorAction.class, actions.get(9));
+    floorAction = (ConstructionFloorAction) actions.get(9);
     Assertions.assertEquals(ConstructionActionType.PLACE_ONE, floorAction.type());
-    Assertions.assertEquals(Face.ARRIERE, floorAction.face());
+    Assertions.assertEquals(Face.AVANT, floorAction.face());
     Assertions.assertEquals(Rang.RANG_2, floorAction.rang());
     Assertions.assertEquals(Etage.ETAGE_1, floorAction.etage());
-    Assertions.assertEquals(StockPosition.BOTTOM, floorAction.stockPosition());
+    Assertions.assertEquals(StockPosition.BOTTOM_FAST, floorAction.stockPosition());
   }
 
   @Test
@@ -237,7 +231,7 @@ public class MaxThreeFloorConstructionPlannerServiceTest {
 
     ConstructionPlanResult planResult = planner.plan(big);
     List<ConstructionAction> actions = planResult.actions();
-    Assertions.assertEquals(10, actions.size());
+    Assertions.assertEquals(9, actions.size());
     Assertions.assertEquals(68, planResult.newArea().score());
     Assertions.assertEquals(36, planResult.newArea().score() - big.score());
 
@@ -268,48 +262,42 @@ public class MaxThreeFloorConstructionPlannerServiceTest {
     Assertions.assertEquals(Etage.ETAGE_2, floorAction.etage());
     Assertions.assertEquals(StockPosition.BOTTOM, floorAction.stockPosition());
 
-    Assertions.assertInstanceOf(ConstructionMoveAction.class, actions.get(3));
-    moveAction = (ConstructionMoveAction) actions.get(3);
-    Assertions.assertEquals(ConstructionActionType.MOVE, moveAction.type());
-    Assertions.assertEquals(Face.AVANT, moveAction.face());
-    Assertions.assertEquals(Rang.RANG_3, moveAction.rang());
-
-    Assertions.assertInstanceOf(ConstructionTake2Action.class, actions.get(4));
-    take2Action = (ConstructionTake2Action) actions.get(4);
+    Assertions.assertInstanceOf(ConstructionTake2Action.class, actions.get(3));
+    take2Action = (ConstructionTake2Action) actions.get(3);
     Assertions.assertEquals(ConstructionActionType.TAKE_TWO, take2Action.type());
     Assertions.assertEquals(Face.AVANT, take2Action.face());
     Assertions.assertEquals(Rang.RANG_3, take2Action.rang());
     Assertions.assertEquals(Etage.ETAGE_1, take2Action.etage());
 
-    Assertions.assertInstanceOf(ConstructionMoveAction.class, actions.get(5));
-    moveAction = (ConstructionMoveAction) actions.get(5);
+    Assertions.assertInstanceOf(ConstructionMoveAction.class, actions.get(4));
+    moveAction = (ConstructionMoveAction) actions.get(4);
     Assertions.assertEquals(ConstructionActionType.MOVE, moveAction.type());
     Assertions.assertEquals(Face.AVANT, moveAction.face());
     Assertions.assertEquals(Rang.RANG_2, moveAction.rang());
 
-    Assertions.assertInstanceOf(Construction2FloorAction.class, actions.get(6));
-    twoFloorAction = (Construction2FloorAction) actions.get(6);
+    Assertions.assertInstanceOf(Construction2FloorAction.class, actions.get(5));
+    twoFloorAction = (Construction2FloorAction) actions.get(5);
     Assertions.assertEquals(ConstructionActionType.PLACE_TWO, twoFloorAction.type());
     Assertions.assertEquals(Face.AVANT, twoFloorAction.face());
     Assertions.assertEquals(Rang.RANG_2, twoFloorAction.rang());
     Assertions.assertEquals(Etage.ETAGE_2, twoFloorAction.etage());
 
-    Assertions.assertInstanceOf(ConstructionMoveAction.class, actions.get(7));
-    moveAction = (ConstructionMoveAction) actions.get(7);
+    Assertions.assertInstanceOf(ConstructionMoveAction.class, actions.get(6));
+    moveAction = (ConstructionMoveAction) actions.get(6);
     Assertions.assertEquals(ConstructionActionType.MOVE, moveAction.type());
     Assertions.assertEquals(Face.ARRIERE, moveAction.face());
     Assertions.assertEquals(Rang.RANG_3, moveAction.rang());
 
-    Assertions.assertInstanceOf(ConstructionFloorAction.class, actions.get(8));
-    floorAction = (ConstructionFloorAction) actions.get(8);
+    Assertions.assertInstanceOf(ConstructionFloorAction.class, actions.get(7));
+    floorAction = (ConstructionFloorAction) actions.get(7);
     Assertions.assertEquals(ConstructionActionType.PLACE_ONE, floorAction.type());
     Assertions.assertEquals(Face.ARRIERE, floorAction.face());
     Assertions.assertEquals(Rang.RANG_3, floorAction.rang());
     Assertions.assertEquals(Etage.ETAGE_1, floorAction.etage());
     Assertions.assertEquals(StockPosition.TOP, floorAction.stockPosition());
 
-    Assertions.assertInstanceOf(ConstructionFloorAction.class, actions.get(9));
-    floorAction = (ConstructionFloorAction) actions.get(9);
+    Assertions.assertInstanceOf(ConstructionFloorAction.class, actions.get(8));
+    floorAction = (ConstructionFloorAction) actions.get(8);
     Assertions.assertEquals(ConstructionActionType.PLACE_ONE, floorAction.type());
     Assertions.assertEquals(Face.ARRIERE, floorAction.face());
     Assertions.assertEquals(Rang.RANG_3, floorAction.rang());
