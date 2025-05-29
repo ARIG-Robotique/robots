@@ -25,6 +25,8 @@ import org.arig.robot.utils.ThreadUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.logging.LogLevel;
 
+import java.awt.geom.Rectangle2D;
+
 @Slf4j
 public class NerellOrdonanceur extends AbstractOrdonanceur {
 
@@ -114,7 +116,13 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
 
   @Override
   public void addDeadZones() {
-
+    if (nerellRobotStatus.team() == Team.JAUNE) {
+      // Zone départ adverse
+      tableUtils.addPersistentDeadZone(new Rectangle2D.Double(1600, 0, 350, 250));
+    } else {
+      // Zone départ adverse
+      tableUtils.addPersistentDeadZone(new Rectangle2D.Double(1050, 0, 350, 250));
+    }
   }
 
   @Override
