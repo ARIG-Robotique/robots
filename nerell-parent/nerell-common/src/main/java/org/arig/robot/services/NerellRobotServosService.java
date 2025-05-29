@@ -27,8 +27,8 @@ public class NerellRobotServosService extends AbstractCommonRobotServosService {
   public static final byte BLOCK_COLONNE_ARRIERE_GAUCHE_ID = 1;
   public static final byte BLOCK_COLONNE_ARRIERE_DROIT_ID = 3;
 
-  public static final int TIME_TIROIR = 350;
-  public static final int TIME_BEC = 480;
+  public static final int TIME_TIROIR = 500;
+  public static final int TIME_BEC = 500;
   public static final int TIME_ASCENSEUR = 1000;
   public static final int TIME_PINCES = 750;
   public static final int TIME_DOIGTS = 450;
