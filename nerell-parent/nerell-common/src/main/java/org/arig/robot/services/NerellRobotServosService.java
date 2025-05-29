@@ -29,7 +29,7 @@ public class NerellRobotServosService extends AbstractCommonRobotServosService {
 
   public static final int TIME_TIROIR = 350;
   public static final int TIME_BEC = 480;
-  public static final int TIME_ASCENSEUR = 850;
+  public static final int TIME_ASCENSEUR = 1000;
   public static final int TIME_PINCES = 750;
   public static final int TIME_DOIGTS = 450;
   public static final int TIME_BLOCK_COLONNE = 250;
