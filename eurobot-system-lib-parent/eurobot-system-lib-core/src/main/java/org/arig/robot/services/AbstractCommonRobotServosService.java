@@ -37,9 +37,12 @@ public abstract class AbstractCommonRobotServosService extends AbstractServosSer
   protected static final String POS_SPLIT = "Split";
   protected static final String POS_HAUT = "Haut";
   protected static final String POS_BAS = "Bas";
+  protected static final String POS_LEVER_2_ETAGES = "Lever 2 étages";
   protected static final String POS_ETAGE_2 = "Etage 2";
   protected static final String POS_REPOS = "Repos";
+  protected static final String POS_REPOS_HAUT = "Repos haut";
   protected static final String POS_BANDEROLE = "Banderole";
+  protected static final String POS_FREE_FACE = "Free face";
 
   protected static final byte FULL_SPEED = 0;
   protected static final byte HALF_SPEED = 30;
@@ -86,8 +89,8 @@ public abstract class AbstractCommonRobotServosService extends AbstractServosSer
       ascenseurAvantBanderole(false);
       ascenseurArriereRepos(false);
     } else {
-      ascenseurAvantStock(false);
-      ascenseurArriereStock(false);
+      ascenseurAvantReposHaut(false);
+      ascenseurArriereReposHaut(false);
     }
     becAvantRepos(false);
     becArriereRepos(false);
@@ -232,6 +235,14 @@ public abstract class AbstractCommonRobotServosService extends AbstractServosSer
     setPositionAndSpeed(TIROIR_AVANT, POS_STOCK, halfSpeed ? HALF_SPEED : FULL_SPEED, wait);
   }
 
+  public void tiroirAvantLever2Etages(boolean wait) {
+    setPosition(TIROIR_AVANT, POS_LEVER_2_ETAGES, wait);
+  }
+
+  public void tiroirAvantLibreAutreTiroir(boolean wait) {
+    setPosition(TIROIR_AVANT, POS_FREE_FACE, wait);
+  }
+
   public void tiroirArriereDepose(boolean wait) {
     tiroirArriereDepose(wait, false);
   }
@@ -256,6 +267,14 @@ public abstract class AbstractCommonRobotServosService extends AbstractServosSer
     setPositionAndSpeed(TIROIR_ARRIERE, POS_STOCK, halfSpeed ? HALF_SPEED : FULL_SPEED, wait);
   }
 
+  public void tiroirArriereLever2Etages(boolean wait) {
+    setPosition(TIROIR_ARRIERE, POS_LEVER_2_ETAGES, wait);
+  }
+
+  public void tiroirArriereLibreAutreTiroir(boolean wait) {
+    setPosition(TIROIR_ARRIERE, POS_FREE_FACE, wait);
+  }
+
   public void becAvantOuvert(boolean wait) {
     setPosition(BEC_AVANT, POS_OUVERT, wait);
   }
@@ -268,6 +287,10 @@ public abstract class AbstractCommonRobotServosService extends AbstractServosSer
     setPosition(BEC_AVANT, POS_REPOS, wait);
   }
 
+  public void becAvantLever2Etages(boolean wait) {
+    setPosition(BEC_AVANT, POS_LEVER_2_ETAGES, wait);
+  }
+
   public void becArriereOuvert(boolean wait) {
     setPosition(BEC_ARRIERE, POS_OUVERT, wait);
   }
@@ -278,6 +301,10 @@ public abstract class AbstractCommonRobotServosService extends AbstractServosSer
 
   public void becArriereRepos(boolean wait) {
     setPosition(BEC_ARRIERE, POS_REPOS, wait);
+  }
+
+  public void becArriereLever2Etages(boolean wait) {
+    setPosition(BEC_ARRIERE, POS_LEVER_2_ETAGES, wait);
   }
 
   public void ascenseurAvantHaut(boolean wait) {
@@ -300,6 +327,9 @@ public abstract class AbstractCommonRobotServosService extends AbstractServosSer
     setPosition(ASCENSEUR_AVANT, POS_REPOS, wait);
   }
 
+  public void ascenseurAvantReposHaut(boolean wait) {
+    setPosition(ASCENSEUR_AVANT, POS_REPOS_HAUT, wait);
+  }
   public void ascenseurAvantBanderole(boolean wait) {
     setPosition(ASCENSEUR_AVANT, POS_BANDEROLE, wait);
   }
@@ -326,6 +356,10 @@ public abstract class AbstractCommonRobotServosService extends AbstractServosSer
 
   public void ascenseurArriereRepos(boolean wait) {
     setPosition(ASCENSEUR_ARRIERE, POS_REPOS, wait);
+  }
+
+  public void ascenseurArriereReposHaut(boolean wait) {
+    setPosition(ASCENSEUR_ARRIERE, POS_REPOS_HAUT, wait);
   }
 
   public void ascenseurArriereEtage2(boolean wait) {

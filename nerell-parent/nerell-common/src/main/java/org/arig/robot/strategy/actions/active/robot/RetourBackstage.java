@@ -61,22 +61,22 @@ public class RetourBackstage extends AbstractNerellAction {
       mv.pathTo(entryPoint());
       if (position.getAngle() > 0) {
         // Face Avant
+        servosNerell.groupePincesAvantPrise(false);
         servosNerell.ascenseurAvantStock(false);
         if (rs.team() == Team.JAUNE) {
           mv.gotoOrientationDeg(180 - 35);
         } else {
           mv.gotoOrientationDeg(35);
         }
-        servosNerell.groupePincesAvantPrise(false);
       } else {
         // Face Arrière
+        servosNerell.groupePincesArrierePrise(false);
         servosNerell.ascenseurArriereStock(false);
         if (rs.team() == Team.JAUNE) {
           mv.gotoOrientationDeg(-35);
         } else {
           mv.gotoOrientationDeg(-180 + 35);
         }
-        servosNerell.groupePincesArrierePrise(false);
       }
       log.info("Arrivée au backstage");
       groups.forEach(g -> g.backstage(BackstageState.TARGET_REACHED));

@@ -6,6 +6,7 @@ import org.arig.robot.model.Etage;
 import org.arig.robot.model.GradinBrut;
 import org.arig.robot.model.Face;
 import org.arig.robot.model.PriseGradinState;
+import org.arig.robot.model.StockPosition;
 import org.arig.robot.services.AbstractEnergyService;
 import org.arig.robot.services.AbstractNerellFaceService;
 import org.arig.robot.services.NerellFaceWrapper;
@@ -253,25 +254,25 @@ public class NerellServosCommands {
 
   @ShellMethod("Test construction etage 1 avant")
   public void testConstructionEtage1Avant() {
-    testConstructionEtage(Face.AVANT, Etage.ETAGE_1);
+    testConstructionEtage(Face.AVANT, Etage.ETAGE_1, StockPosition.TOP);
   }
 
   @ShellMethod("Test construction etage 1 arriere")
   public void testConstructionEtage1Arriere() {
-    testConstructionEtage(Face.ARRIERE, Etage.ETAGE_1);
+    testConstructionEtage(Face.ARRIERE, Etage.ETAGE_1, StockPosition.TOP);
   }
 
   @ShellMethod("Test construction etage 2 avant")
   public void testConstructionEtage2Avant() {
-    testConstructionEtage(Face.AVANT, Etage.ETAGE_2);
+    testConstructionEtage(Face.AVANT, Etage.ETAGE_2, StockPosition.TOP);
   }
 
   @ShellMethod("Test construction etage 2 arriere")
   public void testConstructionEtage2Arriere() {
-    testConstructionEtage(Face.ARRIERE, Etage.ETAGE_2);
+    testConstructionEtage(Face.ARRIERE, Etage.ETAGE_2, StockPosition.TOP);
   }
 
-  private void testConstructionEtage(Face face, Etage etage) {
+  private void testConstructionEtage(Face face, Etage etage, StockPosition stockPosition) {
     try {
       log.info("Début test construction etage {} sur la face {}. Start avec tirette", etage.name(), face);
       boolean tirette = ThreadUtils.waitUntil(ioService::tirette, 1000, 60000);
@@ -285,7 +286,7 @@ public class NerellServosCommands {
       log.info("Tiroir : B {} - H {}", ioService.tiroirAvantBas(true), ioService.tiroirAvantHaut(true));
 
       AbstractNerellFaceService faceService = faceWrapper.getFaceService(face);
-      faceService.deposeGradin(etage);
+      faceService.deposeGradin(etage, stockPosition);
     } catch (Exception e) {
       log.error("Erreur lors de la construction de l'étage 1 sur la face {}", face, e);
     }

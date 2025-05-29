@@ -41,12 +41,14 @@ public class NerellRobotServosService extends AbstractCommonRobotServosService {
       .time(TIME_TIROIR)
       .position(POS_DEPOSE, 930)
       .position(POS_PRISE, 1190)
-      .position(POS_STOCK, 1830);
+      .position(POS_FREE_FACE, 1590)
+      .position(POS_STOCK, 1830)
+      .position(POS_LEVER_2_ETAGES, 2050);
     Servo becAvant = servo(BEC_AVANT_ID, BEC_AVANT)
       .time(TIME_BEC)
       .position(POS_REPOS, 800)
       .position(POS_OUVERT, 1900)
-      .position(POS_SPLIT, 1730)
+      .position(POS_LEVER_2_ETAGES, 1390)
       .position(POS_FERME, 1610);
     Servo ascAvant = servo(ASCENSEUR_AVANT_ID, ASCENSEUR_AVANT)
       .time(TIME_ASCENSEUR)
@@ -54,6 +56,7 @@ public class NerellRobotServosService extends AbstractCommonRobotServosService {
       .position(POS_SPLIT, 750)
       .position(POS_STOCK, 870)
       .position(POS_ETAGE_2, 980)
+      .position(POS_REPOS_HAUT, 1330)
       .position(POS_BANDEROLE, 2060)
       .position(POS_REPOS, 2160) // 106 mm
       .position(POS_BAS, 2290);
@@ -66,12 +69,14 @@ public class NerellRobotServosService extends AbstractCommonRobotServosService {
       .time(TIME_TIROIR)
       .position(POS_DEPOSE, 940)
       .position(POS_PRISE, 1210)
-      .position(POS_STOCK, 1880);
+      .position(POS_FREE_FACE, 1630)
+      .position(POS_STOCK, 1880)
+      .position(POS_LEVER_2_ETAGES, 2090);
     Servo becArriere = servo(BEC_ARRIERE_ID, BEC_ARRIERE)
       .time(TIME_BEC)
       .position(POS_REPOS, 630)
       .position(POS_OUVERT, 1800)
-      .position(POS_SPLIT, 1620)
+      .position(POS_LEVER_2_ETAGES, 1250)
       .position(POS_FERME, 1530);
     Servo ascArriere = servo(ASCENSEUR_ARRIERE_ID, ASCENSEUR_ARRIERE)
       .time(TIME_ASCENSEUR)
@@ -79,7 +84,8 @@ public class NerellRobotServosService extends AbstractCommonRobotServosService {
       .position(POS_SPLIT, 800)
       .position(POS_STOCK, 830)
       .position(POS_ETAGE_2, 940)
-      .position(POS_REPOS, 2100) // 107 mm
+      .position(POS_REPOS_HAUT, 1310)// 107 mm
+      .position(POS_REPOS, 2100)
       .position(POS_BAS, 2280);
     group(GROUP_INDIVIDUAL_ARRIERE_ID, GROUP_INDIVIDUAL_ARRIERE)
       .addServo(tiroirArriere)

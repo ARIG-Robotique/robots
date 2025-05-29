@@ -52,7 +52,7 @@ public class NerellFaceArriereServiceUtils extends NerellFaceArriereService {
   }
 
   @Override
-  protected void deplacementDeposeEtage() throws AvoidingException {
+  protected void deplacementDeposeEtage(boolean reverse) throws AvoidingException {
     log.info("Enleve la tirette une fois la construction enlevé");
     while (ioService.tirette()) {
       ThreadUtils.sleep(300);
