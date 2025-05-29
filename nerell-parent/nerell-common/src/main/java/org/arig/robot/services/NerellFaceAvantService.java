@@ -28,7 +28,7 @@ public class NerellFaceAvantService extends AbstractNerellFaceService {
   protected void ouvreFacePourPrise() {
     servos.tiroirAvantPrise(false);
     servos.becAvantOuvert(false);
-    servos.groupeBlockColonneAvantOuvert(false);
+    servos.groupeBlockColonneAvantFerme(false);
     servos.groupeDoigtsAvantLache(false);
     servos.ascenseurAvantBas(false);
     servos.groupePincesAvantPrise(true);
@@ -40,13 +40,14 @@ public class NerellFaceAvantService extends AbstractNerellFaceService {
     mv.setVitessePercent(20, 100);
     mv.avanceMM(90);
     mv.setVitessePercent(0, 100);
-    mv.avanceMM(10);
+    mv.avanceMM(20);
+    servos.groupeBlockColonneAvantOuvert(false);
   }
 
   @Override
   protected void deplacementPriseColonnesSol() throws AvoidingException {
     rs.enableCalage(TypeCalage.AVANT, TypeCalage.FORCE);
-    mv.setVitessePercent(70, 100);
+    mv.setVitessePercent(10, 100);
     mv.avanceMM(90);
   }
 
