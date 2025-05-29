@@ -6,6 +6,7 @@ import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.RobotName;
+import org.arig.robot.model.Team;
 import org.arig.robot.model.enums.GotoOption;
 import org.arig.robot.strategy.actions.AbstractEurobotAction;
 import org.arig.robot.utils.ThreadUtils;
@@ -65,11 +66,11 @@ public class MoshPit extends AbstractEurobotAction {
           mv.gotoPoint(getX(750), 1370, avant);
         }
         if (robotName.id() == RobotName.RobotIdentification.PAMI_ROND) {
-          ThreadUtils.sleep(5000);
+          ThreadUtils.sleep(3000);
           mv.avanceMM(160);
         }
         if (robotName.id() == RobotName.RobotIdentification.PAMI_CARRE) {
-          ThreadUtils.sleep(10000);
+          ThreadUtils.sleep(6000);
           mv.avanceMM(140);
           mv.gotoPoint(getX(660), 1460, avant);
         }
@@ -77,12 +78,18 @@ public class MoshPit extends AbstractEurobotAction {
       rs.enableAvoidance();
 
       if (robotName.id() == RobotName.RobotIdentification.PAMI_STAR) {
+        final int offsetY;
+        if (rs.team() == Team.JAUNE) {
+          offsetY = 100;
+        } else {
+          offsetY = -100;
+        }
         if (tryFinalPoint == 0) {
-          mv.gotoPoint(getX(1800), 1380, avant);
+          mv.gotoPoint(getX(1800), 1380 + offsetY, avant);
         } else if (tryFinalPoint == 1) {
-          mv.gotoPoint(getX(2000), 1300, avant);
+          mv.gotoPoint(getX(2000), 1300 + offsetY, avant);
         } else if (tryFinalPoint == 2) {
-          mv.gotoPoint(getX(1750), 1400, avant);
+          mv.gotoPoint(getX(1750), 1400 + offsetY, avant);
         }
       }
       if (robotName.id() == RobotName.RobotIdentification.PAMI_ROND) {

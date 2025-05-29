@@ -57,30 +57,30 @@ public class Scene extends AbstractEurobotAction {
       mv.setVitessePercent(100, 100);
       rs.disableAvoidance();
       mv.avanceMM(95);
-      mv.gotoPoint(getX(350), 1910, avant);
+      mv.gotoPoint(getX(350), 1880, avant);
 
       // Rampes, on réduit les accels et la vitesse
       //mv.setVitessePercent(100, 30);
       //mv.setRampeOrientationPercent(10, 100);
       //mv.setRampesDistancePercent(10, 100);
 
-      mv.gotoPoint(getX(1200), 1910, avant, GotoOption.SANS_ORIENTATION);
+      mv.gotoPoint(getX(1200), 1880, avant);
 
       // On rétablit les accels et la vitesse pour la suite
       //mv.setRampeOrientationPercent(100, 100);
       //mv.setRampesDistancePercent(100, 100);
       //mv.setVitessePercent(100, 100);
 
-      mv.gotoOrientationDeg(-90);
-      mv.avanceMM(300);
+      mv.gotoOrientationDegSansDistance(-90);
+      mv.gotoPoint(getX(1200),1880 - 300, avant);
 
       // Bord de scene, on réduit les accels et la vitesse
       mv.setVitessePercent(10, 10);
       mv.setRampeOrientationPercent(10, 100);
       mv.setRampesDistancePercent(10, 100);
 
-      rs.enableCalageTempo(2000);
-      mv.avanceMM(70);
+      rs.enableCalageTempo(1000);
+      mv.avanceMM(40);
       //mv.setVitessePercent(20, 100);
       //rs.enableCalage(TypeCalage.PRISE_PRODUIT_SOL_AVANT);
       //mv.avanceMM(42);
