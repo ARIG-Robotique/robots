@@ -102,7 +102,7 @@ public class NerellTasksScheduler {
     }
   }
 
-  @Scheduled(fixedDelay = 1000)
+  @Scheduled(fixedDelay = 500)
   public void updateBaliseData() {
     if (!rs.matchEnabled() || !rs.baliseEnabled()) return;
 
