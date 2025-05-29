@@ -241,11 +241,12 @@ public class NerellFaceArriereService extends AbstractNerellFaceService {
       log.info("Pas de split tiroir");
       if (etage == Etage.ETAGE_1) {
         servos.ascenseurArriereBas(true);
+        servos.tiroirArriereStock(false);
       } else {
         servos.ascenseurArriereEtage2(true);
+        servos.tiroirArriereStock(true);
       }
       servos.becArriereFerme(false);
-      servos.tiroirArriereStock(false);
       updateTiroirState(false, false);
     }
 
