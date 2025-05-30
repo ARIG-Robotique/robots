@@ -82,7 +82,7 @@ public class NerellRobotServosService extends AbstractCommonRobotServosService {
       .time(TIME_ASCENSEUR)
       .position(POS_HAUT, 570)
       .position(POS_SPLIT, 800)
-      .position(POS_STOCK, 830)
+      .position(POS_STOCK, 840)
       .position(POS_ETAGE_2, 940)
       .position(POS_REPOS_HAUT, 1310)// 107 mm
       .position(POS_REPOS, 2100)
