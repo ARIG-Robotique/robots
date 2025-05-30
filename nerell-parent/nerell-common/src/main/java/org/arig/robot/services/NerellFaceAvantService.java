@@ -205,6 +205,7 @@ public class NerellFaceAvantService extends AbstractNerellFaceService {
       updateColonnesSolState(false, false);
       updatePincesState(true, true);
       servos.ascenseurAvantStock(true);
+      servos.tiroirAvantLibreAutreTiroir(false);
       servos.groupePincesAvantPrise(true);
       servos.ascenseurAvantHaut(true);
       servos.groupeBlockColonneAvantOuvert(false);
@@ -214,6 +215,7 @@ public class NerellFaceAvantService extends AbstractNerellFaceService {
     }
 
     log.info("Dépose de l'étage {} depuis les pinces", etage.name());
+    servos.tiroirAvantLibreAutreTiroir(false);
     servos.groupePincesAvantPrise(true);
     servos.ascenseurAvantHaut(true);
     servos.tiroirAvantDepose(true);
