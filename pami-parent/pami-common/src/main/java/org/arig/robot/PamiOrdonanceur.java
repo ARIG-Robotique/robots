@@ -16,6 +16,7 @@ import org.arig.robot.model.RobotName;
 import org.arig.robot.model.Strategy;
 import org.arig.robot.model.StrategyOption;
 import org.arig.robot.model.Team;
+import org.arig.robot.model.enums.TypeCalage;
 import org.arig.robot.services.PamiEcranService;
 import org.arig.robot.services.PamiIOService;
 import org.arig.robot.services.PamiRobotServosService;
@@ -227,7 +228,7 @@ public class PamiOrdonanceur extends AbstractOrdonanceur {
       }
 
       if (!skip) {
-        robotStatus.enableCalageTempo(1000);
+        robotStatus.enableCalageTempo(1000, TypeCalage.ARRIERE);
         mv.reculeMMSansAngle(300);
 
         RobotName.RobotIdentification id = robotName.id();
