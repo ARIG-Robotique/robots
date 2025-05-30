@@ -45,7 +45,7 @@ public abstract class AbstractNerellFaceService {
 
   protected abstract void ouvreFacePourPrise();
 
-  protected abstract void ouvreFacePourPrise2Etages() throws AvoidingException;
+  protected abstract void ouvreFacePourPrise2Etages();
 
   protected abstract void deplacementPriseColonnesPinces() throws AvoidingException;
 
@@ -54,6 +54,8 @@ public abstract class AbstractNerellFaceService {
   protected abstract void echappementPriseGradinBrut(PriseGradinState state) throws AvoidingException;
 
   protected abstract void deplacementDeposeInit() throws AvoidingException;
+
+  protected abstract void deplacementDepose2Gradins() throws AvoidingException;
 
   protected abstract void deplacementDeposeColonnesSol(boolean reverse) throws AvoidingException;
 
@@ -124,8 +126,12 @@ public abstract class AbstractNerellFaceService {
     deposeEtage(etage, stockPosition);
   }
 
-  public PriseGradinState reprise2Gradin(Etage etage) throws AvoidingException {
+  public PriseGradinState reprise2Gradin(Rang rangReprise, Etage etage) throws AvoidingException {
+    log.info("Rerise du gradin 2 etages {} pour stock dépose 3 etages", rangReprise);
+    log.info(" - Préparation de la reprise du gradin 2 étages");
     ouvreFacePourPrise2Etages();
+
+    log.info(" - Prises des colonnes dans les pinces");
     deplacementPriseColonnesPinces();
     if (!iosPinces()) {
       log.warn("Erreur de chargement du gradin 2 étages dans les pinces (G : {} ; D : {})", ioService.pinceAvantGauche(false), ioService.pinceAvantDroite(false));
@@ -134,12 +140,18 @@ public abstract class AbstractNerellFaceService {
     }
     updatePincesState(true, true);
 
+    log.info(" - Lever des deux étages du gradin");
     leverGradin2Etages();
 
     return PriseGradinState.OK;
   }
 
-  public void depose2Gradins(Etage etage) throws AvoidingException {
+  public void depose2Gradins(Rang rangDepose, Etage etage) throws AvoidingException {
+    log.info("Dépose de 2 gradins sur étage 1 du {}", rangDepose);
+    log.info(" - Déplacement de dépose des colonnes sur l'étage 1");
+    deplacementDepose2Gradins();
+
+    log.info(" - Dépose de gradin de niveau 3");
     poserGradin2Etages();
   }
 }

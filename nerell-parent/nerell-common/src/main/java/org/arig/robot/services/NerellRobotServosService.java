@@ -177,7 +177,7 @@ public class NerellRobotServosService extends AbstractCommonRobotServosService {
       .position(POS_FERME, 2420);
     Servo doigtArriereDroite = servo(DOIGT_ARRIERE_DROIT_ID, DOIGT_ARRIERE_DROIT)
       .time(TIME_DOIGTS)
-      .position(POS_SUPER_OUVERT, 2310)
+      .position(POS_SUPER_OUVERT, 2260)
       .position(POS_OUVERT, 2160)
       .position(POS_PRISE_SOL, 1900)
       .position(POS_LACHE, 1670)

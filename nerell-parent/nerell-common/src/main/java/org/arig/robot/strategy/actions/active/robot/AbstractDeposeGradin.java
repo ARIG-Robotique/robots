@@ -4,13 +4,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.EurobotConfig;
 import org.arig.robot.exception.AvoidingException;
 import org.arig.robot.exception.NoPathFoundException;
-import org.arig.robot.model.Construction2FloorAction;
+import org.arig.robot.model.Construction3FloorsAction;
 import org.arig.robot.model.ConstructionAction;
 import org.arig.robot.model.ConstructionArea;
 import org.arig.robot.model.ConstructionFloorAction;
 import org.arig.robot.model.ConstructionMoveAction;
 import org.arig.robot.model.ConstructionPlanResult;
-import org.arig.robot.model.ConstructionTake2Action;
 import org.arig.robot.model.Etage;
 import org.arig.robot.model.Face;
 import org.arig.robot.model.Point;
@@ -100,8 +99,7 @@ public abstract class AbstractDeposeGradin extends AbstractNerellAction {
       boolean firstDeposeInRang = true;
       for (ConstructionAction action : planResult.actions()) {
 
-        if (currentRang != action.rang() || action instanceof ConstructionMoveAction) {
-          ConstructionMoveAction moveAction = (ConstructionMoveAction) action;
+        if (action instanceof ConstructionMoveAction moveAction) {
           firstDeposeInRang = true;
           rs.disableAvoidance();
           if (currentRang == null) {
@@ -114,7 +112,6 @@ public abstract class AbstractDeposeGradin extends AbstractNerellAction {
             applyOffsetRangPosition(pt);
             mv.gotoPoint(pt);
           }
-
         }
 
         if (action instanceof ConstructionFloorAction floorAction) {
@@ -132,25 +129,24 @@ public abstract class AbstractDeposeGradin extends AbstractNerellAction {
           constructionArea().addGradin(rang, etage);
         }
 
-        if (action instanceof ConstructionTake2Action take2Action) {
-          Face face = take2Action.face();
-          Rang rang = take2Action.rang();
-          Etage etage = take2Action.etage();
-
-          AbstractNerellFaceService faceService = faceWrapper.getFaceService(face);
-          faceService.reprise2Gradin(etage);
-          constructionArea().removeGradin(rang, etage);
-        }
-
-        if (action instanceof Construction2FloorAction twoFloorAction) {
+        if (action instanceof Construction3FloorsAction twoFloorAction) {
           Face face = twoFloorAction.face();
-          Rang rang = twoFloorAction.rang();
+          Rang rangDepose = twoFloorAction.rang();
+          Rang rangReprise = twoFloorAction.rangReprise();
           Etage etage = twoFloorAction.etage();
 
           AbstractNerellFaceService faceService = faceWrapper.getFaceService(face);
-          faceService.depose2Gradins(etage);
-          constructionArea().addGradin(rang, etage);
-          constructionArea().addGradin(rang, etage.next());
+          faceService.reprise2Gradin(rangReprise, etage);
+          constructionArea().removeGradin(rangReprise, Etage.ETAGE_1);
+          faceService.depose2Gradins(rangDepose, etage);
+          constructionArea().addGradin(rangDepose, etage);
+          constructionArea().addGradin(rangDepose, etage.next());
+        }
+
+        if (ilEstTempsDeRentrer()) {
+          log.info("Action {} interrompue car il est temps de rentrer", name());
+          updateValidTime();
+          break;
         }
       }
     } catch (NoPathFoundException | AvoidingException e) {

@@ -79,6 +79,13 @@ public class NerellFaceAvantService extends AbstractNerellFaceService {
   }
 
   @Override
+  protected void deplacementDepose2Gradins() throws AvoidingException {
+    rs.enableCalage(TypeCalage.FORCE);
+    mv.setVitessePercent(20, 100);
+    mv.avanceMM(DEPL_INIT_PRISE);
+  }
+
+  @Override
   protected void deplacementDeposeColonnesSol(boolean reverse) throws AvoidingException {
     rs.enableCalage(TypeCalage.FORCE);
     mv.setVitessePercent(100, 100);
@@ -262,21 +269,21 @@ public class NerellFaceAvantService extends AbstractNerellFaceService {
   }
 
   @Override
-  protected void ouvreFacePourPrise2Etages() throws AvoidingException {
+  protected void ouvreFacePourPrise2Etages() {
     servos.groupePincesAvantPrise(false);
     servos.groupeDoigtsAvantLache(false);
-    servos.ascenseurAvantBas(true);
-  }
-
-  @Override
-  protected void leverGradin2Etages() {
-    servos.groupeDoigtsAvantSerre(true);
     if (ioService.tiroirArriereBas(true)) {
       servos.groupePincesArrierePrise(true);
       servos.ascenseurArriereHaut(false);
     }
     servos.tiroirArriereLibreAutreTiroir(false);
     servos.tiroirAvantLever2Etages(false);
+    servos.ascenseurAvantBas(true);
+  }
+
+  @Override
+  protected void leverGradin2Etages() {
+    servos.groupeDoigtsAvantSerre(true);
     servos.becAvantLever2Etages(true);
     servos.ascenseurAvantHaut(true);
   }
@@ -288,6 +295,9 @@ public class NerellFaceAvantService extends AbstractNerellFaceService {
     deplacementDeposeEtage(false);
     updatePincesState(false, false);
     servos.groupeDoigtsAvantFerme(false);
+    servos.tiroirAvantStock(false);
+    servos.becAvantFerme(false);
+    servos.tiroirArriereStock(true);
     if (ioService.tiroirArriereBas(true)) {
       servos.ascenseurArriereStock(true);
       servos.groupePincesArriereStock(false);

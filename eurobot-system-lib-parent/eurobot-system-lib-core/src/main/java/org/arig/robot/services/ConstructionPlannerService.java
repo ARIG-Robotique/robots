@@ -2,14 +2,13 @@ package org.arig.robot.services;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.arig.robot.model.Construction2FloorAction;
+import org.arig.robot.model.Construction3FloorsAction;
 import org.arig.robot.model.ConstructionAction;
 import org.arig.robot.model.ConstructionArea;
 import org.arig.robot.model.ConstructionElementSource;
 import org.arig.robot.model.ConstructionFloorAction;
 import org.arig.robot.model.ConstructionMoveAction;
 import org.arig.robot.model.ConstructionPlanResult;
-import org.arig.robot.model.ConstructionTake2Action;
 import org.arig.robot.model.Etage;
 import org.arig.robot.model.EurobotStatus;
 import org.arig.robot.model.Face;
@@ -64,11 +63,9 @@ public class ConstructionPlannerService {
         // Etape 3 est-ce que l'on peut faire une pile de 3 ?
         Rang rangOneElement = area.getFirstRangWithElement(1);
         Rang rangTwoElements = area.getFirstRangWithElement(2);
-        Face emptyFace = stock.emptyFace(); // TODO: Optim face avec que BOTTOM, ou empty face
+        Face emptyFace = stock.emptyFace();
         if (rangOneElement != null && rangTwoElements != null && rangOneElement.before(rangTwoElements) && emptyFace != null) {
-          actions.add(new ConstructionTake2Action(emptyFace, rangTwoElements));
-          actions.add(new ConstructionMoveAction(emptyFace, rangOneElement));
-          actions.add(new Construction2FloorAction(emptyFace, rangOneElement));
+          actions.add(new Construction3FloorsAction(emptyFace, rangOneElement, rangTwoElements));
           area.removeGradin(rangTwoElements, Etage.ETAGE_1, true);
           area.addGradin(rangOneElement, Etage.ETAGE_2, true);
           area.addGradin(rangOneElement, Etage.ETAGE_3, true);

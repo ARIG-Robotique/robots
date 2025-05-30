@@ -5,13 +5,15 @@ import lombok.experimental.Accessors;
 
 @Getter
 @Accessors(fluent = true)
-public class Construction2FloorAction extends ConstructionAction {
+public class Construction3FloorsAction extends ConstructionAction {
 
   private final Etage etage;
+  private final Rang rangReprise;
 
-  public Construction2FloorAction(Face face, Rang rang) {
-    super(ConstructionActionType.PLACE_TWO, face, rang);
+  public Construction3FloorsAction(Face face, Rang rang, Rang rangReprise) {
+    super(ConstructionActionType.MAKE_THREE, face, rang);
     this.etage = Etage.ETAGE_2;
+    this.rangReprise = rangReprise;
   }
 
   public String toString() {
