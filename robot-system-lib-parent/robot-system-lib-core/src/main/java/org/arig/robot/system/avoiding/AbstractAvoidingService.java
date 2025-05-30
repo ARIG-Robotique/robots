@@ -83,5 +83,4 @@ public abstract class AbstractAvoidingService implements AvoidingService {
       return Math.abs(dA) >= 180 - angle;
     }
   }
-
 }

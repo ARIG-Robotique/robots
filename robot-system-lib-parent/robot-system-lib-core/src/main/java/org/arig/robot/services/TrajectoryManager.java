@@ -126,8 +126,8 @@ public class TrajectoryManager implements InitializingBean {
 
   private AtomicBoolean cancelMouvement = new AtomicBoolean(false);
 
-  private SignalEdgeFilter obstacleFoundFilter = new SignalEdgeFilter(false, SignalEdgeFilter.Type.RISING);
-  private SignalEdgeFilter obstacleNotFoundFilter = new SignalEdgeFilter(false, SignalEdgeFilter.Type.FALLING);
+  private SignalEdgeFilter obstacleFoundRisingFilter = new SignalEdgeFilter(false, SignalEdgeFilter.Type.RISING);
+  private SignalEdgeFilter obstacleFoundFallingFilter = new SignalEdgeFilter(true, SignalEdgeFilter.Type.FALLING);
 
   public void afterPropertiesSet() {
     log.info("Fenetre arret distance                  : {} pulse -> {} mm", robotConfig.fenetreArretDistance(), conv.pulseToMm(robotConfig.fenetreArretDistance()));
@@ -261,7 +261,7 @@ public class TrajectoryManager implements InitializingBean {
    * -> b : Si dans fenêtre d'approche : consigne(n) = consigne(n - 1) - d(position)
    */
   private void calculConsigne() {
-    if (Boolean.TRUE.equals(obstacleFoundFilter.filter(obstacleFound.get()))) {
+    if (Boolean.TRUE.equals(obstacleFoundRisingFilter.filter(obstacleFound.get()))) {
       log.info("Sauvegarde des vieilles consignes sur detection d'obstacle");
       oldConsigne = cmdRobot.getConsigne();
       oldTypeConsigne = cmdRobot.getTypes();
@@ -275,7 +275,7 @@ public class TrajectoryManager implements InitializingBean {
       calage.set(false);
     }
 
-    if (Boolean.TRUE.equals(obstacleNotFoundFilter.filter(obstacleFound.get())) && oldConsigne != null) {
+    if (Boolean.TRUE.equals(obstacleFoundFallingFilter.filter(obstacleFound.get())) && oldConsigne != null) {
       log.info("Restauration des vieilles consignes sur disparition d'obstacle");
       cmdRobot.setConsigne(oldConsigne);
       cmdRobot.setTypes(oldTypeConsigne);
