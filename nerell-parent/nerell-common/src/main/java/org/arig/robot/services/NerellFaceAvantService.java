@@ -243,6 +243,9 @@ public class NerellFaceAvantService extends AbstractNerellFaceService {
     }
 
     servos.groupeDoigtsAvantLache(true);
+    if (etage == Etage.ETAGE_1) {
+      ThreadUtils.sleep(250);
+    }
     deplacementDeposeEtage(false);
     updatePincesState(false, false);
     servos.becAvantFerme(false);
