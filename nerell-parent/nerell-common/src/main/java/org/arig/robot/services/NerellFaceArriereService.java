@@ -29,7 +29,6 @@ public class NerellFaceArriereService extends AbstractNerellFaceService {
   protected void ouvreFacePourPrise() {
     servos.tiroirArrierePrise(false);
     servos.becArriereOuvert(false);
-    servos.groupeBlockColonneArriereFerme(false);
     servos.groupeDoigtsArriereLache(false);
     servos.ascenseurArriereBas(false);
     servos.groupePincesArrierePrise(true);
@@ -42,7 +41,6 @@ public class NerellFaceArriereService extends AbstractNerellFaceService {
     mv.reculeMM(DEPL_PRISE_COLONNES_PINCES_1);
     mv.setVitessePercent(0, 100);
     mv.reculeMM(DEPL_PRISE_COLONNES_PINCES_2);
-    servos.groupeBlockColonneArriereOuvert(false);
   }
 
   @Override
@@ -199,11 +197,10 @@ public class NerellFaceArriereService extends AbstractNerellFaceService {
       servos.groupePincesArrierePriseSol(false);
       servos.groupeDoigtsArriereOuvert(true);
       deplacementDeposeColonnesSol(false);
-      servos.ascenseurArriereRepos(true);
+      servos.ascenseurArriereBas(true);
       servos.groupeDoigtsArrierePriseSol(false);
       deplacementDeposeColonnesSol(true);
       servos.groupePincesArriereStock(true);
-      servos.ascenseurArriereBas(true);
       servos.groupeDoigtsArriereSerre(true);
       updateColonnesSolState(false, false);
       updatePincesState(true, true);

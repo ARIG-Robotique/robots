@@ -29,7 +29,6 @@ public class NerellFaceAvantService extends AbstractNerellFaceService {
   protected void ouvreFacePourPrise() {
     servos.tiroirAvantPrise(false);
     servos.becAvantOuvert(false);
-    servos.groupeBlockColonneAvantFerme(false);
     servos.groupeDoigtsAvantLache(false);
     servos.ascenseurAvantBas(false);
     servos.groupePincesAvantPrise(true);
@@ -42,7 +41,6 @@ public class NerellFaceAvantService extends AbstractNerellFaceService {
     mv.avanceMM(DEPL_PRISE_COLONNES_PINCES_1);
     mv.setVitessePercent(0, 100);
     mv.avanceMM(DEPL_PRISE_COLONNES_PINCES_2);
-    servos.groupeBlockColonneAvantOuvert(false);
   }
 
   @Override
@@ -195,15 +193,14 @@ public class NerellFaceAvantService extends AbstractNerellFaceService {
 
     if (stockPosition == StockPosition.BOTTOM || stockPosition == StockPosition.BOTTOM_FAST) {
       log.info("Récupération des colonnes en stock depuis le sol");
-      servos.groupeBlockColonneAvantOuvert(false);
+      servos.groupeBlockColonneAvantPriseSol(false);
       servos.groupePincesAvantPriseSol(false);
       servos.groupeDoigtsAvantOuvert(false);
       deplacementDeposeColonnesSol(false);
-      servos.ascenseurAvantRepos(true);
+      servos.ascenseurAvantBas(true);
       servos.groupeDoigtsAvantPriseSol(false);
       deplacementDeposeColonnesSol(true);
       servos.groupePincesAvantStock(true);
-      servos.ascenseurAvantBas(true);
       servos.groupeDoigtsAvantSerre(true);
       updateColonnesSolState(false, false);
       updatePincesState(true, true);
