@@ -142,12 +142,6 @@ public abstract class AbstractDeposeGradin extends AbstractNerellAction {
           constructionArea().addGradin(rangDepose, etage);
           constructionArea().addGradin(rangDepose, etage.next());
         }
-
-        if (ilEstTempsDeRentrer()) {
-          log.info("Action {} interrompue car il est temps de rentrer", name());
-          updateValidTime();
-          break;
-        }
       }
     } catch (NoPathFoundException | AvoidingException e) {
       log.warn("Erreur prise {} : {}", name(), e.toString());
