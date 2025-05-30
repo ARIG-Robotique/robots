@@ -15,6 +15,22 @@ public class DeposeGrandGradinAdverse extends AbstractDeposeGradin {
   private static final int CENTER_Y = 875;
 
   @Override
+  public boolean isValid() {
+    if (rs.eviterCoteAdverse()) {
+      return false;
+    }
+    return super.isValid();
+  }
+
+  @Override
+  public void refreshCompleted() {
+    if (rs.eviterCoteAdverse()) {
+      log.info("DeposeGrandGradinAdverse: Complete car coté adverse désactivé");
+      complete(true);
+    }
+  }
+
+  @Override
   protected void applyOffsetRangPosition(Point position) {
     if (rs.team() == Team.JAUNE) {
       position.addDeltaX(-EurobotConfig.offsetDeposeGradin);

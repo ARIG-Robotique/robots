@@ -9,7 +9,7 @@ public abstract class AbstractPriseGradinBrutBleu extends AbstractPriseGradinBru
 
   @Override
   public boolean isValid() {
-    if (rs.team() == Team.JAUNE && rs.getRemainingTime() > EurobotConfig.validPriseAdverseRemainingTime)
+    if (rs.team() == Team.JAUNE && rs.eviterCoteAdverse())
       return false;
 
     return super.isValid();

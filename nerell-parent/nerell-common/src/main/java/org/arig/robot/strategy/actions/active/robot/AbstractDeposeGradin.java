@@ -79,7 +79,7 @@ public abstract class AbstractDeposeGradin extends AbstractNerellAction {
       return false;
     }
 
-    // SI aucun rang n'est constructible, on ne peut pas déposer
+    // Si aucun rang n'est constructible, on ne peut pas déposer
     final ConstructionPlanResult planResult = constructionPlannerService.plan(constructionArea(), true);
     return isTimeValid() && !planResult.actions().isEmpty();
   }

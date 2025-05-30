@@ -19,6 +19,22 @@ public class DeposePetitGradinAdverse extends AbstractDeposeGradin {
   }
 
   @Override
+  public boolean isValid() {
+    if (rs.eviterCoteAdverse()) {
+      return false;
+    }
+    return super.isValid();
+  }
+
+  @Override
+  public void refreshCompleted() {
+    if (rs.eviterCoteAdverse()) {
+      log.info("DeposePetitGradinAdverse: Complete car coté adverse désactivé");
+      complete(true);
+    }
+  }
+
+  @Override
   protected Point rangPosition(Rang rang) {
     if (rang == Rang.CONSTRUCTION) {
       return new Point(getX(CENTER_X), EurobotConfig.rang2Coord);

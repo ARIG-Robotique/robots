@@ -4,6 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.EurobotConfig;
 import org.arig.robot.model.GradinBrut;
 import org.arig.robot.model.Point;
+import org.arig.robot.model.Strategy;
+import org.arig.robot.model.Team;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -13,6 +15,15 @@ public class PriseGradinBrutJauneMilieuCentre extends AbstractPriseGradinBrutJau
   @Override
   protected GradinBrut.ID gradinId() {
     return GradinBrut.ID.JAUNE_MILIEU_CENTRE;
+  }
+
+  @Override
+  public int order() {
+    if (rs.team() == Team.JAUNE && rs.strategy() == Strategy.QUALIF) {
+      return 500;
+    }
+
+    return super.order();
   }
 
   @Override
