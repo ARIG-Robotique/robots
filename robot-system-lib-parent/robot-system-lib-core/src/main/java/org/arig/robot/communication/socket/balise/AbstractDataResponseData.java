@@ -14,9 +14,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class AbstractDataResponseData<DATA2D extends AbstractData2D, DATA3D extends AbstractData3D<?, ?, ?>> implements Serializable {
+public class AbstractDataResponseData<DATA3D extends AbstractData3D<?, ?>> implements Serializable {
 
-  protected List<DATA2D> data2D;
   protected List<DATA3D> data3D;
 
 }

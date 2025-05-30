@@ -10,21 +10,17 @@ import java.awt.*;
 @Getter
 @AllArgsConstructor
 public enum ZoneMines {
-  SOLAR_PANEL_1(275, 50, 270, 75, Team.BLEU),
-  SOLAR_PANEL_2(500, 50, 270, 75, Team.BLEU),
-  SOLAR_PANEL_3(725, 50, 270, 75, Team.BLEU),
-  SOLAR_PANEL_4(1275, 50, 270, 75, null),
-  SOLAR_PANEL_5(1500, 50, 270, 75, null),
-  SOLAR_PANEL_6(1725, 50, 270, 75, null),
-  SOLAR_PANEL_7(2225, 50, 270, 75, Team.JAUNE),
-  SOLAR_PANEL_8(2500, 50, 270, 75, Team.JAUNE),
-  SOLAR_PANEL_9(2725, 50, 270, 75, Team.JAUNE),
-  JAUNE_NORD(2240, 1950, 270, 50, Team.JAUNE),
-  JAUNE_MILIEU(2950, 1340, 50, 270, Team.JAUNE),
-  JAUNE_SUD(50, 565, 50, 270, Team.JAUNE),
-  BLEU_NORD(760, 1950, 270, 50, Team.BLEU),
-  BLEU_MILIEU(50, 1340, 50, 270, Team.BLEU),
-  BLEU_SUD(2950, 565, 50, 270, Team.BLEU);
+  JAUNE_RESERVE(625, 1675, 400, 100, Team.JAUNE),
+  JAUNE_HAUT_GAUCHE(25, 1125, 100, 400, Team.JAUNE),
+  JAUNE_MILIEU_CENTRE(900, 900, 400, 100, Team.JAUNE),
+  JAUNE_BAS_GAUCHE(25, 200, 100, 400, Team.JAUNE),
+  JAUNE_BAS_CENTRE(575, 200, 400, 100, Team.JAUNE),
+
+  BLEU_RESERVE(1975, 1675, 400, 100, Team.BLEU),
+  BLEU_HAUT_DROITE(2875, 1125, 100, 400, Team.BLEU),
+  BLEU_MILIEU_CENTRE(1700, 900, 400, 100, Team.BLEU),
+  BLEU_BAS_DROITE(2875, 200, 100, 400, Team.BLEU),
+  BLEU_BAS_CENTRE(2025, 200, 400, 300, Team.BLEU);
 
   private final int cx;
 
@@ -38,21 +34,6 @@ public enum ZoneMines {
 
   public static ZoneQueryData.Zone toQueryZone(ZoneMines zone) {
     return new ZoneQueryData.Zone(zone.name(), zone.cx, zone.cy, zone.dx, zone.dy);
-  }
-
-  public static ZoneMines getPanneau(int nb) {
-    return switch (nb) {
-      case 1 -> SOLAR_PANEL_1;
-      case 2 -> SOLAR_PANEL_2;
-      case 3 -> SOLAR_PANEL_3;
-      case 4 -> SOLAR_PANEL_4;
-      case 5 -> SOLAR_PANEL_5;
-      case 6 -> SOLAR_PANEL_6;
-      case 7 -> SOLAR_PANEL_7;
-      case 8 -> SOLAR_PANEL_8;
-      case 9 -> SOLAR_PANEL_9;
-      default -> null;
-    };
   }
 
   public Rectangle toRectangle() {

@@ -166,6 +166,8 @@ public class NerellOrdonanceur extends AbstractOrdonanceur {
   public void startMatch() {
     if (!baliseService.isOK()) {
       nerellRobotStatus.baliseEnabled(false);
+    } else {
+      baliseService.startMatch();
     }
 
     if (robotStatus.pamiTriangleGroupOk()) {

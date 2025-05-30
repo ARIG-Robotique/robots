@@ -23,8 +23,6 @@ public interface IVisionBalise<DATA extends Serializable> {
 
   void end();
 
-  EmptyResponse keepAlive();
-
   EmptyResponse setConfig(ConfigQueryData queryData);
 
   StatusResponse getStatus();
@@ -40,5 +38,7 @@ public interface IVisionBalise<DATA extends Serializable> {
   ZoneResponse getMines(ZoneQueryData queryData);
 
   IdleResponse setIdle(IdleQueryData queryData);
+
+  EmptyResponse startMatch();
 
 }

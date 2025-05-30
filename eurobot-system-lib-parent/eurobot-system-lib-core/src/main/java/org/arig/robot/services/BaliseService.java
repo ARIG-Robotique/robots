@@ -6,6 +6,7 @@ import org.arig.robot.communication.socket.balise.DataResponse;
 import org.arig.robot.communication.socket.balise.ZoneQueryData;
 import org.arig.robot.communication.socket.balise.ZoneResponse;
 import org.arig.robot.model.EurobotStatus;
+import org.arig.robot.model.GradinBrut;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.Team;
 import org.arig.robot.model.balise.BaliseData;
@@ -36,7 +37,9 @@ public class BaliseService extends AbstractBaliseService<BaliseData> {
     DataResponse response = (DataResponse)
       balise.getData(new DataQueryData<>(
           FiltreBalise.ROBOT,
-          FiltreBalise.RAW_TRIBUNE
+          FiltreBalise.PAMI,
+          FiltreBalise.STOCK,
+          FiltreBalise.ZONE_DEPOSE
         )
       );
 
@@ -58,21 +61,13 @@ public class BaliseService extends AbstractBaliseService<BaliseData> {
 
 
   private void updateStocksRawTribune() {
-        /*
-        data3D.stream()
-                .filter(object -> object.getType() == Data3DType.RAW_TRIBUNE)
-                .filter(plantStock -> plantStock.getMetadata().getNumPlantes() != null
-                        && plantStock.getMetadata().getNumPlantes() <= 2)
-                .forEach(plantStock -> {
-                    RawTribune.ID stockRawTribuneId = Data3DName.getStockPlantesID(plantStock.getName());
-                    if (stockRawTribuneId == null) {
-                        return;
-                    }
-                    if (!rs.plantes().stock(stockPlantesID).isEmpty()) {
-                        rs.plantes().priseStock(stockPlantesID, StockPlantes.Status.EMPTY);
-                    }
-                });
-         */
+    data3D.stream()
+      .filter(object -> object.getType() == Data3DType.STOCK)
+      .filter(stock -> stock.getMetadata().getTimeSpentNear() >= 1500)
+      .forEach(stock -> {
+        rs.gradinBrutStocks().get(GradinBrut.ID.valueOf(stock.getName().name()))
+          .setGradinPris();
+      });
   }
 
   private void updatePositionAdverse() {

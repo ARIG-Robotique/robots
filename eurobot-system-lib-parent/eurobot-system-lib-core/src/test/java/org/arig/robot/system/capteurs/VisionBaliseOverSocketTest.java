@@ -35,7 +35,7 @@ class VisionBaliseOverSocketTest {
   @BeforeAll
   @SneakyThrows
   static void initTest() {
-    String host = "localhost";
+    String host = "192.168.0.114";
     int port = 50667;
     Assumptions.assumeTrue(SocketUtils.serverListening(host, port));
 
@@ -57,13 +57,6 @@ class VisionBaliseOverSocketTest {
   @SneakyThrows
   void waitForSocketClosed() {
     Thread.sleep(1_000);
-  }
-
-  @Test
-  @SneakyThrows
-  void testKeepAlive() {
-    EmptyResponse response = balise.keepAlive();
-    Assertions.assertNotNull(response);
   }
 
   @Test
@@ -124,12 +117,11 @@ class VisionBaliseOverSocketTest {
   @Test
   @SneakyThrows
   void testGetData() {
-    DataQueryData<FiltreBalise> queryData = new DataQueryData<>(FiltreBalise.ALL);
+    DataQueryData<FiltreBalise> queryData = new DataQueryData<>(FiltreBalise.TOUT);
     DataResponse response = (DataResponse) balise.getData(queryData);
     Assertions.assertNotNull(response);
     Assertions.assertTrue(response.isOk());
     Assertions.assertNotNull(response.getData());
-    Assertions.assertFalse(response.getData().getData2D().isEmpty());
     Assertions.assertFalse(response.getData().getData3D().isEmpty());
   }
 

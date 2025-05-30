@@ -36,17 +36,6 @@ public abstract class AbstractVisionBaliseBouchon<DATA extends Serializable> imp
   }
 
   @Override
-  public EmptyResponse keepAlive() {
-    EmptyResponse response = new EmptyResponse();
-
-    response.setIndex(0);
-    response.setAction(BaliseAction.ALIVE);
-    response.setStatus(org.arig.robot.communication.socket.enums.StatusResponse.OK);
-
-    return response;
-  }
-
-  @Override
   public EmptyResponse setConfig(ConfigQueryData queryData) {
     EmptyResponse response = new EmptyResponse();
 
@@ -124,6 +113,17 @@ public abstract class AbstractVisionBaliseBouchon<DATA extends Serializable> imp
 
     response.setIndex(0);
     response.setAction(BaliseAction.IDLE);
+    response.setStatus(org.arig.robot.communication.socket.enums.StatusResponse.OK);
+
+    return response;
+  }
+
+  @Override
+  public EmptyResponse startMatch() {
+    EmptyResponse response = new EmptyResponse();
+
+    response.setIndex(0);
+    response.setAction(BaliseAction.START);
     response.setStatus(org.arig.robot.communication.socket.enums.StatusResponse.OK);
 
     return response;

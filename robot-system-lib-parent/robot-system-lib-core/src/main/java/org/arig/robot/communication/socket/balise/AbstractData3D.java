@@ -9,13 +9,11 @@ import java.io.Serializable;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public abstract class AbstractData3D<
   NAME extends Enum<NAME>,
-  TYPE extends Enum<TYPE>,
-  TEAM extends Enum<TEAM>
+  TYPE extends Enum<TYPE>
   > implements Serializable {
 
   protected NAME name;
   protected TYPE type;
-  protected TEAM team;
   private int r;
   private int x;
   private int y;

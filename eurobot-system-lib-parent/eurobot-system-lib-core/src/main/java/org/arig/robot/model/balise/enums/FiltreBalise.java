@@ -1,22 +1,29 @@
 package org.arig.robot.model.balise.enums;
 
 public enum FiltreBalise {
-  ALL,
+  TOUT,
+  INCONNU,
 
-  UNKNOWN,
+  DATA2D,
   DATA3D,
-  TAG,
-  REFERENCE_ABSOLUTE,
-  REFERENCE_RELATIVE,
-  CAMERA,
-  OBJECT,
 
-  TOP_TRACKER,
-  TEAM_TRACKER,
-  TEAM,
+  REFERENCE_ABSOLUE,
+  REFERENCE_RELATIVE,
+
+  CAMERA,
+  LENTILLE,
+
+  OBJET,
+
+  EQUIPE,
+
   ARUCO,
   YOLO,
+  TAG,
 
   ROBOT,
-  RAW_TRIBUNE
+  PAMI,
+
+  STOCK,
+  ZONE_DEPOSE,
 }

@@ -7,12 +7,12 @@ import org.arig.robot.communication.socket.balise.enums.BaliseAction;
 import java.io.Serializable;
 
 @EqualsAndHashCode(callSuper = true)
-public class AliveQuery
+public class StartQuery
   extends AbstractQuery<BaliseAction>
   implements Serializable {
 
-  public AliveQuery() {
-    super(BaliseAction.ALIVE);
+  public StartQuery() {
+    super(BaliseAction.START);
   }
 
 }

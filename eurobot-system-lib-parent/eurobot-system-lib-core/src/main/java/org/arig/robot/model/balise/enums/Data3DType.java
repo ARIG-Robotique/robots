@@ -1,14 +1,18 @@
 package org.arig.robot.model.balise.enums;
 
 public enum Data3DType {
-  UNKNOWN,
+  INCONNU,
   TAG,
-  REFERENCE_ABSOLUTE,
+  YOLO,
+  ARUCO,
+  REFERENCE_ABSOLUE,
   REFERENCE_RELATIVE,
   CAMERA,
-  OBJECT,
-  TEAM,
-  YOLO,
+  LENTILLE,
+  OBJET,
   ROBOT,
-  RAW_TRIBUNE
+  PAMI,
+  STOCK,
+  ZONE_DEPOSE,
+  EQUIPE,
 }

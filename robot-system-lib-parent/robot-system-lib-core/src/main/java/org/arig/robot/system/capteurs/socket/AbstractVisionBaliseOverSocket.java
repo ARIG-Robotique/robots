@@ -2,7 +2,6 @@ package org.arig.robot.system.capteurs.socket;
 
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.communication.socket.balise.AbstractBaliseResponseWithData;
-import org.arig.robot.communication.socket.balise.AliveQuery;
 import org.arig.robot.communication.socket.balise.ConfigQuery;
 import org.arig.robot.communication.socket.balise.ConfigQueryData;
 import org.arig.robot.communication.socket.balise.DataQuery;
@@ -16,6 +15,7 @@ import org.arig.robot.communication.socket.balise.ImageQuery;
 import org.arig.robot.communication.socket.balise.ImageQueryData;
 import org.arig.robot.communication.socket.balise.ImageResponse;
 import org.arig.robot.communication.socket.balise.ProcessQuery;
+import org.arig.robot.communication.socket.balise.StartQuery;
 import org.arig.robot.communication.socket.balise.StatusQuery;
 import org.arig.robot.communication.socket.balise.StatusResponse;
 import org.arig.robot.communication.socket.balise.TeamQuery;
@@ -58,17 +58,6 @@ public abstract class AbstractVisionBaliseOverSocket<DATA extends Serializable>
       }
     }
     super.end();
-  }
-
-  @Override
-  public EmptyResponse keepAlive() {
-    try {
-      openIfNecessary();
-      return sendToSocketAndGet(new AliveQuery(), EmptyResponse.class);
-    } catch (Exception e) {
-      log.warn("Erreur de recupération de la photo : {}", e.toString());
-      return null;
-    }
   }
 
   @Override
@@ -156,6 +145,17 @@ public abstract class AbstractVisionBaliseOverSocket<DATA extends Serializable>
       return sendToSocketAndGet(new IdleQuery(queryData), IdleResponse.class);
     } catch (Exception e) {
       log.warn("Erreur de modification de l'idle", e);
+      return null;
+    }
+  }
+
+  @Override
+  public EmptyResponse startMatch() {
+    try {
+      openIfNecessary();
+      return sendToSocketAndGet(new StartQuery(), EmptyResponse.class);
+    } catch (Exception e) {
+      log.warn("Erreur d'envoi de start match", e);
       return null;
     }
   }

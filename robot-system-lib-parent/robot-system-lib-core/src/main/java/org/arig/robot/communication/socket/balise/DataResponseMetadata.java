@@ -11,7 +11,10 @@ import lombok.NoArgsConstructor;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DataResponseMetadata {
 
-  private Integer numPlantes;
-  private Long lastContactStopAge;
+  private Boolean contacting;
+  private Boolean intact;
+  private Long lastContactStartAge;
+  private Long lastContactEndAge;
+  private Long timeSpentNear;
 
 }

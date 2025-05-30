@@ -127,15 +127,8 @@ public abstract class AbstractBaliseService<DATA extends Serializable> {
     return idle;
   }
 
-  public boolean sendKeepAlive() {
-    EmptyResponse response = balise.keepAlive();
-
-    if (response == null) {
-      isOK = false;
-      return false;
-    }
-
-    return response.isOk();
+  public void startMatch() {
+    balise.startMatch();
   }
 
 }

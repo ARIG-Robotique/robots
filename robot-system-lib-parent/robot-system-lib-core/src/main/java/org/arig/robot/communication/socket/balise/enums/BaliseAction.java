@@ -1,8 +1,11 @@
 package org.arig.robot.communication.socket.balise.enums;
 
 public enum BaliseAction {
-  ALIVE,
+//  ALIVE,
   CONFIG,
+  START,
+  END,
+  STARTING_ZONE,
   LOCK_CAMERA,
   STATUS,
   TEAM,
