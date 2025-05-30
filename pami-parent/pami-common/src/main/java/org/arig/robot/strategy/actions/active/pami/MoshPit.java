@@ -66,11 +66,11 @@ public class MoshPit extends AbstractEurobotAction {
           mv.gotoPoint(getX(750), 1370, avant);
         }
         if (robotName.id() == RobotName.RobotIdentification.PAMI_ROND) {
-          ThreadUtils.sleep(3000);
+          ThreadUtils.sleep(4000);
           mv.avanceMM(160);
         }
         if (robotName.id() == RobotName.RobotIdentification.PAMI_CARRE) {
-          ThreadUtils.sleep(6000);
+          ThreadUtils.sleep(8000);
           mv.avanceMM(140);
           mv.gotoPoint(getX(660), 1460, avant);
         }
