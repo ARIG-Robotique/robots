@@ -27,6 +27,7 @@ public abstract class AbstractCommonRobotServosService extends AbstractServosSer
   public static final String BLOCK_COLONNE_ARRIERE_DROIT = "Block colonne arrière droit";
 
   protected static final String POS_FERME = "Fermé";
+  protected static final String POS_SUPER_OUVERT = "Super ouvert";
   protected static final String POS_OUVERT = "Ouvert";
   protected static final String POS_SERRE = "Serré";
   protected static final String POS_LACHE = "Lache";
@@ -139,6 +140,10 @@ public abstract class AbstractCommonRobotServosService extends AbstractServosSer
     setPositionBatch(GROUP_PINCES_ARRIERE, POS_REPOS, wait);
   }
 
+  public void groupeDoigtsAvantSuperOuvert(boolean wait) {
+    setPositionBatch(GROUP_DOIGTS_AVANT, POS_SUPER_OUVERT, wait);
+  }
+
   public void groupeDoigtsAvantOuvert(boolean wait) {
     setPositionBatch(GROUP_DOIGTS_AVANT, POS_OUVERT, wait);
   }
@@ -165,6 +170,10 @@ public abstract class AbstractCommonRobotServosService extends AbstractServosSer
 
   public void groupeDoigtsAvantFerme(boolean wait) {
     setPositionBatch(GROUP_DOIGTS_AVANT, POS_FERME, wait);
+  }
+
+  public void groupeDoigtsArriereSuperOuvert(boolean wait) {
+    setPositionBatch(GROUP_DOIGTS_ARRIERE, POS_SUPER_OUVERT, wait);
   }
 
   public void groupeDoigtsArriereOuvert(boolean wait) {

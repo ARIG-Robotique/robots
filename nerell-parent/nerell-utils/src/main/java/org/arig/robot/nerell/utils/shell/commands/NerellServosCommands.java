@@ -85,7 +85,7 @@ public class NerellServosCommands {
   public void configWaitDoigtsAvant(int wait) {
     servosService.groupePincesAvantOuvertNePasUtiliserEnMatch(true);
     for (int i = 0; i < nbLoop; i++) {
-      servosService.groupeDoigtsAvantOuvert(false);
+      servosService.groupeDoigtsAvantSuperOuvert(false);
       ThreadUtils.sleep(wait);
       servosService.groupeDoigtsAvantFerme(false);
       ThreadUtils.sleep(wait);
@@ -98,7 +98,7 @@ public class NerellServosCommands {
   public void configWaitDoigtsArriere(int wait) {
     servosService.groupePincesArriereOuvertNePasUtiliserEnMatch(true);
     for (int i = 0; i < nbLoop; i++) {
-      servosService.groupeDoigtsArriereOuvert(false);
+      servosService.groupeDoigtsArriereSuperOuvert(false);
       ThreadUtils.sleep(wait);
       servosService.groupeDoigtsArriereFerme(false);
       ThreadUtils.sleep(wait);

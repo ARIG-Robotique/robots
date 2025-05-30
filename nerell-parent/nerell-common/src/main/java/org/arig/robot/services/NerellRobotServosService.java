@@ -31,7 +31,7 @@ public class NerellRobotServosService extends AbstractCommonRobotServosService {
   public static final int TIME_BEC = 500;
   public static final int TIME_ASCENSEUR = 1000;
   public static final int TIME_PINCES = 750;
-  public static final int TIME_DOIGTS = 450;
+  public static final int TIME_DOIGTS = 500;
   public static final int TIME_BLOCK_COLONNE = 250;
 
   public NerellRobotServosService(SD21Servos servos) {
@@ -117,6 +117,7 @@ public class NerellRobotServosService extends AbstractCommonRobotServosService {
 
     Servo doigtAvantGauche = servo(DOIGT_AVANT_GAUCHE_ID, DOIGT_AVANT_GAUCHE)
       .time(TIME_DOIGTS)
+      .position(POS_SUPER_OUVERT, 2410)
       .position(POS_OUVERT, 2260)
       .position(POS_PRISE_SOL, 1980)
       .position(POS_LACHE, 1720)
@@ -125,6 +126,7 @@ public class NerellRobotServosService extends AbstractCommonRobotServosService {
       .position(POS_FERME, 870);
     Servo doigtAvantDroite = servo(DOIGT_AVANT_DROIT_ID, DOIGT_AVANT_DROIT)
       .time(TIME_DOIGTS)
+      .position(POS_SUPER_OUVERT, 660)
       .position(POS_OUVERT, 810)
       .position(POS_PRISE_SOL, 1090)
       .position(POS_LACHE, 1310)
@@ -134,6 +136,7 @@ public class NerellRobotServosService extends AbstractCommonRobotServosService {
     group(GROUP_DOIGTS_AVANT_ID, GROUP_DOIGTS_AVANT)
       .addServo(doigtAvantGauche)
       .addServo(doigtAvantDroite)
+      .batch(POS_SUPER_OUVERT)
       .batch(POS_OUVERT)
       .batch(POS_PRISE_SOL)
       .batch(POS_LACHE)
@@ -166,6 +169,7 @@ public class NerellRobotServosService extends AbstractCommonRobotServosService {
 
     Servo doigtArriereGauche = servo(DOIGT_ARRIERE_GAUCHE_ID, DOIGT_ARRIERE_GAUCHE)
       .time(TIME_DOIGTS)
+      .position(POS_SUPER_OUVERT, 930)
       .position(POS_OUVERT, 1080)
       .position(POS_PRISE_SOL, 1250)
       .position(POS_LACHE, 1510)
@@ -173,6 +177,7 @@ public class NerellRobotServosService extends AbstractCommonRobotServosService {
       .position(POS_FERME, 2420);
     Servo doigtArriereDroite = servo(DOIGT_ARRIERE_DROIT_ID, DOIGT_ARRIERE_DROIT)
       .time(TIME_DOIGTS)
+      .position(POS_SUPER_OUVERT, 2310)
       .position(POS_OUVERT, 2160)
       .position(POS_PRISE_SOL, 1900)
       .position(POS_LACHE, 1670)
@@ -181,6 +186,7 @@ public class NerellRobotServosService extends AbstractCommonRobotServosService {
     group(GROUP_DOIGTS_ARRIERE_ID, GROUP_DOIGTS_ARRIERE)
       .addServo(doigtArriereGauche)
       .addServo(doigtArriereDroite)
+      .batch(POS_SUPER_OUVERT)
       .batch(POS_OUVERT)
       .batch(POS_PRISE_SOL)
       .batch(POS_LACHE)

@@ -244,7 +244,12 @@ public class NerellFaceAvantService extends AbstractNerellFaceService {
       updateTiroirState(false, false);
     }
 
-    servos.groupeDoigtsAvantLache(true);
+    if (etage == Etage.ETAGE_1 && stockPosition == StockPosition.TOP) {
+      servos.groupeDoigtsAvantSuperOuvert(true);
+    } else {
+      servos.groupeDoigtsAvantLache(true);
+    }
+
     if (etage == Etage.ETAGE_1) {
       ThreadUtils.sleep(250);
     }
