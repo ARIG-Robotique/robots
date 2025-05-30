@@ -193,7 +193,7 @@ public class NerellFaceArriereService extends AbstractNerellFaceService {
 
     if (stockPosition == StockPosition.BOTTOM || stockPosition == StockPosition.BOTTOM_FAST) {
       log.info("Récupération des colonnes en stock depuis le sol");
-      servos.groupeBlockColonneArriereOuvert(false);
+      servos.groupeBlockColonneArrierePriseSol(false);
       servos.groupePincesArrierePriseSol(false);
       servos.groupeDoigtsArriereOuvert(true);
       deplacementDeposeColonnesSol(false);
@@ -207,6 +207,7 @@ public class NerellFaceArriereService extends AbstractNerellFaceService {
       servos.ascenseurArriereStock(true);
       servos.groupePincesArrierePrise(true);
       servos.ascenseurArriereHaut(true);
+      servos.groupeBlockColonneArriereOuvert(false);
       if (etage == Etage.ETAGE_2) {
         deplacementDeposeEtage(true);
       }

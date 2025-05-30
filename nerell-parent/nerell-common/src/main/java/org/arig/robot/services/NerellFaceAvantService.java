@@ -207,6 +207,7 @@ public class NerellFaceAvantService extends AbstractNerellFaceService {
       servos.ascenseurAvantStock(true);
       servos.groupePincesAvantPrise(true);
       servos.ascenseurAvantHaut(true);
+      servos.groupeBlockColonneAvantOuvert(false);
       if (etage == Etage.ETAGE_2) {
         deplacementDeposeEtage(true);
       }
