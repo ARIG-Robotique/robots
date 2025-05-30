@@ -32,7 +32,7 @@ public interface PamiConstantesConfig {
   // Configuration des convertions //
   // ----------------------------- //
 
-  double entraxeTriangle = 110.0094727205884;
+  double entraxeTriangle = 104.77156793521104;
   double entraxeCarre = 104.72747511715694;
   double entraxeRond = 105.33522951647504;
   double entraxeStar = 105.52939546733161;
