@@ -10,10 +10,10 @@ public interface EurobotConfig {
 
   // Temps restants
   int validRetourBackstageRemainingTime = 10000;
-  int validPriseRemainingTime = 20000;
-  int validPriseAdverseRemainingTime = 30000;
-  int validPriseDeuxFacesPleineRemainingTime = 30000;
-  int validDeposeDeuxFacesNonPleineRemainingTime = 30000;
+  int validPriseRemainingTime = 25000;
+  int validPriseAdverseRemainingTime = 40000;
+  int validPriseDeuxFacesPleineRemainingTime = 40000;
+  int validDeposeDeuxFacesNonPleineRemainingTime = 35000;
   int validDeposeRemainingTime = 15000;
   int validEchappementRemainingTime = 10000;
 

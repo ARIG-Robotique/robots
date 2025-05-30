@@ -41,7 +41,8 @@ public abstract class AbstractPriseGradinBrut extends AbstractNerellAction {
 
     // Forcer le remplissage des deux faces avant un certains moment de la fin
     // Ajouter aussi le paramètre de la limite a deux niveaux ??
-    if (rs.getRemainingTime() >= EurobotConfig.validPriseDeuxFacesPleineRemainingTime && !rs.faceAvant().isEmpty() && !rs.faceArriere().isEmpty()) {
+    if (rs.getRemainingTime() >= EurobotConfig.validPriseDeuxFacesPleineRemainingTime
+      && !rs.faceAvant().isEmpty() && !rs.faceArriere().isEmpty()) {
       return false;
     }
 
