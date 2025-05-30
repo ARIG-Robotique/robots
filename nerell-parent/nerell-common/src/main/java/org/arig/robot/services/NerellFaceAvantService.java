@@ -239,13 +239,13 @@ public class NerellFaceAvantService extends AbstractNerellFaceService {
         servos.ascenseurAvantEtage2(true);
         servos.tiroirAvantStock(true);
       }
-      servos.becAvantFerme(false);
       updateTiroirState(false, false);
     }
 
     servos.groupeDoigtsAvantLache(true);
     deplacementDeposeEtage(false);
     updatePincesState(false, false);
+    servos.becAvantFerme(false);
     servos.groupeDoigtsAvantFerme(false);
     servos.ascenseurAvantStock(true);
     servos.groupePincesAvantRepos(false);
