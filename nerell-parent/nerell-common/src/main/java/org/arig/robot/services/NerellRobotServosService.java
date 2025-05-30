@@ -189,24 +189,29 @@ public class NerellRobotServosService extends AbstractCommonRobotServosService {
 
     Servo blockColonneAvantGauche = servo(BLOCK_COLONNE_AVANT_GAUCHE_ID, BLOCK_COLONNE_AVANT_GAUCHE)
       .time(TIME_BLOCK_COLONNE)
+      .position(POS_PRISE_SOL, 2600)
       .position(POS_OUVERT, 1720)
       .position(POS_FERME, 1320);
     Servo blockColonneAvantDroite = servo(BLOCK_COLONNE_AVANT_DROIT_ID, BLOCK_COLONNE_AVANT_DROIT)
       .time(TIME_BLOCK_COLONNE)
+      .position(POS_PRISE_SOL, 440)
       .position(POS_OUVERT, 1320)
       .position(POS_FERME, 1730);
     group(GROUP_BLOCK_COLONNE_AVANT_ID, GROUP_BLOCK_COLONNE_AVANT)
       .addServo(blockColonneAvantGauche)
       .addServo(blockColonneAvantDroite)
+      .batch(POS_PRISE_SOL)
       .batch(POS_OUVERT)
       .batch(POS_FERME);
 
     Servo blockColonneArriereGauche = servo(BLOCK_COLONNE_ARRIERE_GAUCHE_ID, BLOCK_COLONNE_ARRIERE_GAUCHE)
       .time(TIME_BLOCK_COLONNE)
+      .position(POS_PRISE_SOL, 500)
       .position(POS_OUVERT, 1300)
       .position(POS_FERME, 1740);
     Servo blockColonneArriereDroite = servo(BLOCK_COLONNE_ARRIERE_DROIT_ID, BLOCK_COLONNE_ARRIERE_DROIT)
       .time(TIME_BLOCK_COLONNE)
+      .position(POS_PRISE_SOL, 2500)
       .position(POS_OUVERT, 1700)
       .position(POS_FERME, 1300);
     group(GROUP_BLOCK_COLONNE_ARRIERE_ID, GROUP_BLOCK_COLONNE_ARRIERE)

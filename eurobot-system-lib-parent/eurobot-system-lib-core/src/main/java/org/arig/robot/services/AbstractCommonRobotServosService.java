@@ -191,12 +191,20 @@ public abstract class AbstractCommonRobotServosService extends AbstractServosSer
     setPositionBatch(GROUP_DOIGTS_ARRIERE, POS_FERME, wait);
   }
 
+  public void groupeBlockColonneAvantPriseSol(boolean wait) {
+    setPositionBatch(GROUP_BLOCK_COLONNE_AVANT, POS_PRISE_SOL, wait);
+  }
+
   public void groupeBlockColonneAvantOuvert(boolean wait) {
     setPositionBatch(GROUP_BLOCK_COLONNE_AVANT, POS_OUVERT, wait);
   }
 
   public void groupeBlockColonneAvantFerme(boolean wait) {
     setPositionBatch(GROUP_BLOCK_COLONNE_AVANT, POS_FERME, wait);
+  }
+
+  public void groupeBlockColonneArrierePriseSol(boolean wait) {
+    setPositionBatch(GROUP_BLOCK_COLONNE_ARRIERE, POS_PRISE_SOL, wait);
   }
 
   public void groupeBlockColonneArriereOuvert(boolean wait) {
