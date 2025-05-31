@@ -28,10 +28,18 @@ public class ConstructionPlannerService {
   private final EurobotStatus rs;
 
   public ConstructionPlanResult plan(ConstructionArea rootArea) {
-    return plan(rootArea, false);
+    return plan(rootArea, null, false);
   }
 
   public ConstructionPlanResult plan(ConstructionArea rootArea, boolean skipLog) {
+    return plan(rootArea, null, skipLog);
+  }
+
+  public ConstructionPlanResult plan(ConstructionArea rootArea, Face orientedFace) {
+    return plan(rootArea, orientedFace, false);
+  }
+
+  public ConstructionPlanResult plan(ConstructionArea rootArea, Face orientedFace, boolean skipLog) {
     ConstructionArea area = rootArea.clone();
     List<ConstructionAction> actions = new ArrayList<>();
     ConstructionPlanResult result = new ConstructionPlanResult(area, actions);
@@ -49,21 +57,21 @@ public class ConstructionPlannerService {
         // Etape 1, on pose un élément seul sur le rang, seulement si il est vide
         if (nbElementsInRang == 0 && stock.totalSize() >= 3) {
           // Pile de 1 pour commencer une pile de 3
-          build1Floor(actions, stock, rang, area);
+          build1Floor(actions, stock, rang, area, orientedFace);
           continue;
         }
 
         // Etape 2, on cherche un rang vide pour faire une pile de 2
         Rang rangVide = area.getFirstRangWithElement(0);
         if (rangVide != null && stock.totalSize() >= 2) {
-          build2Floor(actions, 0, stock, rangVide, area);
+          build2Floor(actions, 0, stock, rangVide, area, orientedFace);
           continue;
         }
 
         // Etape 3 est-ce que l'on peut faire une pile de 3 ?
         Rang rangOneElement = area.getFirstRangWithElement(1);
         Rang rangTwoElements = area.getFirstRangWithElement(2);
-        Face emptyFace = stock.emptyFace();
+        Face emptyFace = stock.emptyFace(orientedFace);
         if (rangOneElement != null && rangTwoElements != null && rangOneElement.before(rangTwoElements) && emptyFace != null) {
           actions.add(new Construction3FloorsAction(emptyFace, rangOneElement, rangTwoElements));
           area.removeGradin(rangTwoElements, Etage.ETAGE_1, true);
@@ -75,11 +83,11 @@ public class ConstructionPlannerService {
 
       // On ne peut pas faire de pile de 3, on fait une pile de 2 ou 1
       if (rang != null && stock.totalSize() >= 2) {
-        build2Floor(actions, nbElementsInRang, stock, rang, area);
+        build2Floor(actions, nbElementsInRang, stock, rang, area, orientedFace);
         continue;
 
       } else if (rang != null) {
-        build1Floor(actions, stock, rang, area);
+        build1Floor(actions, stock, rang, area, orientedFace);
         continue;
       }
 
@@ -93,11 +101,12 @@ public class ConstructionPlannerService {
     return result;
   }
 
-  private void build2Floor(List<ConstructionAction> actions, int nbElementsInRang, StockVirtuel stock, Rang rang, ConstructionArea area) {
+  private void build2Floor(List<ConstructionAction> actions, int nbElementsInRang,
+                           StockVirtuel stock, Rang rang, ConstructionArea area, Face orientedFace) {
     // Pile de 2
     int nbElementsToPlace = Math.min(2 - nbElementsInRang, 2);
 
-    List<ConstructionElementSource> sources = stock.takeElements(nbElementsToPlace);
+    List<ConstructionElementSource> sources = stock.takeElements(orientedFace, nbElementsToPlace);
     actions.add(new ConstructionMoveAction(sources.get(0).face(), rang));
     for (ConstructionElementSource source : sources) {
       Etage targetEtage = nbElementsToPlace == 2 ? Etage.ETAGE_1 : Etage.ETAGE_2;
@@ -107,9 +116,10 @@ public class ConstructionPlannerService {
     }
   }
 
-  private void build1Floor(List<ConstructionAction> actions, StockVirtuel stock, Rang rang, ConstructionArea area) {
+  private void build1Floor(List<ConstructionAction> actions, StockVirtuel stock,
+                           Rang rang, ConstructionArea area, Face orientedFace) {
     // Pile de 1
-    ConstructionElementSource source = stock.takeElements(1).get(0);
+    ConstructionElementSource source = stock.takeElements(orientedFace, 1).get(0);
     StockPosition stockPosition = source.stockPosition();
     actions.add(new ConstructionMoveAction(source.face(), rang));
     if (!rs.limiter2Etages() && area.nbRang() > 1 && rang == Rang.RANG_2 && stockPosition == StockPosition.BOTTOM) {

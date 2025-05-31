@@ -15,6 +15,7 @@ import org.arig.robot.model.Face;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.Rang;
 import org.arig.robot.model.StockPosition;
+import org.arig.robot.model.Team;
 import org.arig.robot.services.AbstractNerellFaceService;
 import org.arig.robot.services.ConstructionPlannerService;
 import org.arig.robot.strategy.actions.AbstractNerellAction;
@@ -32,6 +33,14 @@ public abstract class AbstractDeposeGradin extends AbstractNerellAction {
   @Override
   public String name() {
     return EurobotConfig.ACTION_DEPOSE_GRADIN_PREFIX + constructionArea().name();
+  }
+
+  protected Face orientedFace() {
+    if (Math.abs(mv.currentAngleDeg()) <= 0) {
+      return Face.AVANT;
+    } else {
+      return Face.ARRIERE;
+    }
   }
 
   @Override
@@ -94,7 +103,7 @@ public abstract class AbstractDeposeGradin extends AbstractNerellAction {
     mv.setVitessePercent(100, 100);
 
     try {
-      final ConstructionPlanResult planResult = constructionPlannerService.plan(constructionArea());
+      final ConstructionPlanResult planResult = constructionPlannerService.plan(constructionArea(), orientedFace());
       Rang currentRang = null;
       boolean firstDeposeInRang = true;
       for (ConstructionAction action : planResult.actions()) {

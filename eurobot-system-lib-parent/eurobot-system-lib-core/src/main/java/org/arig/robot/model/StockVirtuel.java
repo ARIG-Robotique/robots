@@ -25,16 +25,21 @@ public class StockVirtuel {
     return null;
   }
 
-  public List<ConstructionElementSource> takeElements(int expected) {
+  public List<ConstructionElementSource> takeElements(Face preferedFace, int expected) {
     List<ConstructionElementSource> result = new ArrayList<>();
     List<Face> faces = new ArrayList<>();
 
-    if (hasAtLeast(Face.AVANT, expected)) {
-      faces.add(Face.AVANT);
-      faces.add(Face.ARRIERE);
+    if (preferedFace != null && hasAtLeast(preferedFace, expected)) {
+      faces.add(preferedFace);
+      faces.add(preferedFace == Face.AVANT ? Face.ARRIERE : Face.AVANT);
     } else {
-      faces.add(Face.ARRIERE);
-      faces.add(Face.AVANT);
+      if (hasAtLeast(Face.AVANT, expected)) {
+        faces.add(Face.AVANT);
+        faces.add(Face.ARRIERE);
+      } else {
+        faces.add(Face.ARRIERE);
+        faces.add(Face.AVANT);
+      }
     }
 
     for (Face face : faces) {
@@ -51,7 +56,16 @@ public class StockVirtuel {
     return avant.size() + arriere.size();
   }
 
-  public Face emptyFace() {
+  public Face emptyFace(Face orientedFace) {
+    if (orientedFace != null) {
+      if (orientedFace == Face.AVANT && avant.isEmpty()) {
+        return Face.AVANT;
+      }
+      if (orientedFace == Face.ARRIERE && arriere.isEmpty()) {
+        return Face.ARRIERE;
+      }
+    }
+
     if (avant.isEmpty()) {
       return Face.AVANT;
     } else if (arriere.isEmpty()) {

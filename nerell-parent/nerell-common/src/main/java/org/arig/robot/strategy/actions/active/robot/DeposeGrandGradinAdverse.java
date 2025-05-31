@@ -3,6 +3,7 @@ package org.arig.robot.strategy.actions.active.robot;
 import lombok.extern.slf4j.Slf4j;
 import org.arig.robot.constants.EurobotConfig;
 import org.arig.robot.model.ConstructionArea;
+import org.arig.robot.model.Face;
 import org.arig.robot.model.Point;
 import org.arig.robot.model.Rang;
 import org.arig.robot.model.Team;
@@ -20,6 +21,23 @@ public class DeposeGrandGradinAdverse extends AbstractDeposeGradin {
       return false;
     }
     return super.isValid();
+  }
+
+  @Override
+  protected Face orientedFace() {
+    if (rs.team() == Team.JAUNE) {
+      if (Math.abs(mv.currentAngleDeg()) <= 90) {
+        return Face.AVANT;
+      } else {
+        return Face.ARRIERE;
+      }
+    } else {
+      if (Math.abs(mv.currentAngleDeg()) <= 90) {
+        return Face.ARRIERE;
+      } else {
+        return Face.AVANT;
+      }
+    }
   }
 
   @Override
