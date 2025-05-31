@@ -16,6 +16,7 @@ public class SemiCompleteAvoidingService extends AbstractAvoidingService {
   private StopWatch stopWatch = new StopWatch();
 
   private boolean hasProximite = false;
+  private int nbAvoiding = 0;
 
   @Override
   protected void processAvoiding() {
@@ -24,8 +25,13 @@ public class SemiCompleteAvoidingService extends AbstractAvoidingService {
     }
 
     boolean hasNewProximite = hasProximite();
-
     if (hasNewProximite) {
+      nbAvoiding = 5;
+    } else {
+      nbAvoiding--;
+      nbAvoiding = Math.max(nbAvoiding, 0);
+    }
+    if (nbAvoiding > 0) {
       if (!hasProximite) {
         log.info("Attente que l'obstacle sans aille ...");
 
