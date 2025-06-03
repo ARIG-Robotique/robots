@@ -7,7 +7,7 @@ import lombok.experimental.Accessors;
 
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public enum StrategyOption {
-  LIMITER_2_ETAGES("Limiter à 2 étages", true),
+  LIMITER_2_ETAGES("Limiter à 2 étages", false),
   EVITER_COTE_ADVERSE("Eviter coté adverse", false),
   EJECTION_COUP_DE_PUTE("Ejection coup de pute", false);
 
