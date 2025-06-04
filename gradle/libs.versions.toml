@@ -3,7 +3,7 @@ spring-boot = "3.1.0"
 graalvm-buildtools = "0.9.20"
 
 junixsocket = "2.10.1"
-javacan = "3.3.2"
+javacan = "3.5.0"
 
 [libraries]
 anyangle-path-finding = { module = "com.github.Ohohcakester:Any-Angle-Pathfinding", version = "master-7b196baf6b-1" }
