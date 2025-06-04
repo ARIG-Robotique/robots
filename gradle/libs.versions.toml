@@ -1,5 +1,5 @@
 [versions]
-spring-boot = "3.1.0"
+spring-boot = "3.5.0"
 graalvm-buildtools = "0.9.20"
 
 junixsocket = "2.10.1"
