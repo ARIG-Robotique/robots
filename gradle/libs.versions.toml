@@ -15,7 +15,7 @@ javacan-core = { module = "tel.schich:javacan-core", version.ref = "javacan" }
 javacan-epoll = { module = "tel.schich:javacan-epoll", version.ref = "javacan" }
 junixsocket-common = { module = "com.kohlschutter.junixsocket:junixsocket-common", version.ref = "junixsocket" }
 junixsocket-native-common = { module = "com.kohlschutter.junixsocket:junixsocket-native-common", version.ref = "junixsocket" }
-pi4j-core = { module = "com.pi4j:pi4j-core", version = "1.4" }
+pi4j-core = { module = "com.pi4j:pi4j-core", version = "3.0.2" }
 pure-java-hid-api = { module = "io.github.vveird:purejavahidapi", version = "0.0.3" }
 spring-shell-starter = { module = "org.springframework.shell:spring-shell-starter", version = "3.0.3" }
 
