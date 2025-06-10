@@ -1,5 +1,6 @@
 plugins {
     `java-library`
+    `jvm-test-suite`
     jacoco
     id("io.spring.dependency-management")
 }
@@ -37,7 +38,10 @@ dependencies {
     testImplementation("io.projectreactor:reactor-test")
 }
 
-
-tasks.withType<Test> {
-    useJUnitPlatform()
+testing {
+    suites {
+        val test by getting(JvmTestSuite::class) {
+            useJUnitJupiter()
+        }
+    }
 }
