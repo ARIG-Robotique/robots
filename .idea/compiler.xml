@@ -38,7 +38,7 @@
         <module name="robots.robot-system-lib-parent.robot-system-lib-core.main" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel target="17">
+    <bytecodeTargetLevel target="21">
       <module name="robots.eurobot-system-lib-parent.main" target="11" />
       <module name="robots.eurobot-system-lib-parent.test" target="11" />
       <module name="robots.main" target="11" />
