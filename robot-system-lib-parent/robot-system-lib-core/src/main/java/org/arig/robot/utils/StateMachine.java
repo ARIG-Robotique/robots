@@ -92,7 +92,7 @@ public class StateMachine<KEY extends Enum<?>, STATE extends Serializable, TRANS
 
   // TODO calcul automatique des différents points de passage si manquant dans "transitions"
   public void goTo(@NonNull KEY to) {
-    goTo(to, null);
+    goTo(to, (OPTION) null);
   }
 
   public void goTo(@NonNull KEY to, OPTION... option) {
