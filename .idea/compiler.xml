@@ -55,24 +55,48 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="robots.nerell-parent.nerell-robot" options="-parameters" />
-      <module name="robots.nerell-parent.nerell-robot.main" options="-parameters" />
-      <module name="robots.nerell-parent.nerell-robot.test" options="-parameters" />
-      <module name="robots.nerell-parent.nerell-simulator" options="-parameters" />
-      <module name="robots.nerell-parent.nerell-simulator.main" options="-parameters" />
-      <module name="robots.nerell-parent.nerell-simulator.test" options="-parameters" />
-      <module name="robots.nerell-parent.nerell-utils" options="-parameters" />
-      <module name="robots.nerell-parent.nerell-utils.main" options="-parameters" />
-      <module name="robots.nerell-parent.nerell-utils.test" options="-parameters" />
-      <module name="robots.pami-parent.pami-robot" options="-parameters" />
-      <module name="robots.pami-parent.pami-robot.main" options="-parameters" />
-      <module name="robots.pami-parent.pami-robot.test" options="-parameters" />
-      <module name="robots.pami-parent.pami-simulator" options="-parameters" />
-      <module name="robots.pami-parent.pami-simulator.main" options="-parameters" />
-      <module name="robots.pami-parent.pami-simulator.test" options="-parameters" />
-      <module name="robots.pami-parent.pami-utils" options="-parameters" />
-      <module name="robots.pami-parent.pami-utils.main" options="-parameters" />
-      <module name="robots.pami-parent.pami-utils.test" options="-parameters" />
+      <module name="robots.eurobot-system-lib-parent.eurobot-system-lib-bouchon" options="-parameters" />
+      <module name="robots.eurobot-system-lib-parent.eurobot-system-lib-bouchon.main" options="-parameters" />
+      <module name="robots.eurobot-system-lib-parent.eurobot-system-lib-bouchon.test" options="-parameters" />
+      <module name="robots.eurobot-system-lib-parent.eurobot-system-lib-core" options="-parameters" />
+      <module name="robots.eurobot-system-lib-parent.eurobot-system-lib-core.main" options="-parameters" />
+      <module name="robots.eurobot-system-lib-parent.eurobot-system-lib-core.test" options="-parameters" />
+      <module name="robots.nerell-parent.nerell-common" options="-parameters" />
+      <module name="robots.nerell-parent.nerell-common.main" options="-parameters" />
+      <module name="robots.nerell-parent.nerell-common.test" options="-parameters" />
+      <module name="robots.nerell-parent.nerell-robot" options="-parameters -parameters" />
+      <module name="robots.nerell-parent.nerell-robot.main" options="-parameters -parameters" />
+      <module name="robots.nerell-parent.nerell-robot.test" options="-parameters -parameters" />
+      <module name="robots.nerell-parent.nerell-simulator" options="-parameters -parameters" />
+      <module name="robots.nerell-parent.nerell-simulator.main" options="-parameters -parameters" />
+      <module name="robots.nerell-parent.nerell-simulator.test" options="-parameters -parameters" />
+      <module name="robots.nerell-parent.nerell-utils" options="-parameters -parameters" />
+      <module name="robots.nerell-parent.nerell-utils.main" options="-parameters -parameters" />
+      <module name="robots.nerell-parent.nerell-utils.test" options="-parameters -parameters" />
+      <module name="robots.pami-parent.pami-common" options="-parameters" />
+      <module name="robots.pami-parent.pami-common.main" options="-parameters" />
+      <module name="robots.pami-parent.pami-common.test" options="-parameters" />
+      <module name="robots.pami-parent.pami-robot" options="-parameters -parameters" />
+      <module name="robots.pami-parent.pami-robot.main" options="-parameters -parameters" />
+      <module name="robots.pami-parent.pami-robot.test" options="-parameters -parameters" />
+      <module name="robots.pami-parent.pami-simulator" options="-parameters -parameters" />
+      <module name="robots.pami-parent.pami-simulator.main" options="-parameters -parameters" />
+      <module name="robots.pami-parent.pami-simulator.test" options="-parameters -parameters" />
+      <module name="robots.pami-parent.pami-utils" options="-parameters -parameters" />
+      <module name="robots.pami-parent.pami-utils.main" options="-parameters -parameters" />
+      <module name="robots.pami-parent.pami-utils.test" options="-parameters -parameters" />
+      <module name="robots.robot-system-lib-parent.robot-system-lib-bouchon" options="-parameters" />
+      <module name="robots.robot-system-lib-parent.robot-system-lib-bouchon.main" options="-parameters" />
+      <module name="robots.robot-system-lib-parent.robot-system-lib-bouchon.test" options="-parameters" />
+      <module name="robots.robot-system-lib-parent.robot-system-lib-core" options="-parameters" />
+      <module name="robots.robot-system-lib-parent.robot-system-lib-core.main" options="-parameters" />
+      <module name="robots.robot-system-lib-parent.robot-system-lib-core.test" options="-parameters" />
+      <module name="robots.robot-system-lib-parent.robot-system-lib-joycon" options="-parameters" />
+      <module name="robots.robot-system-lib-parent.robot-system-lib-joycon.main" options="-parameters" />
+      <module name="robots.robot-system-lib-parent.robot-system-lib-joycon.test" options="-parameters" />
+      <module name="robots.robot-system-lib-parent.robot-system-lib-raspi" options="-parameters" />
+      <module name="robots.robot-system-lib-parent.robot-system-lib-raspi.main" options="-parameters" />
+      <module name="robots.robot-system-lib-parent.robot-system-lib-raspi.test" options="-parameters" />
     </option>
   </component>
 </project>

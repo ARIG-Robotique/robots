@@ -26,6 +26,10 @@ dependencyManagement {
     }
 }
 
+tasks.withType<JavaCompile>() {
+    options.compilerArgs.add("-parameters")
+}
+
 dependencies {
     compileOnly("org.projectlombok:lombok")
     testCompileOnly("org.projectlombok:lombok")
