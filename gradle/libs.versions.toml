@@ -1,6 +1,6 @@
 [versions]
 spring-boot = "3.5.7"
-graalvm-buildtools = "0.10.6"
+graalvm-buildtools = "0.11.4"
 
 junixsocket = "2.10.1"
 javacan = "3.5.0"
