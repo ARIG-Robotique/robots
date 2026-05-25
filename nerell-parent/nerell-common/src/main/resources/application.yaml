@@ -174,37 +174,3 @@ pamis:
 # Ecran
 ecran:
   binary: /home/damiensorel@sglk.local/arig/cpp-linux/build-robots-gui-Desktop-Debug/robots-gui
-
----
-
-# Spring properties
-spring:
-  config:
-    activate:
-      on-profile: eliott
-
-# Balise de vision
-balise:
-  impl: SOCKET
-  socket:
-    host: Overlord.local
-    port: 50667
-
-# PAMIs
-pamis:
-  triangle:
-    socket:
-      host: localhost
-  carre:
-    socket:
-      host: localhost
-  rond:
-    socket:
-      host: localhost
-  star:
-    socket:
-      host: localhost
-
-# Ecran
-ecran:
-  binary: ${user.home}/dev/arig-wksp/cpp-linux/robots-gui/build/Desktop-Debug/robots-gui
