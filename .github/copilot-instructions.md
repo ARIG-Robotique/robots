@@ -15,6 +15,7 @@ Eurobot competition robots codebase (ARIG Association). Java/Spring Boot multi-m
 
 # Run tests for a specific module
 ./gradlew :robot-system-lib-parent:robot-system-lib-core:test
+./gradlew :eurobot-system-lib-parent:eurobot-system-lib-core:test
 
 # Run a single test class
 ./gradlew :robot-system-lib-parent:robot-system-lib-core:test --tests "org.arig.robot.filters.common.ChangeFilterTest"
@@ -25,31 +26,59 @@ pre-commit run --all-files
 
 CI builds against **Java 21 and 23** using the Liberica JDK distribution.
 
-## Module Architecture
+Gradle parallel builds are enabled (`org.gradle.parallel=true`).
+
+Pre-commit hooks enforce: no trailing whitespace, end-of-file newline, valid JSON/XML/YAML formatting (run `pre-commit run --all-files` to check locally).
+
+## Architecture
+
+This is a multi-robot Java monorepo for Eurobot competition robots, organized in layers:
 
 ```
 robot-system-lib-parent/          # Core technical library (hardware-agnostic)
-  robot-system-lib-core/          # Filters, PID, pathfinding, strategy engine, models
+  robot-system-lib-core/       ← Core: filters (PID, ramp, average), motion, pathfinding,
+                               │  strategy engine, communication (I2C, CAN, socket), servos
   robot-system-lib-raspi/         # Raspberry Pi bindings (Pi4J, I2C, CAN bus)
-  robot-system-lib-bouchon/       # Mock/stub hardware for simulator/dev (bouchon = stub)
+  robot-system-lib-bouchon/    ← Stub/mock implementations (no hardware needed)
   robot-system-lib-joycon/        # Joy-Con controller support
 
 eurobot-system-lib-parent/        # Eurobot-competition-specific, shared across robots
-  eurobot-system-lib-core/        # Table pathfinding, Lidar, Eurobot rules
+  eurobot-system-lib-core/     ← Game logic, shared status model (EurobotStatus), pathfinding
   eurobot-system-lib-bouchon/     # Mock implementations for eurobot layer
 
-nerell-parent/                    # Main robot
-  nerell-common/                  # Shared logic: model, services, strategy actions, Spring config
-  nerell-robot/                   # Spring Boot executable (depends on raspi + common)
-  nerell-simulator/               # Simulator executable (depends on bouchon + common)
-  nerell-utils/                   # Utility shell application
+nerell-parent/                 ← Main robot ("Nerell")
+  nerell-common/               ← Shared game logic (strategy actions, services, Spring contexts)
+  nerell-robot/                ← Spring Boot app → deploys on physical Raspberry Pi
+  nerell-simulator/            ← Spring Boot app → runs locally with bouchon impls
+  nerell-utils/                ← Spring Shell CLI for hardware diagnostics
 
-pami-parent/                      # PAMI small robots (same structure as nerell)
+pami-parent/                   ← PAMI robots (4 variants: triangle, carre, rond, star)
+  pami-common/                 ← Shared PAMI logic
+  pami-robot/                  ← Physical robot app
+  pami-simulator/              ← Simulator app
+  pami-utils/                  ← Spring Shell CLI for diagnostics
 ```
 
-**`odin-parent` and `tinker-parent` are commented out** in `settings.gradle.kts` — do not uncomment unless intentionally re-enabling them.
+`odin-parent` and `tinker-parent` are commented out in `settings.gradle.kts` (inactive).
+
+### Robot–Simulator duality
+
+Every robot has two Spring Boot apps with the same business logic:
+- `*-robot`: uses `robot-system-lib-raspi` (Pi4J GPIO, CAN bus)
+- `*-simulator`: uses `*-bouchon` modules (no-op/simulated hardware)
+
+The `-common` module contains all game logic; `-robot`/`-simulator` only wire up different Spring beans.
 
 ## Key Conventions
+
+- **All modules** apply the `org.arig.robots.common-conventions` plugin (Spring Boot BOM 3.5, Java 21 toolchain, JUnit Jupiter, WebFlux, Lombok).
+- **Group/version**: `org.arig.robot` / `BUILD-SNAPSHOT` everywhere.
+- **Bouchon** = stub/mock for hardware components. Naming: `*Bouchon` suffix for classes, `*-bouchon` for modules.
+- **French naming**: domain objects, packages, and variable names frequently use French (e.g., `capteurs` = sensors, `bras` = arm, `gradin` = bleacher, `ordonanceur` = scheduler/orchestrator).
+- **Lombok**: `@Slf4j`, `@Data`, `@Getter/@Setter`, `@Accessors(fluent = true)` are standard. Fluent accessors mean getters/setters have no `get`/`set` prefix.
+- **Constants classes**: named `*Constantes*` or `*Config` in the `constants/` package.
+- **Deployable JARs**: `*-robot` modules produce an `-exec` classifier JAR via `BootJar`. The plain `jar` task uses `""` classifier to avoid conflicts.
+- **Dependency versions**: managed via `gradle/libs.versions.toml` (version catalog) + Spring Boot BOM.
 
 ### Lombok
 All classes use Lombok extensively. Prefer `@Slf4j`, `@Data`, `@Getter`, `@Setter`. Models use `@Accessors(fluent = true)` — accessor methods have **no `get`/`set` prefix** (e.g., `rs.mainRobot()` not `rs.getMainRobot()`).
@@ -63,6 +92,7 @@ Robot behaviour is driven by a list of `Action` beans managed by `StrategyManage
 
 `StrategyManager.execute()` sorts valid actions by `order()` descending and picks the highest priority one each cycle.
 
+Concrete actions extend `AbstractAction` (or specific robot one like `AbstractNerellAction` / `AbstractNerellMacroAction`). `StrategyManager` picks the highest-priority valid non-blocked action each cycle.
 ### Spring Configuration Pattern
 Config is split into multiple `@Configuration` classes per concern:
 - `*Context` — core beans (robot status, config)
@@ -70,6 +100,10 @@ Config is split into multiple `@Configuration` classes per concern:
 - `*StrategyContext` — action/strategy beans
 - `*SchedulerContext` — scheduled task configuration
 - `*WebAppContext` — REST controller configuration
+
+### Robot status model
+
+`AbstractRobotStatus` → `EurobotStatus` → `NerellRobotStatus` / `PamiRobotStatus`. Uses Lombok `@Data @Accessors(fluent = true)` throughout — access fields as methods (`status.team()`, not `status.getTeam()`).
 
 ### Bouchon (Mock) vs Raspi
 Hardware interfaces have two implementations:
@@ -84,6 +118,15 @@ Robot executables (`nerell-robot`) depend on `raspi`. Simulator executables (`ne
 - All modules inherit the `org.arig.robots.common-conventions` plugin (defined in `buildSrc/`) which sets Java 21 toolchain, Spring Boot BOM, Lombok, JUnit Jupiter, and WebFlux
 
 ### Deployment
+
+```bash
+./deploy.sh          # interactive: select robots + whether to deploy utils shell
+./robots-action.sh   # interactive: run/stop/reboot/poweroff selected robots via SSH
+./getLogs.sh         # fetch logs from robots
+```
+
 Use `deploy.sh` (interactive, requires `fzf`) to build and SCP the executable jar + scripts to a robot over SSH (`{robot-name}.local`). The jar is named `{project}-robot-BUILD-SNAPSHOT-exec.jar`.
 
 Use `robots-action.sh` to remotely trigger actions (`run`, `monitoring`, `poweroff`, `reboot`) on deployed robots via SSH.
+
+Robots are addressed as `{name}.local` over SSH (mDNS). Robots: `nerell`, `pami-triangle`, `pami-carre`, `pami-rond`, `pami-star`. Requires `fzf` for interactive selection.
